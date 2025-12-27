@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="TripCostSplitter.Core/TripCostSplitter.Core.csproj" />
+  <Project Path="TripCostSplitter.NTest/TripCostSplitter.NTest.csproj" />
+</Solution>
