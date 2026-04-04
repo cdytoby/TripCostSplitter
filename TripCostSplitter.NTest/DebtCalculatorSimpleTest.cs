@@ -1,4 +1,5 @@
 ﻿using TripCostSplitter.Core;
+using TripCostSplitter.Core.DataModels;
 
 namespace TripCostSplitter.NTest;
 

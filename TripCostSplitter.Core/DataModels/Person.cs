@@ -1,4 +1,4 @@
-﻿namespace TripCostSplitter.Core;
+﻿namespace TripCostSplitter.Core.DataModels;
 
 public class Person(int id, string name)
 {

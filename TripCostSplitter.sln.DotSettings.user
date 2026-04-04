@@ -1,6 +1,0 @@
-﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4e56da32_002D8db8_002D402a_002Dba78_002Dea1ce30a281b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="DebtCalculatorTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::25A95D43-815F-E57D-BE1B-54D82A5B340C::net10.0::TripCostSplitter.NTest.DebtCalculatorSimpleTest.CalculateDebts_ComplexScenario_CorrectlyBalances&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

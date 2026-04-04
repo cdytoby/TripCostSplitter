@@ -1,4 +1,6 @@
-﻿namespace TripCostSplitter.Core;
+﻿using TripCostSplitter.Core.DataModels;
+
+namespace TripCostSplitter.Core;
 
 public class DebtCalculator
 {
