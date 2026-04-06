@@ -23,11 +23,7 @@ public class SplitEvenlyCalculator : ISplitCalculator
         
         foreach (Person participant in allParticipants)
         {
-            result.Add(new DebitInfo
-            {
-                Payee = participant,
-                Amount = perPerson
-            });
+            result.Add(new DebitInfo(participant, perPerson));
         }
         
         if (splitData.TotalExactValidation)
@@ -35,7 +31,10 @@ public class SplitEvenlyCalculator : ISplitCalculator
             decimal resultSum = result.Sum(di => di.Amount);
             if (!resultSum.Equals(totalPaid))
             {
-                result.Last().Amount += totalPaid - resultSum;
+                DebitInfo oldDebitInfo = result[0];
+                DebitInfo newDebitInfo =
+                    new DebitInfo(oldDebitInfo.Recipient, oldDebitInfo.Amount + (totalPaid - resultSum));
+                result[0] = newDebitInfo;
             }
         }
 

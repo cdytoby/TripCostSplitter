@@ -19,11 +19,7 @@ public class SplitByExactAmountCalculator: ISplitCalculator
         List<DebitInfo> result = [];
         foreach ((Person participant, decimal exactAmount) in amounts)
         {
-            result.Add(new DebitInfo
-            {
-                Payee = participant,
-                Amount = exactAmount
-            });
+            result.Add(new DebitInfo(participant, exactAmount));
         }
         
         return result;

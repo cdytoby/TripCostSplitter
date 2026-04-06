@@ -20,11 +20,7 @@ public class SplitByPercentageCalculator : ISplitCalculator
         List<DebitInfo> result = [];
         foreach ((Person participant, decimal percentage) in percentages)
         {
-            result.Add(new DebitInfo
-            {
-                Payee = participant,
-                Amount = totalPaid * (percentage / 100)
-            });
+            result.Add(new DebitInfo(participant, totalPaid * (percentage / 100)));
         }
         
         if (splitData.TotalExactValidation)
@@ -32,7 +28,10 @@ public class SplitByPercentageCalculator : ISplitCalculator
             decimal resultSum = result.Sum(di => di.Amount);
             if (!resultSum.Equals(totalPaid))
             {
-                result.Last().Amount += totalPaid - resultSum;
+                DebitInfo oldDebitInfo = result[0];
+                DebitInfo newDebitInfo =
+                    new DebitInfo(oldDebitInfo.Recipient, oldDebitInfo.Amount + (totalPaid - resultSum));
+                result[0] = newDebitInfo;
             }
         }
 

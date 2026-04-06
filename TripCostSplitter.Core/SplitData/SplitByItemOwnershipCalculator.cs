@@ -25,14 +25,10 @@ public class SplitByItemOwnershipCalculator : ISplitCalculator
             decimal personTotal = 0;
             if (ownershipDict.TryGetValue(participant, out IList<string>? itemNames))
             {
-                personTotal += itemNames.Sum(itemName => payment.PaymentItems.First(pi => pi.Item.Equals(itemName)).Amount);
+                personTotal += itemNames.Sum(itemName => payment.PurchaseItems.First(pi => pi.Item.Equals(itemName)).Amount);
             }
             
-            result.Add(new DebitInfo
-            {
-                Payee = participant,
-                Amount = personTotal
-            });
+            result.Add(new DebitInfo(participant, personTotal));
             
         }
         

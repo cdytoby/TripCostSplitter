@@ -41,13 +41,9 @@ public class SplitCalculatorTests
             Participants = (List<Person>)[_alice],
             PayerInfos = (List<PayerInfo>)
             [
-                new PayerInfo
-                {
-                    Payer = _alice,
-                    Amount = 100
-                }
+                new PayerInfo(_alice, 100)
             ],
-            PaymentItems = (List<PaymentItem>)[],
+            PurchaseItems = (List<PurchaseItem>)[],
             SplitData = splitData
         };
         
@@ -56,7 +52,7 @@ public class SplitCalculatorTests
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(1));
-        Assert.That(result[0].Payee, Is.EqualTo(_alice));
+        Assert.That(result[0].Recipient, Is.EqualTo(_alice));
         Assert.That(result[0].Amount, Is.EqualTo(100));
     }
     
@@ -78,13 +74,9 @@ public class SplitCalculatorTests
             ],
             PayerInfos = (List<PayerInfo>)
             [
-                new PayerInfo
-                {
-                    Payer = _alice,
-                    Amount = 100
-                }
+                new PayerInfo(_alice, 100)
             ],
-            PaymentItems = (List<PaymentItem>)[],
+            PurchaseItems = (List<PurchaseItem>)[],
             SplitData = splitData
         };
         
@@ -94,8 +86,8 @@ public class SplitCalculatorTests
         // Assert
         Assert.That(result, Has.Count.EqualTo(2));
         Assert.That(result.Sum(di => di.Amount), Is.EqualTo(100));
-        Assert.That(result.First(di => di.Payee == _alice).Amount, Is.EqualTo(50));
-        Assert.That(result.First(di => di.Payee == _bob).Amount, Is.EqualTo(50));
+        Assert.That(result.First(di => di.Recipient == _alice).Amount, Is.EqualTo(50));
+        Assert.That(result.First(di => di.Recipient == _bob).Amount, Is.EqualTo(50));
     }
     
     // Test case: Multiple payers, amount should be split evenly among all participants
@@ -117,19 +109,11 @@ public class SplitCalculatorTests
             ],
             PayerInfos = (List<PayerInfo>)
             [
-                new PayerInfo
-                {
-                    Payer = _alice,
-                    Amount = 60
-                },
+                new PayerInfo(_alice, 60),
                 
-                new PayerInfo
-                {
-                    Payer = _bob,
-                    Amount = 60
-                }
+                new PayerInfo(_bob, 60)
             ],
-            PaymentItems = (List<PaymentItem>)[],
+            PurchaseItems = (List<PurchaseItem>)[],
             SplitData = splitData
         };
         
@@ -165,13 +149,9 @@ public class SplitCalculatorTests
             ],
             PayerInfos = (List<PayerInfo>)
             [
-                new PayerInfo
-                {
-                    Payer = _alice,
-                    Amount = totalAmount
-                }
+                new PayerInfo(_alice, totalAmount)
             ],
-            PaymentItems = (List<PaymentItem>)[],
+            PurchaseItems = (List<PurchaseItem>)[],
             SplitData = splitData
         };
         
@@ -202,13 +182,9 @@ public class SplitCalculatorTests
             Participants = (List<Person>)[_alice],
             PayerInfos = (List<PayerInfo>)
             [
-                new PayerInfo
-                {
-                    Payer = _alice,
-                    Amount = 100
-                }
+                new PayerInfo(_alice, 100)
             ],
-            PaymentItems = (List<PaymentItem>)[],
+            PurchaseItems = (List<PurchaseItem>)[],
             SplitData = splitData
         };
         
@@ -217,7 +193,7 @@ public class SplitCalculatorTests
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(1));
-        Assert.That(result[0].Payee, Is.EqualTo(_alice));
+        Assert.That(result[0].Recipient, Is.EqualTo(_alice));
         Assert.That(result[0].Amount, Is.EqualTo(100));
     }
     
@@ -248,13 +224,9 @@ public class SplitCalculatorTests
             ],
             PayerInfos = (List<PayerInfo>)
             [
-                new PayerInfo
-                {
-                    Payer = _alice,
-                    Amount = 100
-                }
+                new PayerInfo(_alice, 100)
             ],
-            PaymentItems = (List<PaymentItem>)[],
+            PurchaseItems = (List<PurchaseItem>)[],
             SplitData = splitData
         };
         
@@ -264,9 +236,9 @@ public class SplitCalculatorTests
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
         Assert.That(result.Sum(di => di.Amount), Is.EqualTo(100));
-        Assert.That(result.First(di => di.Payee == _alice).Amount, Is.EqualTo(50));
-        Assert.That(result.First(di => di.Payee == _bob).Amount, Is.EqualTo(30));
-        Assert.That(result.First(di => di.Payee == _charlie).Amount, Is.EqualTo(20));
+        Assert.That(result.First(di => di.Recipient == _alice).Amount, Is.EqualTo(50));
+        Assert.That(result.First(di => di.Recipient == _bob).Amount, Is.EqualTo(30));
+        Assert.That(result.First(di => di.Recipient == _charlie).Amount, Is.EqualTo(20));
     }
     
     // Test case: TotalExactValidation enabled with percentages that don't sum to 100
@@ -297,13 +269,9 @@ public class SplitCalculatorTests
             ],
             PayerInfos = (List<PayerInfo>)
             [
-                new PayerInfo
-                {
-                    Payer = _alice,
-                    Amount = 100
-                }
+                new PayerInfo(_alice, 100)
             ],
-            PaymentItems = (List<PaymentItem>)[],
+            PurchaseItems = (List<PurchaseItem>)[],
             SplitData = splitData
         };
         
@@ -341,13 +309,9 @@ public class SplitCalculatorTests
             ],
             PayerInfos = (List<PayerInfo>)
             [
-                new PayerInfo
-                {
-                    Payer = _alice,
-                    Amount = 100
-                }
+                new PayerInfo(_alice, 100)
             ],
-            PaymentItems = (List<PaymentItem>)[],
+            PurchaseItems = (List<PurchaseItem>)[],
             SplitData = splitData
         };
         
@@ -356,9 +320,9 @@ public class SplitCalculatorTests
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
-        Assert.That(result.First(di => di.Payee == _alice).Amount, Is.EqualTo(50));
-        Assert.That(result.First(di => di.Payee == _bob).Amount, Is.EqualTo(30));
-        Assert.That(result.First(di => di.Payee == _charlie).Amount, Is.EqualTo(20));
+        Assert.That(result.First(di => di.Recipient == _alice).Amount, Is.EqualTo(50));
+        Assert.That(result.First(di => di.Recipient == _bob).Amount, Is.EqualTo(30));
+        Assert.That(result.First(di => di.Recipient == _charlie).Amount, Is.EqualTo(20));
     }
     
     // Test case: Person who owns an item gets the cost of that item
@@ -391,25 +355,12 @@ public class SplitCalculatorTests
             ],
             PayerInfos = (List<PayerInfo>)
             [
-                new PayerInfo
-                {
-                    Payer = _alice,
-                    Amount = 100
-                }
+                new PayerInfo(_alice, 100)
             ],
-            PaymentItems = (List<PaymentItem>)
+            PurchaseItems = (List<PurchaseItem>)
             [
-                new PaymentItem
-                {
-                    Item = "Apple",
-                    Amount = 60
-                },
-                
-                new PaymentItem
-                {
-                    Item = "Orange",
-                    Amount = 40
-                }
+                new PurchaseItem("Apple", 60),
+                new PurchaseItem("Orange", 40)
             ],
             SplitData = splitData
         };
@@ -419,9 +370,9 @@ public class SplitCalculatorTests
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
-        Assert.That(result.First(di => di.Payee == _bob).Amount, Is.EqualTo(60));
-        Assert.That(result.First(di => di.Payee == _charlie).Amount, Is.EqualTo(40));
-        Assert.That(result.First(di => di.Payee == _alice).Amount, Is.EqualTo(0));
+        Assert.That(result.First(di => di.Recipient == _bob).Amount, Is.EqualTo(60));
+        Assert.That(result.First(di => di.Recipient == _charlie).Amount, Is.EqualTo(40));
+        Assert.That(result.First(di => di.Recipient == _alice).Amount, Is.EqualTo(0));
     }
     
     // Test case: Alice owns two items, should receive sum of both item costs
@@ -458,37 +409,14 @@ public class SplitCalculatorTests
             ],
             PayerInfos = (List<PayerInfo>)
             [
-                new PayerInfo
-                {
-                    Payer = _alice,
-                    Amount = 100
-                }
+                new PayerInfo(_alice, 100)
             ],
-            PaymentItems = (List<PaymentItem>)
+            PurchaseItems = (List<PurchaseItem>)
             [
-                new PaymentItem
-                {
-                    Item = "Groceries",
-                    Amount = 60
-                },
-                
-                new PaymentItem
-                {
-                    Item = "Gas",
-                    Amount = 20
-                },
-                
-                new PaymentItem
-                {
-                    Item = "Parking",
-                    Amount = 10
-                },
-                
-                new PaymentItem
-                {
-                    Item = "Hotel",
-                    Amount = 10
-                }
+                new PurchaseItem("Groceries", 60),
+                new PurchaseItem("Gas", 20),
+                new PurchaseItem("Parking", 10),
+                new PurchaseItem("Hotel", 10)
             ],
             SplitData = splitData
         };
@@ -498,7 +426,7 @@ public class SplitCalculatorTests
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
-        Assert.That(result.First(di => di.Payee == _bob).Amount, Is.EqualTo(60));
-        Assert.That(result.First(di => di.Payee == _charlie).Amount, Is.EqualTo(30));
+        Assert.That(result.First(di => di.Recipient == _bob).Amount, Is.EqualTo(60));
+        Assert.That(result.First(di => di.Recipient == _charlie).Amount, Is.EqualTo(30));
     }
 }

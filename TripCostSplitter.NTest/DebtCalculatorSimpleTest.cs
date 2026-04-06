@@ -27,33 +27,21 @@ public class DebtCalculatorSimpleTest
             Currency = "USD",
             PayerInfos = new List<PayerInfo>
             {
-                new()
-                {
-                    Payer = alice,
-                    Amount = 100
-                }
+                new PayerInfo(alice, 100)
             },
             DebitInfos = new List<DebitInfo>
             {
-                new()
-                {
-                    Payee = alice,
-                    Amount = 50
-                },
-                new()
-                {
-                    Payee = bob,
-                    Amount = 50
-                }
+                new DebitInfo(alice, 50),
+                new DebitInfo(bob, 50)
             },
-            PaymentItems = new List<PaymentItem>()
+            PurchaseItems = new List<PurchaseItem>()
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<IPayment>
+            Payments = new List<Payment>
             {
                 payment
             }
@@ -83,26 +71,14 @@ public class DebtCalculatorSimpleTest
             Currency = "USD",
             PayerInfos = new List<PayerInfo>
             {
-                new()
-                {
-                    Payer = alice,
-                    Amount = 60
-                }
+                new PayerInfo(alice, 60)
             },
             DebitInfos = new List<DebitInfo>
             {
-                new()
-                {
-                    Payee = alice,
-                    Amount = 30
-                },
-                new()
-                {
-                    Payee = bob,
-                    Amount = 30
-                }
+                new DebitInfo(alice, 30),
+                new DebitInfo(bob, 30)
             },
-            PaymentItems = new List<PaymentItem>()
+            PurchaseItems = new List<PurchaseItem>()
         };
         
         Payment payment2 = new()
@@ -112,33 +88,21 @@ public class DebtCalculatorSimpleTest
             Currency = "USD",
             PayerInfos = new List<PayerInfo>
             {
-                new()
-                {
-                    Payer = bob,
-                    Amount = 40
-                }
+                new PayerInfo(bob, 40)
             },
             DebitInfos = new List<DebitInfo>
             {
-                new()
-                {
-                    Payee = alice,
-                    Amount = 20
-                },
-                new()
-                {
-                    Payee = bob,
-                    Amount = 20
-                }
+                new DebitInfo(alice, 20),
+                new DebitInfo(bob, 20)
             },
-            PaymentItems = new List<PaymentItem>()
+            PurchaseItems = new List<PurchaseItem>()
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<IPayment>
+            Payments = new List<Payment>
             {
                 payment1,
                 payment2
@@ -170,38 +134,22 @@ public class DebtCalculatorSimpleTest
             Currency = "USD",
             PayerInfos = new List<PayerInfo>
             {
-                new()
-                {
-                    Payer = alice,
-                    Amount = 150
-                }
+                new PayerInfo(alice, 150)
             },
             DebitInfos = new List<DebitInfo>
             {
-                new()
-                {
-                    Payee = alice,
-                    Amount = 50
-                },
-                new()
-                {
-                    Payee = bob,
-                    Amount = 50
-                },
-                new()
-                {
-                    Payee = charlie,
-                    Amount = 50
-                }
+                new DebitInfo(alice, 50),
+                new DebitInfo(bob, 50),
+                new DebitInfo(charlie, 50)
             },
-            PaymentItems = new List<PaymentItem>()
+            PurchaseItems = new List<PurchaseItem>()
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<IPayment>
+            Payments = new List<Payment>
             {
                 payment
             }
@@ -229,28 +177,20 @@ public class DebtCalculatorSimpleTest
             Currency = "USD",
             PayerInfos = new List<PayerInfo>
             {
-                new()
-                {
-                    Payer = alice,
-                    Amount = 100
-                }
+                new PayerInfo(alice, 100)
             },
             DebitInfos = new List<DebitInfo>
             {
-                new()
-                {
-                    Payee = alice,
-                    Amount = 100
-                }
+                new DebitInfo(alice, 100)
             },
-            PaymentItems = new List<PaymentItem>()
+            PurchaseItems = new List<PurchaseItem>()
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<IPayment>
+            Payments = new List<Payment>
             {
                 payment
             }
@@ -279,36 +219,16 @@ public class DebtCalculatorSimpleTest
             Currency = "USD",
             PayerInfos = new List<PayerInfo>
             {
-                new()
-                {
-                    Payer = alice,
-                    Amount = 120
-                }
+                new PayerInfo(alice, 120)
             },
             DebitInfos = new List<DebitInfo>
             {
-                new()
-                {
-                    Payee = alice,
-                    Amount = 30
-                },
-                new()
-                {
-                    Payee = bob,
-                    Amount = 30
-                },
-                new()
-                {
-                    Payee = charlie,
-                    Amount = 30
-                },
-                new()
-                {
-                    Payee = dave,
-                    Amount = 30
-                }
+                new DebitInfo(alice, 30),
+                new DebitInfo(bob, 30),
+                new DebitInfo(charlie, 30),
+                new DebitInfo(dave, 30)
             },
-            PaymentItems = new List<PaymentItem>()
+            PurchaseItems = new List<PurchaseItem>()
         };
         
         Payment payment2 = new()
@@ -318,33 +238,21 @@ public class DebtCalculatorSimpleTest
             Currency = "USD",
             PayerInfos = new List<PayerInfo>
             {
-                new()
-                {
-                    Payer = bob,
-                    Amount = 80
-                }
+                new PayerInfo(bob, 80)
             },
             DebitInfos = new List<DebitInfo>
             {
-                new()
-                {
-                    Payee = bob,
-                    Amount = 40
-                },
-                new()
-                {
-                    Payee = charlie,
-                    Amount = 40
-                }
+                new DebitInfo(bob, 40),
+                new DebitInfo(charlie, 40)
             },
-            PaymentItems = new List<PaymentItem>()
+            PurchaseItems = new List<PurchaseItem>()
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<IPayment>
+            Payments = new List<Payment>
             {
                 payment1,
                 payment2
@@ -376,43 +284,23 @@ public class DebtCalculatorSimpleTest
             Currency = "USD",
             PayerInfos = new List<PayerInfo>
             {
-                new()
-                {
-                    Payer = alice,
-                    Amount = 60
-                },
-                new()
-                {
-                    Payer = bob,
-                    Amount = 60
-                }
+                new PayerInfo(alice, 60),
+                new PayerInfo(bob, 60)
             },
             DebitInfos = new List<DebitInfo>
             {
-                new()
-                {
-                    Payee = alice,
-                    Amount = 40
-                },
-                new()
-                {
-                    Payee = bob,
-                    Amount = 40
-                },
-                new()
-                {
-                    Payee = charlie,
-                    Amount = 40
-                }
+                new DebitInfo(alice, 40),
+                new DebitInfo(bob, 40),
+                new DebitInfo(charlie, 40)
             },
-            PaymentItems = new List<PaymentItem>()
+            PurchaseItems = new List<PurchaseItem>()
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<IPayment>
+            Payments = new List<Payment>
             {
                 payment
             }
@@ -435,7 +323,7 @@ public class DebtCalculatorSimpleTest
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<IPayment>()
+            Payments = new List<Payment>()
         };
         
         // Act

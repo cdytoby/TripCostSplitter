@@ -9,9 +9,8 @@ public class DebtCalculator
         // Calculate net balance for each person
         Dictionary<Person, decimal> balances = new();
 
-        foreach (IPayment p in travel.Payments)
+        foreach (Payment payment in travel.Payments)
         {
-            Payment payment = (Payment)p;
             // Add amounts paid by payers
             foreach (PayerInfo payerInfo in payment.PayerInfos)
             {
@@ -22,8 +21,8 @@ public class DebtCalculator
             // Subtract amounts owed by debtors
             foreach (DebitInfo debitInfo in payment.DebitInfos)
             {
-                balances.TryAdd(debitInfo.Payee, 0);
-                balances[debitInfo.Payee] -= debitInfo.Amount;
+                balances.TryAdd(debitInfo.Recipient, 0);
+                balances[debitInfo.Recipient] -= debitInfo.Amount;
             }
         }
 
@@ -44,12 +43,7 @@ public class DebtCalculator
 
             decimal amountToSettle = Math.Min(creditor.Value, Math.Abs(debtor.Value));
 
-            debts.Add(new DebtItem
-            {
-                Debtor = debtor.Key,
-                Creditor = creditor.Key,
-                Amount = amountToSettle
-            });
+            debts.Add(new DebtItem(debtor.Key, creditor.Key, amountToSettle));
 
             creditors[creditorIndex] = new KeyValuePair<Person, decimal>(creditor.Key, creditor.Value - amountToSettle);
             debtors[debtorIndex] = new KeyValuePair<Person, decimal>(debtor.Key, debtor.Value + amountToSettle);

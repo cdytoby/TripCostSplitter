@@ -1,7 +1,3 @@
 ﻿namespace TripCostSplitter.Core.DataModels;
 
-public class Person(int id, string name)
-{
-    public int Id { get; set; } = id;
-    public string Name { get; set; } = name;
-}
+public record Person(int Id, string Name);
