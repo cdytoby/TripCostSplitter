@@ -20,31 +20,30 @@ public class DebtCalculatorSimpleTest
         Person alice = new(1, "Alice");
         Person bob = new(2, "Bob");
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Participants = [alice, bob],
             Currency = "USD",
-            PayerInfos = new List<PayerInfo>
-            {
-                new PayerInfo(alice, 100)
-            },
-            DebitInfos = new List<DebitInfo>
-            {
-                new DebitInfo(alice, 50),
-                new DebitInfo(bob, 50)
-            },
-            PurchaseItems = new List<PurchaseItem>()
+            PayerInfos = [new PayerInfo(alice, 100)],
+            PurchaseItems = []
+        };
+
+        Transaction transaction = new()
+        {
+            TransactionData = paymentData,
+            RecipientInfos = 
+            [
+                new RecipientInfo(alice, 50),
+                new RecipientInfo(bob, 50)
+            ]
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<Payment>
-            {
-                payment
-            }
+            Transactions = [transaction]
         };
         
         // Act
@@ -64,49 +63,53 @@ public class DebtCalculatorSimpleTest
         Person alice = new(1, "Alice");
         Person bob = new(2, "Bob");
         
-        Payment payment1 = new()
+        PaymentData payment1 = new()
         {
             Date = DateTime.Now,
             Participants = [alice, bob],
             Currency = "USD",
-            PayerInfos = new List<PayerInfo>
-            {
-                new PayerInfo(alice, 60)
-            },
-            DebitInfos = new List<DebitInfo>
-            {
-                new DebitInfo(alice, 30),
-                new DebitInfo(bob, 30)
-            },
-            PurchaseItems = new List<PurchaseItem>()
+            PayerInfos = [new PayerInfo(alice, 60)],
+            PurchaseItems = []
+        };
+
+        Transaction pwd1 = new()
+        {
+            TransactionData = payment1,
+            RecipientInfos = 
+            [
+                new RecipientInfo(alice, 30),
+                new RecipientInfo(bob, 30)
+            ]
         };
         
-        Payment payment2 = new()
+        PaymentData payment2 = new()
         {
             Date = DateTime.Now,
             Participants = [alice, bob],
             Currency = "USD",
-            PayerInfos = new List<PayerInfo>
-            {
-                new PayerInfo(bob, 40)
-            },
-            DebitInfos = new List<DebitInfo>
-            {
-                new DebitInfo(alice, 20),
-                new DebitInfo(bob, 20)
-            },
-            PurchaseItems = new List<PurchaseItem>()
+            PayerInfos = [new PayerInfo(bob, 40)],
+            PurchaseItems = []
+        };
+
+        Transaction pwd2 = new()
+        {
+            TransactionData = payment2,
+            RecipientInfos = 
+            [
+                new RecipientInfo(alice, 20),
+                new RecipientInfo(bob, 20)
+            ]
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<Payment>
-            {
-                payment1,
-                payment2
-            }
+            Transactions = 
+            [
+                pwd1,
+                pwd2
+            ]
         };
         
         // Act
@@ -127,32 +130,31 @@ public class DebtCalculatorSimpleTest
         Person bob = new(2, "Bob");
         Person charlie = new(3, "Charlie");
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Participants = [alice, bob, charlie],
             Currency = "USD",
-            PayerInfos = new List<PayerInfo>
-            {
-                new PayerInfo(alice, 150)
-            },
-            DebitInfos = new List<DebitInfo>
-            {
-                new DebitInfo(alice, 50),
-                new DebitInfo(bob, 50),
-                new DebitInfo(charlie, 50)
-            },
-            PurchaseItems = new List<PurchaseItem>()
+            PayerInfos = [new PayerInfo(alice, 150)],
+            PurchaseItems = []
+        };
+
+        Transaction pwd = new()
+        {
+            TransactionData = paymentData,
+            RecipientInfos = 
+            [
+                new RecipientInfo(alice, 50),
+                new RecipientInfo(bob, 50),
+                new RecipientInfo(charlie, 50)
+            ]
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<Payment>
-            {
-                payment
-            }
+            Transactions = [pwd]
         };
         
         // Act
@@ -170,30 +172,26 @@ public class DebtCalculatorSimpleTest
         // Arrange
         Person alice = new(1, "Alice");
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Participants = [alice],
             Currency = "USD",
-            PayerInfos = new List<PayerInfo>
-            {
-                new PayerInfo(alice, 100)
-            },
-            DebitInfos = new List<DebitInfo>
-            {
-                new DebitInfo(alice, 100)
-            },
-            PurchaseItems = new List<PurchaseItem>()
+            PayerInfos = [new PayerInfo(alice, 100)],
+            PurchaseItems = []
+        };
+
+        Transaction pwd = new()
+        {
+            TransactionData = paymentData,
+            RecipientInfos = [new RecipientInfo(alice, 100)]
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<Payment>
-            {
-                payment
-            }
+            Transactions = [pwd]
         };
         
         // Act
@@ -212,51 +210,55 @@ public class DebtCalculatorSimpleTest
         Person charlie = new(3, "Charlie");
         Person dave = new(4, "Dave");
         
-        Payment payment1 = new()
+        PaymentData payment1 = new()
         {
             Date = DateTime.Now,
             Participants = [alice, bob, charlie, dave],
             Currency = "USD",
-            PayerInfos = new List<PayerInfo>
-            {
-                new PayerInfo(alice, 120)
-            },
-            DebitInfos = new List<DebitInfo>
-            {
-                new DebitInfo(alice, 30),
-                new DebitInfo(bob, 30),
-                new DebitInfo(charlie, 30),
-                new DebitInfo(dave, 30)
-            },
-            PurchaseItems = new List<PurchaseItem>()
+            PayerInfos = [new PayerInfo(alice, 120)],
+            PurchaseItems = []
+        };
+
+        Transaction pwd1 = new()
+        {
+            TransactionData = payment1,
+            RecipientInfos = 
+            [
+                new RecipientInfo(alice, 30),
+                new RecipientInfo(bob, 30),
+                new RecipientInfo(charlie, 30),
+                new RecipientInfo(dave, 30)
+            ]
         };
         
-        Payment payment2 = new()
+        PaymentData payment2 = new()
         {
             Date = DateTime.Now,
             Participants = [alice, bob, charlie, dave],
             Currency = "USD",
-            PayerInfos = new List<PayerInfo>
-            {
-                new PayerInfo(bob, 80)
-            },
-            DebitInfos = new List<DebitInfo>
-            {
-                new DebitInfo(bob, 40),
-                new DebitInfo(charlie, 40)
-            },
-            PurchaseItems = new List<PurchaseItem>()
+            PayerInfos = [new PayerInfo(bob, 80)],
+            PurchaseItems = []
+        };
+
+        Transaction pwd2 = new()
+        {
+            TransactionData = payment2,
+            RecipientInfos = 
+            [
+                new RecipientInfo(bob, 40),
+                new RecipientInfo(charlie, 40)
+            ]
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<Payment>
-            {
-                payment1,
-                payment2
-            }
+            Transactions = 
+            [
+                pwd1,
+                pwd2
+            ]
         };
         
         // Act
@@ -277,33 +279,35 @@ public class DebtCalculatorSimpleTest
         Person bob = new(2, "Bob");
         Person charlie = new(3, "Charlie");
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Participants = [alice, bob, charlie],
             Currency = "USD",
-            PayerInfos = new List<PayerInfo>
-            {
+            PayerInfos = 
+            [
                 new PayerInfo(alice, 60),
                 new PayerInfo(bob, 60)
-            },
-            DebitInfos = new List<DebitInfo>
-            {
-                new DebitInfo(alice, 40),
-                new DebitInfo(bob, 40),
-                new DebitInfo(charlie, 40)
-            },
-            PurchaseItems = new List<PurchaseItem>()
+            ],
+            PurchaseItems = []
+        };
+
+        Transaction pwd = new()
+        {
+            TransactionData = paymentData,
+            RecipientInfos =
+            [
+                new RecipientInfo(alice, 40),
+                new RecipientInfo(bob, 40),
+                new RecipientInfo(charlie, 40)
+            ]
         };
         
         Travel travel = new()
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<Payment>
-            {
-                payment
-            }
+            Transactions = [pwd]
         };
         
         // Act
@@ -323,7 +327,7 @@ public class DebtCalculatorSimpleTest
         {
             Name = "Trip",
             CalculateCurrency = "USD",
-            Payments = new List<Payment>()
+            Transactions = []
         };
         
         // Act

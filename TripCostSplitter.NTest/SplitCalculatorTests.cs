@@ -34,21 +34,21 @@ public class SplitCalculatorTests
         // Arrange
         SplitEvenly splitData = new();
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = (List<Person>)[_alice],
-            PayerInfos = (List<PayerInfo>)
+            Participants = [_alice],
+            PayerInfos = 
             [
                 new PayerInfo(_alice, 100)
             ],
-            PurchaseItems = (List<PurchaseItem>)[],
+            PurchaseItems = [],
             SplitData = splitData
         };
         
         // Act
-        IList<DebitInfo> result = _evenlyCalculator.CalculateDebit(payment);
+        IList<RecipientInfo> result = _evenlyCalculator.CalculateDebit(paymentData);
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(1));
@@ -63,25 +63,25 @@ public class SplitCalculatorTests
         // Arrange
         SplitEvenly splitData = new();
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = (List<Person>)
+            Participants = 
             [
                 _alice,
                 _bob
             ],
-            PayerInfos = (List<PayerInfo>)
+            PayerInfos = 
             [
                 new PayerInfo(_alice, 100)
             ],
-            PurchaseItems = (List<PurchaseItem>)[],
+            PurchaseItems = [],
             SplitData = splitData
         };
         
         // Act
-        IList<DebitInfo> result = _evenlyCalculator.CalculateDebit(payment);
+        IList<RecipientInfo> result = _evenlyCalculator.CalculateDebit(paymentData);
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(2));
@@ -97,28 +97,28 @@ public class SplitCalculatorTests
         // Arrange
         SplitEvenly splitData = new();
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = (List<Person>)
+            Participants = 
             [
                 _alice,
                 _bob,
                 _charlie
             ],
-            PayerInfos = (List<PayerInfo>)
+            PayerInfos = 
             [
                 new PayerInfo(_alice, 60),
                 
                 new PayerInfo(_bob, 60)
             ],
-            PurchaseItems = (List<PurchaseItem>)[],
+            PurchaseItems = [],
             SplitData = splitData
         };
         
         // Act
-        IList<DebitInfo> result = _evenlyCalculator.CalculateDebit(payment);
+        IList<RecipientInfo> result = _evenlyCalculator.CalculateDebit(paymentData);
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
@@ -137,26 +137,26 @@ public class SplitCalculatorTests
             TotalExactValidation = true
         };
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = (List<Person>)
+            Participants = 
             [
                 _alice,
                 _bob,
                 _charlie
             ],
-            PayerInfos = (List<PayerInfo>)
+            PayerInfos = 
             [
                 new PayerInfo(_alice, totalAmount)
             ],
-            PurchaseItems = (List<PurchaseItem>)[],
+            PurchaseItems = [],
             SplitData = splitData
         };
         
         // Act
-        IList<DebitInfo> result = _evenlyCalculator.CalculateDebit(payment);
+        IList<RecipientInfo> result = _evenlyCalculator.CalculateDebit(paymentData);
         
         // Assert
         Assert.That(result.Sum(di => di.Amount), Is.EqualTo(totalAmount));
@@ -175,21 +175,21 @@ public class SplitCalculatorTests
             }
         };
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = (List<Person>)[_alice],
-            PayerInfos = (List<PayerInfo>)
+            Participants = [_alice],
+            PayerInfos = 
             [
                 new PayerInfo(_alice, 100)
             ],
-            PurchaseItems = (List<PurchaseItem>)[],
+            PurchaseItems = [],
             SplitData = splitData
         };
         
         // Act
-        IList<DebitInfo> result = _percentageCalculator.CalculateDebit(payment);
+        IList<RecipientInfo> result = _percentageCalculator.CalculateDebit(paymentData);
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(1));
@@ -212,26 +212,26 @@ public class SplitCalculatorTests
             }
         };
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = (List<Person>)
+            Participants = 
             [
                 _alice,
                 _bob,
                 _charlie
             ],
-            PayerInfos = (List<PayerInfo>)
+            PayerInfos = 
             [
                 new PayerInfo(_alice, 100)
             ],
-            PurchaseItems = (List<PurchaseItem>)[],
+            PurchaseItems = [],
             SplitData = splitData
         };
         
         // Act
-        IList<DebitInfo> result = _percentageCalculator.CalculateDebit(payment);
+        IList<RecipientInfo> result = _percentageCalculator.CalculateDebit(paymentData);
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
@@ -257,26 +257,26 @@ public class SplitCalculatorTests
             TotalExactValidation = true
         };
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = (List<Person>)
+            Participants = 
             [
                 _alice,
                 _bob,
                 _charlie
             ],
-            PayerInfos = (List<PayerInfo>)
+            PayerInfos = 
             [
                 new PayerInfo(_alice, 100)
             ],
-            PurchaseItems = (List<PurchaseItem>)[],
+            PurchaseItems = [],
             SplitData = splitData
         };
         
         // Act
-        IList<DebitInfo> result = _percentageCalculator.CalculateDebit(payment);
+        IList<RecipientInfo> result = _percentageCalculator.CalculateDebit(paymentData);
         
         // Assert
         Assert.That(result.Sum(di => di.Amount), Is.EqualTo(100));
@@ -297,26 +297,26 @@ public class SplitCalculatorTests
             }
         };
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = (List<Person>)
+            Participants = 
             [
                 _alice,
                 _bob,
                 _charlie
             ],
-            PayerInfos = (List<PayerInfo>)
+            PayerInfos = 
             [
                 new PayerInfo(_alice, 100)
             ],
-            PurchaseItems = (List<PurchaseItem>)[],
+            PurchaseItems = [],
             SplitData = splitData
         };
         
         // Act
-        IList<DebitInfo> result = _exactAmountCalculator.CalculateDebit(payment);
+        IList<RecipientInfo> result = _exactAmountCalculator.CalculateDebit(paymentData);
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
@@ -343,21 +343,21 @@ public class SplitCalculatorTests
             }
         };
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = (List<Person>)
+            Participants = 
             [
                 _alice,
                 _bob,
                 _charlie
             ],
-            PayerInfos = (List<PayerInfo>)
+            PayerInfos = 
             [
                 new PayerInfo(_alice, 100)
             ],
-            PurchaseItems = (List<PurchaseItem>)
+            PurchaseItems = 
             [
                 new PurchaseItem("Apple", 60),
                 new PurchaseItem("Orange", 40)
@@ -366,7 +366,7 @@ public class SplitCalculatorTests
         };
         
         // Act
-        IList<DebitInfo> result = _ownershipCalculator.CalculateDebit(payment);
+        IList<RecipientInfo> result = _ownershipCalculator.CalculateDebit(paymentData);
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
@@ -385,10 +385,10 @@ public class SplitCalculatorTests
             OwnershipGroups = new Dictionary<Person, IList<string>>
             {
                 {
-                    _bob, (List<string>)["Groceries"]
+                    _bob, ["Groceries"]
                 },
                 {
-                    _charlie, (List<string>)
+                    _charlie, 
                     [
                         "Gas",
                         "Parking"
@@ -397,21 +397,21 @@ public class SplitCalculatorTests
             }
         };
         
-        Payment payment = new()
+        PaymentData paymentData = new()
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = (List<Person>)
+            Participants = 
             [
                 _alice,
                 _bob,
                 _charlie
             ],
-            PayerInfos = (List<PayerInfo>)
+            PayerInfos = 
             [
                 new PayerInfo(_alice, 100)
             ],
-            PurchaseItems = (List<PurchaseItem>)
+            PurchaseItems = 
             [
                 new PurchaseItem("Groceries", 60),
                 new PurchaseItem("Gas", 20),
@@ -422,7 +422,7 @@ public class SplitCalculatorTests
         };
         
         // Act
-        IList<DebitInfo> result = _ownershipCalculator.CalculateDebit(payment);
+        IList<RecipientInfo> result = _ownershipCalculator.CalculateDebit(paymentData);
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));

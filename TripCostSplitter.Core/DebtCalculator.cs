@@ -9,17 +9,18 @@ public class DebtCalculator
         // Calculate net balance for each person
         Dictionary<Person, decimal> balances = new();
 
-        foreach (Payment payment in travel.Payments)
+        foreach (Transaction transactions in travel.Transactions)
         {
+            ITransactionData transactionData = transactions.TransactionData;
             // Add amounts paid by payers
-            foreach (PayerInfo payerInfo in payment.PayerInfos)
+            foreach (PayerInfo payerInfo in transactionData.PayerInfos)
             {
                 balances.TryAdd(payerInfo.Payer, 0);
                 balances[payerInfo.Payer] += payerInfo.Amount;
             }
 
             // Subtract amounts owed by debtors
-            foreach (DebitInfo debitInfo in payment.DebitInfos)
+            foreach (RecipientInfo debitInfo in transactions.RecipientInfos)
             {
                 balances.TryAdd(debitInfo.Recipient, 0);
                 balances[debitInfo.Recipient] -= debitInfo.Amount;

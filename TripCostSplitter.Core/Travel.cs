@@ -6,5 +6,5 @@ public class Travel
 {
     public required string Name { get; set; }
     public required string CalculateCurrency { get; set; }
-    public required IList<Payment> Payments { get; set; }
+    public required IList<Transaction> Transactions { get; set; }
 }

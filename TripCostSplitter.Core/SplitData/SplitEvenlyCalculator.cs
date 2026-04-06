@@ -8,22 +8,22 @@ public class SplitEvenlyCalculator : ISplitCalculator
 
     public bool CanHandle(ISplitData splitData) => splitData is SplitEvenly;
 
-    public IList<DebitInfo> CalculateDebit(Payment payment)
+    public IList<RecipientInfo> CalculateDebit(PaymentData paymentData)
     {
-        SplitEvenly splitData = (SplitEvenly)payment.SplitData!;
-        IList<Person> allParticipants = payment.Participants;
+        SplitEvenly splitData = (SplitEvenly)paymentData.SplitData!;
+        IList<Person> allParticipants = paymentData.Participants;
 
-        if (!allParticipants.Any() || !payment.PayerInfos.Any())
-            return new List<DebitInfo>();
+        if (!allParticipants.Any() || !paymentData.PayerInfos.Any())
+            return new List<RecipientInfo>();
 
-        decimal totalPaid = payment.PayerInfos.Sum(p => p.Amount);
+        decimal totalPaid = paymentData.PayerInfos.Sum(p => p.Amount);
         decimal perPerson = totalPaid / allParticipants.Count;
 
-        List<DebitInfo> result = [];
+        List<RecipientInfo> result = [];
         
         foreach (Person participant in allParticipants)
         {
-            result.Add(new DebitInfo(participant, perPerson));
+            result.Add(new RecipientInfo(participant, perPerson));
         }
         
         if (splitData.TotalExactValidation)
@@ -31,10 +31,10 @@ public class SplitEvenlyCalculator : ISplitCalculator
             decimal resultSum = result.Sum(di => di.Amount);
             if (!resultSum.Equals(totalPaid))
             {
-                DebitInfo oldDebitInfo = result[0];
-                DebitInfo newDebitInfo =
-                    new DebitInfo(oldDebitInfo.Recipient, oldDebitInfo.Amount + (totalPaid - resultSum));
-                result[0] = newDebitInfo;
+                RecipientInfo oldRecipientInfo = result[0];
+                RecipientInfo newRecipientInfo =
+                    new RecipientInfo(oldRecipientInfo.Recipient, oldRecipientInfo.Amount + (totalPaid - resultSum));
+                result[0] = newRecipientInfo;
             }
         }
 

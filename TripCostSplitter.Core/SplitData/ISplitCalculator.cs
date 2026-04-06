@@ -8,5 +8,5 @@ public interface ISplitCalculator
     
     bool CanHandle(ISplitData splitData);
     
-    IList<DebitInfo> CalculateDebit(Payment payment);
+    IList<RecipientInfo> CalculateDebit(PaymentData paymentData);
 }

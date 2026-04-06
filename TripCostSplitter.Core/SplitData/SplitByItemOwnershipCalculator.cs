@@ -8,16 +8,16 @@ public class SplitByItemOwnershipCalculator : ISplitCalculator
 
     public bool CanHandle(ISplitData splitData) => splitData is SplitByItemOwnership;
 
-    public IList<DebitInfo> CalculateDebit(Payment payment)
+    public IList<RecipientInfo> CalculateDebit(PaymentData paymentData)
     {
-        SplitByItemOwnership splitDataTyped = (SplitByItemOwnership)payment.SplitData!;
+        SplitByItemOwnership splitDataTyped = (SplitByItemOwnership)paymentData.SplitData!;
         Dictionary<Person, IList<string>> ownershipDict = splitDataTyped.OwnershipGroups;
-        IList<Person> allParticipants = payment.Participants;
+        IList<Person> allParticipants = paymentData.Participants;
 
-        if (!ownershipDict.Any() || !payment.PayerInfos.Any() || !allParticipants.Any())
-            return new List<DebitInfo>();
+        if (!ownershipDict.Any() || !paymentData.PayerInfos.Any() || !allParticipants.Any())
+            return new List<RecipientInfo>();
 
-        List<DebitInfo> result = [];
+        List<RecipientInfo> result = [];
         
         
         foreach (Person participant in allParticipants)
@@ -25,10 +25,10 @@ public class SplitByItemOwnershipCalculator : ISplitCalculator
             decimal personTotal = 0;
             if (ownershipDict.TryGetValue(participant, out IList<string>? itemNames))
             {
-                personTotal += itemNames.Sum(itemName => payment.PurchaseItems.First(pi => pi.Item.Equals(itemName)).Amount);
+                personTotal += itemNames.Sum(itemName => paymentData.PurchaseItems.First(pi => pi.Item.Equals(itemName)).Amount);
             }
             
-            result.Add(new DebitInfo(participant, personTotal));
+            result.Add(new RecipientInfo(participant, personTotal));
             
         }
         
