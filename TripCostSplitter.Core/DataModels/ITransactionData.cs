@@ -1,4 +1,6 @@
-﻿namespace TripCostSplitter.Core.DataModels;
+﻿using System.Collections.ObjectModel;
+
+namespace TripCostSplitter.Core.DataModels;
 
 public interface ITransactionData
 {
@@ -12,5 +14,5 @@ public interface ITransactionData
     
     decimal? ExchangeRateOverride { get; }
     
-    IList<PayerInfo> PayerInfos { get; }
+    ObservableCollection<PayerInfo> PayerInfos { get; }
 }

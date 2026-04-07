@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TripCostSplitter.Core.DataModels;
 
@@ -19,6 +20,7 @@ public partial class TransferData : ObservableObject, ITransactionData
     public partial decimal? ExchangeRateOverride { get; set; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PayerInfos))]
     public required partial Person FromPerson { get; set; }
 
     [ObservableProperty]
@@ -27,5 +29,5 @@ public partial class TransferData : ObservableObject, ITransactionData
     [ObservableProperty]
     public required partial decimal Amount { get; set; }
 
-    public IList<PayerInfo> PayerInfos => [new PayerInfo(FromPerson, Amount)];
+    public ObservableCollection<PayerInfo> PayerInfos => [new(FromPerson, Amount)];
 }

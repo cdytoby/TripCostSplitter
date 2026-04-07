@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TripCostSplitter.Core.SplitData;
 
@@ -20,13 +21,13 @@ public partial class PaymentData: ObservableObject, ITransactionData
     public partial decimal? ExchangeRateOverride { get; set; }
     
     [ObservableProperty]
-    public required partial IList<Person> Participants { get; set; }
+    public required partial ObservableCollection<PayerInfo> PayerInfos { get; set; }
     
     [ObservableProperty]
-    public required partial IList<PurchaseItem> PurchaseItems { get; set; }
+    public required partial ObservableCollection<Person> Participants { get; set; }
     
     [ObservableProperty]
-    public required partial IList<PayerInfo> PayerInfos { get; set; }
+    public required partial ObservableCollection<PurchaseItem> PurchaseItems { get; set; }
     
     [ObservableProperty]
     public partial ISplitData? SplitData { get; set; }
