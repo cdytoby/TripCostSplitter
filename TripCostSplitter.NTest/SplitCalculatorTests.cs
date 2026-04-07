@@ -38,10 +38,10 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = [_alice],
+            ParticipantIds = [_alice.Id],
             PayerInfos = 
             [
-                new PayerInfo(_alice, 100)
+                new PayerInfo(_alice.Id, 100)
             ],
             PurchaseItems = [],
             SplitData = splitData
@@ -52,7 +52,7 @@ public class SplitCalculatorTests
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(1));
-        Assert.That(result[0].Recipient, Is.EqualTo(_alice));
+        Assert.That(result[0].RecipientId, Is.EqualTo(_alice.Id));
         Assert.That(result[0].Amount, Is.EqualTo(100));
     }
     
@@ -67,14 +67,14 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = 
+            ParticipantIds = 
             [
-                _alice,
-                _bob
+                _alice.Id,
+                _bob.Id
             ],
             PayerInfos = 
             [
-                new PayerInfo(_alice, 100)
+                new PayerInfo(_alice.Id, 100)
             ],
             PurchaseItems = [],
             SplitData = splitData
@@ -86,8 +86,8 @@ public class SplitCalculatorTests
         // Assert
         Assert.That(result, Has.Count.EqualTo(2));
         Assert.That(result.Sum(di => di.Amount), Is.EqualTo(100));
-        Assert.That(result.First(di => di.Recipient == _alice).Amount, Is.EqualTo(50));
-        Assert.That(result.First(di => di.Recipient == _bob).Amount, Is.EqualTo(50));
+        Assert.That(result.First(di => di.RecipientId == _alice.Id).Amount, Is.EqualTo(50));
+        Assert.That(result.First(di => di.RecipientId == _bob.Id).Amount, Is.EqualTo(50));
     }
     
     // Test case: Multiple payers, amount should be split evenly among all participants
@@ -101,17 +101,17 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = 
+            ParticipantIds = 
             [
-                _alice,
-                _bob,
-                _charlie
+                _alice.Id,
+                _bob.Id,
+                _charlie.Id
             ],
             PayerInfos = 
             [
-                new PayerInfo(_alice, 60),
+                new PayerInfo(_alice.Id, 60),
                 
-                new PayerInfo(_bob, 60)
+                new PayerInfo(_bob.Id, 60)
             ],
             PurchaseItems = [],
             SplitData = splitData
@@ -141,15 +141,15 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = 
+            ParticipantIds = 
             [
-                _alice,
-                _bob,
-                _charlie
+                _alice.Id,
+                _bob.Id,
+                _charlie.Id
             ],
             PayerInfos = 
             [
-                new PayerInfo(_alice, totalAmount)
+                new PayerInfo(_alice.Id, totalAmount)
             ],
             PurchaseItems = [],
             SplitData = splitData
@@ -169,9 +169,9 @@ public class SplitCalculatorTests
         // Arrange
         SplitByPercentage splitData = new()
         {
-            PersonPercentageDict = new Dictionary<Person, decimal>
+            PersonPercentageDict = new Dictionary<int, decimal>
             {
-                { _alice, 100 }
+                { _alice.Id, 100 }
             }
         };
         
@@ -179,10 +179,10 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = [_alice],
+            ParticipantIds = [_alice.Id],
             PayerInfos = 
             [
-                new PayerInfo(_alice, 100)
+                new PayerInfo(_alice.Id, 100)
             ],
             PurchaseItems = [],
             SplitData = splitData
@@ -193,7 +193,7 @@ public class SplitCalculatorTests
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(1));
-        Assert.That(result[0].Recipient, Is.EqualTo(_alice));
+        Assert.That(result[0].RecipientId, Is.EqualTo(_alice.Id));
         Assert.That(result[0].Amount, Is.EqualTo(100));
     }
     
@@ -204,11 +204,11 @@ public class SplitCalculatorTests
         // Arrange
         SplitByPercentage splitData = new()
         {
-            PersonPercentageDict = new Dictionary<Person, decimal>
+            PersonPercentageDict = new Dictionary<int, decimal>
             {
-                { _alice, 50 },
-                { _bob, 30 },
-                { _charlie, 20 }
+                { _alice.Id, 50 },
+                { _bob.Id, 30 },
+                { _charlie.Id, 20 }
             }
         };
         
@@ -216,15 +216,15 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = 
+            ParticipantIds = 
             [
-                _alice,
-                _bob,
-                _charlie
+                _alice.Id,
+                _bob.Id,
+                _charlie.Id
             ],
             PayerInfos = 
             [
-                new PayerInfo(_alice, 100)
+                new PayerInfo(_alice.Id, 100)
             ],
             PurchaseItems = [],
             SplitData = splitData
@@ -236,9 +236,9 @@ public class SplitCalculatorTests
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
         Assert.That(result.Sum(di => di.Amount), Is.EqualTo(100));
-        Assert.That(result.First(di => di.Recipient == _alice).Amount, Is.EqualTo(50));
-        Assert.That(result.First(di => di.Recipient == _bob).Amount, Is.EqualTo(30));
-        Assert.That(result.First(di => di.Recipient == _charlie).Amount, Is.EqualTo(20));
+        Assert.That(result.First(di => di.RecipientId == _alice.Id).Amount, Is.EqualTo(50));
+        Assert.That(result.First(di => di.RecipientId == _bob.Id).Amount, Is.EqualTo(30));
+        Assert.That(result.First(di => di.RecipientId == _charlie.Id).Amount, Is.EqualTo(20));
     }
     
     // Test case: TotalExactValidation enabled with percentages that don't sum to 100
@@ -248,11 +248,11 @@ public class SplitCalculatorTests
         // Arrange
         SplitByPercentage splitData = new()
         {
-            PersonPercentageDict = new Dictionary<Person, decimal>
+            PersonPercentageDict = new Dictionary<int, decimal>
             {
-                { _alice, 50 },
-                { _bob, 30 },
-                { _charlie, 19 }
+                { _alice.Id, 50 },
+                { _bob.Id, 30 },
+                { _charlie.Id, 19 }
             },
             TotalExactValidation = true
         };
@@ -261,15 +261,15 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = 
+            ParticipantIds = 
             [
-                _alice,
-                _bob,
-                _charlie
+                _alice.Id,
+                _bob.Id,
+                _charlie.Id
             ],
             PayerInfos = 
             [
-                new PayerInfo(_alice, 100)
+                new PayerInfo(_alice.Id, 100)
             ],
             PurchaseItems = [],
             SplitData = splitData
@@ -289,11 +289,11 @@ public class SplitCalculatorTests
         // Arrange
         SplitByExactAmount splitData = new()
         {
-            PersonAmountDict = new Dictionary<Person, decimal>
+            PersonIdAmountDict = new Dictionary<int, decimal>
             {
-                { _alice, 50 },
-                { _bob, 30 },
-                { _charlie, 20 }
+                { _alice.Id, 50 },
+                { _bob.Id, 30 },
+                { _charlie.Id, 20 }
             }
         };
         
@@ -301,15 +301,15 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = 
+            ParticipantIds = 
             [
-                _alice,
-                _bob,
-                _charlie
+                _alice.Id,
+                _bob.Id,
+                _charlie.Id
             ],
             PayerInfos = 
             [
-                new PayerInfo(_alice, 100)
+                new PayerInfo(_alice.Id, 100)
             ],
             PurchaseItems = [],
             SplitData = splitData
@@ -320,9 +320,9 @@ public class SplitCalculatorTests
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
-        Assert.That(result.First(di => di.Recipient == _alice).Amount, Is.EqualTo(50));
-        Assert.That(result.First(di => di.Recipient == _bob).Amount, Is.EqualTo(30));
-        Assert.That(result.First(di => di.Recipient == _charlie).Amount, Is.EqualTo(20));
+        Assert.That(result.First(di => di.RecipientId == _alice.Id).Amount, Is.EqualTo(50));
+        Assert.That(result.First(di => di.RecipientId == _bob.Id).Amount, Is.EqualTo(30));
+        Assert.That(result.First(di => di.RecipientId == _charlie.Id).Amount, Is.EqualTo(20));
     }
     
     // Test case: Person who owns an item gets the cost of that item
@@ -332,13 +332,13 @@ public class SplitCalculatorTests
         // Arrange
         SplitByItemOwnership splitData = new()
         {
-            OwnershipGroups = new Dictionary<Person, IList<string>>
+            OwnershipGroups = new Dictionary<int, List<string>>
             {
                 {
-                    _bob, ["Apple"]
+                    _bob.Id, ["Apple"]
                 },
                 {
-                    _charlie, ["Orange"]
+                    _charlie.Id, ["Orange"]
                 }
             }
         };
@@ -347,15 +347,15 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = 
+            ParticipantIds = 
             [
-                _alice,
-                _bob,
-                _charlie
+                _alice.Id,
+                _bob.Id,
+                _charlie.Id
             ],
             PayerInfos = 
             [
-                new PayerInfo(_alice, 100)
+                new PayerInfo(_alice.Id, 100)
             ],
             PurchaseItems = 
             [
@@ -370,9 +370,9 @@ public class SplitCalculatorTests
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
-        Assert.That(result.First(di => di.Recipient == _bob).Amount, Is.EqualTo(60));
-        Assert.That(result.First(di => di.Recipient == _charlie).Amount, Is.EqualTo(40));
-        Assert.That(result.First(di => di.Recipient == _alice).Amount, Is.EqualTo(0));
+        Assert.That(result.First(di => di.RecipientId == _bob.Id).Amount, Is.EqualTo(60));
+        Assert.That(result.First(di => di.RecipientId == _charlie.Id).Amount, Is.EqualTo(40));
+        Assert.That(result.First(di => di.RecipientId == _alice.Id).Amount, Is.EqualTo(0));
     }
     
     // Test case: Alice owns two items, should receive sum of both item costs
@@ -382,13 +382,13 @@ public class SplitCalculatorTests
         // Arrange
         SplitByItemOwnership splitData = new()
         {
-            OwnershipGroups = new Dictionary<Person, IList<string>>
+            OwnershipGroups = new Dictionary<int, List<string>>
             {
                 {
-                    _bob, ["Groceries"]
+                    _bob.Id, ["Groceries"]
                 },
                 {
-                    _charlie, 
+                    _charlie.Id, 
                     [
                         "Gas",
                         "Parking"
@@ -401,15 +401,15 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             Currency = "USD",
-            Participants = 
+            ParticipantIds = 
             [
-                _alice,
-                _bob,
-                _charlie
+                _alice.Id,
+                _bob.Id,
+                _charlie.Id
             ],
             PayerInfos = 
             [
-                new PayerInfo(_alice, 100)
+                new PayerInfo(_alice.Id, 100)
             ],
             PurchaseItems = 
             [
@@ -426,7 +426,7 @@ public class SplitCalculatorTests
         
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
-        Assert.That(result.First(di => di.Recipient == _bob).Amount, Is.EqualTo(60));
-        Assert.That(result.First(di => di.Recipient == _charlie).Amount, Is.EqualTo(30));
+        Assert.That(result.First(di => di.RecipientId == _bob.Id).Amount, Is.EqualTo(60));
+        Assert.That(result.First(di => di.RecipientId == _charlie.Id).Amount, Is.EqualTo(30));
     }
 }

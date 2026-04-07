@@ -4,14 +4,12 @@ namespace TripCostSplitter.Core.SplitData;
 
 public class SplitEvenlyCalculator : ISplitCalculator
 {
-    public string SplitMethod => "Evenly";
-
     public bool CanHandle(ISplitData splitData) => splitData is SplitEvenly;
 
     public IList<RecipientInfo> CalculateDebit(PaymentData paymentData)
     {
         SplitEvenly splitData = (SplitEvenly)paymentData.SplitData!;
-        IList<Person> allParticipants = paymentData.Participants;
+        IList<int> allParticipants = paymentData.ParticipantIds;
 
         if (!allParticipants.Any() || !paymentData.PayerInfos.Any())
             return new List<RecipientInfo>();
@@ -21,7 +19,7 @@ public class SplitEvenlyCalculator : ISplitCalculator
 
         List<RecipientInfo> result = [];
         
-        foreach (Person participant in allParticipants)
+        foreach (int participant in allParticipants)
         {
             result.Add(new RecipientInfo(participant, perPerson));
         }
@@ -33,7 +31,10 @@ public class SplitEvenlyCalculator : ISplitCalculator
             {
                 RecipientInfo oldRecipientInfo = result[0];
                 RecipientInfo newRecipientInfo =
-                    new RecipientInfo(oldRecipientInfo.Recipient, oldRecipientInfo.Amount + (totalPaid - resultSum));
+                    oldRecipientInfo with
+                    {
+                        Amount = oldRecipientInfo.Amount + (totalPaid - resultSum)
+                    };
                 result[0] = newRecipientInfo;
             }
         }

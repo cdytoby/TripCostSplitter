@@ -1,3 +1,3 @@
 ﻿namespace TripCostSplitter.Core.DataModels;
 
-public record PayerInfo(Person Payer, decimal Amount);
+public record PayerInfo(int PayerId, decimal Amount);

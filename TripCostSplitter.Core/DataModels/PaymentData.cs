@@ -6,8 +6,6 @@ namespace TripCostSplitter.Core.DataModels;
 
 public partial class PaymentData: ObservableObject, ITransactionData
 {
-    public string TransactionType => "Payment";
-
     [ObservableProperty]
     public required partial DateTime Date { get; set; }
     
@@ -24,7 +22,7 @@ public partial class PaymentData: ObservableObject, ITransactionData
     public required partial ObservableCollection<PayerInfo> PayerInfos { get; set; }
     
     [ObservableProperty]
-    public required partial ObservableCollection<Person> Participants { get; set; }
+    public required partial ObservableCollection<int> ParticipantIds { get; set; }
     
     [ObservableProperty]
     public required partial ObservableCollection<PurchaseItem> PurchaseItems { get; set; }

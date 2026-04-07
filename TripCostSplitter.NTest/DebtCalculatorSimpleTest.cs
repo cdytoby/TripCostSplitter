@@ -23,9 +23,9 @@ public class DebtCalculatorSimpleTest
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
-            Participants = [alice, bob],
+            ParticipantIds = [alice.Id, bob.Id],
             Currency = "USD",
-            PayerInfos = [new PayerInfo(alice, 100)],
+            PayerInfos = [new PayerInfo(alice.Id, 100)],
             PurchaseItems = []
         };
 
@@ -34,8 +34,8 @@ public class DebtCalculatorSimpleTest
             TransactionData = paymentData,
             RecipientInfos = 
             [
-                new RecipientInfo(alice, 50),
-                new RecipientInfo(bob, 50)
+                new RecipientInfo(alice.Id, 50),
+                new RecipientInfo(bob.Id, 50)
             ]
         };
         
@@ -51,8 +51,8 @@ public class DebtCalculatorSimpleTest
         
         // Assert
         Assert.That(debts, Has.Count.EqualTo(1));
-        Assert.That(debts[0].Debtor, Is.EqualTo(bob));
-        Assert.That(debts[0].Creditor, Is.EqualTo(alice));
+        Assert.That(debts[0].DebtorId, Is.EqualTo(bob.Id));
+        Assert.That(debts[0].CreditorId, Is.EqualTo(alice.Id));
         Assert.That(debts[0].Amount, Is.EqualTo(50));
     }
     
@@ -66,9 +66,9 @@ public class DebtCalculatorSimpleTest
         PaymentData payment1 = new()
         {
             Date = DateTime.Now,
-            Participants = [alice, bob],
+            ParticipantIds = [alice.Id, bob.Id],
             Currency = "USD",
-            PayerInfos = [new PayerInfo(alice, 60)],
+            PayerInfos = [new PayerInfo(alice.Id, 60)],
             PurchaseItems = []
         };
 
@@ -77,17 +77,17 @@ public class DebtCalculatorSimpleTest
             TransactionData = payment1,
             RecipientInfos = 
             [
-                new RecipientInfo(alice, 30),
-                new RecipientInfo(bob, 30)
+                new RecipientInfo(alice.Id, 30),
+                new RecipientInfo(bob.Id, 30)
             ]
         };
         
         PaymentData payment2 = new()
         {
             Date = DateTime.Now,
-            Participants = [alice, bob],
+            ParticipantIds = [alice.Id, bob.Id],
             Currency = "USD",
-            PayerInfos = [new PayerInfo(bob, 40)],
+            PayerInfos = [new PayerInfo(bob.Id, 40)],
             PurchaseItems = []
         };
 
@@ -96,8 +96,8 @@ public class DebtCalculatorSimpleTest
             TransactionData = payment2,
             RecipientInfos = 
             [
-                new RecipientInfo(alice, 20),
-                new RecipientInfo(bob, 20)
+                new RecipientInfo(alice.Id, 20),
+                new RecipientInfo(bob.Id, 20)
             ]
         };
         
@@ -117,8 +117,8 @@ public class DebtCalculatorSimpleTest
         
         // Assert
         Assert.That(debts, Has.Count.EqualTo(1));
-        Assert.That(debts[0].Debtor, Is.EqualTo(bob));
-        Assert.That(debts[0].Creditor, Is.EqualTo(alice));
+        Assert.That(debts[0].DebtorId, Is.EqualTo(bob.Id));
+        Assert.That(debts[0].CreditorId, Is.EqualTo(alice.Id));
         Assert.That(debts[0].Amount, Is.EqualTo(10));
     }
     
@@ -133,9 +133,9 @@ public class DebtCalculatorSimpleTest
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
-            Participants = [alice, bob, charlie],
+            ParticipantIds = [alice.Id, bob.Id, charlie.Id],
             Currency = "USD",
-            PayerInfos = [new PayerInfo(alice, 150)],
+            PayerInfos = [new PayerInfo(alice.Id, 150)],
             PurchaseItems = []
         };
 
@@ -144,9 +144,9 @@ public class DebtCalculatorSimpleTest
             TransactionData = paymentData,
             RecipientInfos = 
             [
-                new RecipientInfo(alice, 50),
-                new RecipientInfo(bob, 50),
-                new RecipientInfo(charlie, 50)
+                new RecipientInfo(alice.Id, 50),
+                new RecipientInfo(bob.Id, 50),
+                new RecipientInfo(charlie.Id, 50)
             ]
         };
         
@@ -163,7 +163,7 @@ public class DebtCalculatorSimpleTest
         // Assert
         Assert.That(debts, Has.Count.EqualTo(2));
         Assert.That(debts.Sum(d => d.Amount), Is.EqualTo(100));
-        Assert.That(debts.All(d => d.Creditor == alice), Is.True);
+        Assert.That(debts.All(d => d.CreditorId == alice.Id), Is.True);
     }
     
     [Test]
@@ -175,16 +175,16 @@ public class DebtCalculatorSimpleTest
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
-            Participants = [alice],
+            ParticipantIds = [alice.Id],
             Currency = "USD",
-            PayerInfos = [new PayerInfo(alice, 100)],
+            PayerInfos = [new PayerInfo(alice.Id, 100)],
             PurchaseItems = []
         };
 
         Transaction pwd = new()
         {
             TransactionData = paymentData,
-            RecipientInfos = [new RecipientInfo(alice, 100)]
+            RecipientInfos = [new RecipientInfo(alice.Id, 100)]
         };
         
         Travel travel = new()
@@ -213,9 +213,9 @@ public class DebtCalculatorSimpleTest
         PaymentData payment1 = new()
         {
             Date = DateTime.Now,
-            Participants = [alice, bob, charlie, dave],
+            ParticipantIds = [alice.Id, bob.Id, charlie.Id, dave.Id],
             Currency = "USD",
-            PayerInfos = [new PayerInfo(alice, 120)],
+            PayerInfos = [new PayerInfo(alice.Id, 120)],
             PurchaseItems = []
         };
 
@@ -224,19 +224,19 @@ public class DebtCalculatorSimpleTest
             TransactionData = payment1,
             RecipientInfos = 
             [
-                new RecipientInfo(alice, 30),
-                new RecipientInfo(bob, 30),
-                new RecipientInfo(charlie, 30),
-                new RecipientInfo(dave, 30)
+                new RecipientInfo(alice.Id, 30),
+                new RecipientInfo(bob.Id, 30),
+                new RecipientInfo(charlie.Id, 30),
+                new RecipientInfo(dave.Id, 30)
             ]
         };
         
         PaymentData payment2 = new()
         {
             Date = DateTime.Now,
-            Participants = [alice, bob, charlie, dave],
+            ParticipantIds = [alice.Id, bob.Id, charlie.Id, dave.Id],
             Currency = "USD",
-            PayerInfos = [new PayerInfo(bob, 80)],
+            PayerInfos = [new PayerInfo(bob.Id, 80)],
             PurchaseItems = []
         };
 
@@ -245,8 +245,8 @@ public class DebtCalculatorSimpleTest
             TransactionData = payment2,
             RecipientInfos = 
             [
-                new RecipientInfo(bob, 40),
-                new RecipientInfo(charlie, 40)
+                new RecipientInfo(bob.Id, 40),
+                new RecipientInfo(charlie.Id, 40)
             ]
         };
         
@@ -267,8 +267,8 @@ public class DebtCalculatorSimpleTest
         // Assert
         decimal totalDebts = debts.Sum(d => d.Amount);
         Assert.That(totalDebts, Is.EqualTo(100m).Within(0.01m));
-        Assert.That(debts.Any(d => d.Debtor == charlie), Is.True);
-        Assert.That(debts.Any(d => d.Debtor == dave), Is.True);
+        Assert.That(debts.Any(d => d.DebtorId == charlie.Id), Is.True);
+        Assert.That(debts.Any(d => d.DebtorId == dave.Id), Is.True);
     }
     
     [Test]
@@ -282,12 +282,12 @@ public class DebtCalculatorSimpleTest
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
-            Participants = [alice, bob, charlie],
+            ParticipantIds = [alice.Id, bob.Id, charlie.Id],
             Currency = "USD",
             PayerInfos = 
             [
-                new PayerInfo(alice, 60),
-                new PayerInfo(bob, 60)
+                new PayerInfo(alice.Id, 60),
+                new PayerInfo(bob.Id, 60)
             ],
             PurchaseItems = []
         };
@@ -297,9 +297,9 @@ public class DebtCalculatorSimpleTest
             TransactionData = paymentData,
             RecipientInfos =
             [
-                new RecipientInfo(alice, 40),
-                new RecipientInfo(bob, 40),
-                new RecipientInfo(charlie, 40)
+                new RecipientInfo(alice.Id, 40),
+                new RecipientInfo(bob.Id, 40),
+                new RecipientInfo(charlie.Id, 40)
             ]
         };
         
@@ -315,7 +315,7 @@ public class DebtCalculatorSimpleTest
         
         // Assert
         Assert.That(debts, Has.Count.EqualTo(2));
-        Assert.That(debts.All(d => d.Debtor == charlie), Is.True);
+        Assert.That(debts.All(d => d.DebtorId == charlie.Id), Is.True);
         Assert.That(debts.Sum(d => d.Amount), Is.EqualTo(40));
     }
     

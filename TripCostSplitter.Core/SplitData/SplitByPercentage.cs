@@ -4,9 +4,7 @@ namespace TripCostSplitter.Core.SplitData;
 
 public class SplitByPercentage: ISplitData
 {
-    public string SplitMethod => "ByPercentage";
-    
-    public Dictionary<Person, decimal> PersonPercentageDict { get; set; } = new();
+    public Dictionary<int, decimal> PersonPercentageDict { get; set; } = new();
     
     public bool TotalExactValidation { get; set; }
 }

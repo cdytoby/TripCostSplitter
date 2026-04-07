@@ -4,6 +4,5 @@ namespace TripCostSplitter.Core.SplitData;
 
 public class SplitByItemOwnership : ISplitData
 {
-    public string SplitMethod => "ByItemOwnership";
-    public Dictionary<Person, IList<string>> OwnershipGroups { get; set; } = new();
+    public Dictionary<int, List<string>> OwnershipGroups { get; set; } = new();
 }
