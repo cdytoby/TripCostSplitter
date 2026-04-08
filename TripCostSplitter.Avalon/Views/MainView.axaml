@@ -1,0 +1,30 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:TripCostSplitter.Avalon.ViewModels"
+             xmlns:views="clr-namespace:TripCostSplitter.Avalon.Views"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="800"
+             x:Class="TripCostSplitter.Avalon.Views.MainView"
+             x:DataType="vm:MainViewModel">
+    <Design.PreviewWith>
+        <vm:MainViewModel />
+    </Design.PreviewWith>
+
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="vm:TravelListViewModel">
+            <views:TravelListView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:TravelDetailViewModel">
+            <views:TravelDetailView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:TransactionDetailViewModel">
+            <views:TransactionDetailView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:DebtResultViewModel">
+            <views:DebtResultView />
+        </DataTemplate>
+    </UserControl.DataTemplates>
+
+    <ContentControl Content="{Binding CurrentViewModel}" />
+</UserControl>

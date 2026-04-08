@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\TripCostSplitter.Core\TripCostSplitter.Core.csproj" />
+      <ProjectReference Include="..\TripCostSplitter.Avalon\TripCostSplitter.Avalon.csproj" />
     </ItemGroup>
 
 </Project>

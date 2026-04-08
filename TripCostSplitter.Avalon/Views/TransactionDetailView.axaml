@@ -1,0 +1,92 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:TripCostSplitter.Avalon.ViewModels"
+             x:Class="TripCostSplitter.Avalon.Views.TransactionDetailView"
+             x:DataType="vm:TransactionDetailViewModel"
+             x:CompileBindings="False">
+    <ScrollViewer>
+        <DockPanel Margin="10">
+            <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,10">
+                <TextBlock Text="Transaction Details" FontSize="24" FontWeight="Bold"/>
+                <TextBox Text="{Binding PaymentData.Description, FallbackValue=''}" PlaceholderText="Description"/>
+                <TextBox Text="{Binding PaymentData.Currency, FallbackValue=''}" PlaceholderText="Currency"/>
+                
+                <Separator/>
+                <TextBlock Text="Who Paid?" FontWeight="Bold" FontSize="18"/>
+                <ItemsControl ItemsSource="{Binding Payers}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:PayerViewModel">
+                            <Grid ColumnDefinitions="*,100" Margin="0,2">
+                                <TextBlock Grid.Column="0" Text="{Binding Person.Name}" VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="1" Text="{Binding Amount, TargetNullValue=''}" PlaceholderText="Amount"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Separator/>
+                <TextBlock Text="Split Method" FontWeight="Bold" FontSize="18"/>
+                <StackPanel Spacing="5">
+                    <RadioButton Content="Evenly" IsChecked="{Binding IsSplitEvenly}"/>
+                    <RadioButton Content="Exact Amount" IsChecked="{Binding IsSplitExact}"/>
+                    <RadioButton Content="Percentage" IsChecked="{Binding IsSplitPercentage}"/>
+                    <RadioButton Content="Item Ownership" IsChecked="{Binding IsSplitByItemOwnership}"/>
+                </StackPanel>
+
+                <StackPanel IsVisible="{Binding !IsSplitEvenly}" Spacing="5" Margin="0,10,0,0">
+                    <TextBlock Text="Split Details" FontWeight="SemiBold"/>
+                    
+                    <!-- Exact Amount / Percentage -->
+                    <ItemsControl ItemsSource="{Binding SplitParticipants}" IsVisible="{Binding !IsSplitByItemOwnership}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:SplitParticipantViewModel">
+                                <Grid ColumnDefinitions="*,100" Margin="0,2">
+                                    <TextBlock Grid.Column="0" Text="{Binding Person.Name}" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding Value, TargetNullValue=''}" PlaceholderText="Value"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Item Ownership -->
+                    <StackPanel IsVisible="{Binding IsSplitByItemOwnership}" Spacing="5">
+                        <ItemsControl ItemsSource="{Binding Items}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:PurchaseItemViewModel">
+                                    <Border BorderBrush="Gray" BorderThickness="1" Padding="5" Margin="0,2">
+                                        <StackPanel Spacing="5">
+                                            <Grid ColumnDefinitions="*,100,Auto">
+                                                <TextBox Grid.Column="0" Text="{Binding ItemName}" PlaceholderText="Item Name"/>
+                                                <TextBox Grid.Column="1" Text="{Binding Amount}" PlaceholderText="Price"/>
+                                                <Button Grid.Column="2" Content="X" Command="{Binding $parent[UserControl].((vm:TransactionDetailViewModel)DataContext).RemoveItemCommand}" CommandParameter="{Binding}"/>
+                                            </Grid>
+                                            <TextBlock Text="Owners:" FontSize="12" Foreground="Gray"/>
+                                            <ItemsControl ItemsSource="{Binding Participants}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="vm:ItemParticipantViewModel">
+                                                        <CheckBox Content="{Binding Person.Name}" IsChecked="{Binding IsSelected}" Margin="0,0,10,0"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Button Content="Add Item" Command="{Binding AddItemCommand}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,10,0,0">
+                <Button Content="Cancel" Command="{Binding CancelCommand}"/>
+                <Button Content="Save" Command="{Binding SaveCommand}" Classes="accent"/>
+            </StackPanel>
+        </DockPanel>
+    </ScrollViewer>
+</UserControl>

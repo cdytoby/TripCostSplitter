@@ -1,0 +1,30 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:TripCostSplitter.Avalon.ViewModels"
+             x:Class="TripCostSplitter.Avalon.Views.TravelListView"
+             x:DataType="vm:TravelListViewModel"
+             x:CompileBindings="False">
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+            <TextBlock Text="Travels" FontSize="24" FontWeight="Bold" VerticalAlignment="Center"/>
+            <Button Content="Add Trip" Command="{Binding AddTravelCommand}"/>
+        </StackPanel>
+
+        <ListBox ItemsSource="{Binding Travels}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" Margin="5" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="18"/>
+                            <TextBlock Text="{Binding CalculateCurrency}" FontSize="12" Foreground="Gray"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                            <Button Content="Edit" Command="{Binding $parent[ListBox].((vm:TravelListViewModel)DataContext).EditTravelCommand}" CommandParameter="{Binding}"/>
+                            <Button Content="Delete" Command="{Binding $parent[ListBox].((vm:TravelListViewModel)DataContext).DeleteTravelCommand}" CommandParameter="{Binding}"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</UserControl>
