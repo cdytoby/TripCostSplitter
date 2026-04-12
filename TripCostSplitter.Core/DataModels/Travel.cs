@@ -5,6 +5,8 @@ namespace TripCostSplitter.Core.DataModels;
 
 public partial class Travel: ObservableObject
 {
+    public int TravelId { get; init; }
+    
     [ObservableProperty]
     public required partial string Name { get; set; }
     

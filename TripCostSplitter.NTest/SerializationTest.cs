@@ -37,6 +37,7 @@ public class TravelSerializationTests
         
         Transaction transaction = new()
         {
+            TransactionId = 1234,
             TransactionData = paymentData,
             RecipientInfos =
             [
@@ -47,6 +48,7 @@ public class TravelSerializationTests
         
         Travel originalTravel = new()
         {
+            TravelId = 5678,
             Name = "Trip",
             CalculateCurrency = "USD",
             Transactions = [transaction]
@@ -64,5 +66,6 @@ public class TravelSerializationTests
         
         // Assert
         Assert.That(deserializedTravel!.Transactions.First().TransactionData is PaymentData);
+        Assert.That(deserializedTravel!.Transactions.First().TransactionId.Equals(1234));
     }
 }
