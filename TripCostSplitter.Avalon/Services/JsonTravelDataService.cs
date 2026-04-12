@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using TripCostSplitter.Core;
 using TripCostSplitter.Core.DataModels;
+using TripCostSplitter.Core.Services;
 
 namespace TripCostSplitter.Avalon.Services;
 

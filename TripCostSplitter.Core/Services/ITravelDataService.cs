@@ -1,6 +1,6 @@
 ﻿using TripCostSplitter.Core.DataModels;
 
-namespace TripCostSplitter.Core;
+namespace TripCostSplitter.Core.Services;
 
 public interface ITravelDataService
 {

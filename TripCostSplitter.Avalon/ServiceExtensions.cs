@@ -2,6 +2,7 @@
 using TripCostSplitter.Avalon.ViewModels;
 using TripCostSplitter.Avalon.Views;
 using TripCostSplitter.Core;
+using TripCostSplitter.Core.Services;
 using TripCostSplitter.Core.SplitData;
 
 namespace TripCostSplitter.Avalon;
@@ -25,6 +26,7 @@ public static class ServiceExtensions
         services.AddTransient<DebtResultView>();
 
         // Services
+        services.AddSingleton<CurrencyService>();
 
         // Split Calculators
         services.AddSingleton<ISplitCalculator, SplitEvenlyCalculator>();

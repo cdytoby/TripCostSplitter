@@ -8,6 +8,7 @@ using TripCostSplitter.Avalon.Desktop.Services;
 using TripCostSplitter.Avalon.ViewModels;
 using TripCostSplitter.Avalon.Views;
 using TripCostSplitter.Core;
+using TripCostSplitter.Core.Services;
 
 namespace TripCostSplitter.Avalon.Desktop;
 

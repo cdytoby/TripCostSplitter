@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using TripCostSplitter.Core;
 using TripCostSplitter.Core.DataModels;
+using TripCostSplitter.Core.Services;
 
 namespace TripCostSplitter.Avalon.ViewModels;
 
