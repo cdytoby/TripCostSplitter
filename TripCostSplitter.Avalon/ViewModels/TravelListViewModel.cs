@@ -19,7 +19,12 @@ public partial class TravelListViewModel : ObservableObject
     [RelayCommand]
     public async Task AddTravel()
     {
-        Travel travel = new Travel { Name = "New Trip", CalculateCurrency = "USD", Transactions = new() };
+        Travel travel = new()
+        {
+            Name = "New Trip",
+            CalculateCurrency = "USD",
+            Transactions = []
+        };
         _main.Travels.Add(travel);
         await _main.SaveDataCommand.ExecuteAsync(null);
         _main.CurrentViewModel = _main.CreateViewModel<TravelDetailViewModel>(travel);

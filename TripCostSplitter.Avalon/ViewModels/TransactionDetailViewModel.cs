@@ -41,9 +41,9 @@ public partial class TransactionDetailViewModel : ObservableObject
         _travelDetail = travelDetail;
         _splitCalculators = splitCalculators;
         Transaction = transaction;
-        Payers = new();
-        SplitParticipants = new();
-        Items = new();
+        Payers = [];
+        SplitParticipants = [];
+        Items = [];
         IsSplitEvenly = true;
         IsSplitExact = false;
         IsSplitPercentage = false;
@@ -59,7 +59,7 @@ public partial class TransactionDetailViewModel : ObservableObject
                 SplitParticipants.Add(new SplitParticipantViewModel(person));
             }
 
-            foreach (var item in PaymentData.PurchaseItems)
+            foreach (PurchaseItem item in PaymentData.PurchaseItems)
             {
                 Items.Add(new PurchaseItemViewModel(item, _travelDetail.Participants));
             }
@@ -89,15 +89,15 @@ public partial class TransactionDetailViewModel : ObservableObject
             {
                 IsSplitEvenly = false;
                 IsSplitByItemOwnership = true;
-                foreach (var kvp in ownership.OwnershipGroups)
+                foreach (KeyValuePair<int, List<string>> kvp in ownership.OwnershipGroups)
                 {
                     int personId = kvp.Key;
                     foreach (string itemName in kvp.Value)
                     {
-                        var itemVm = Items.FirstOrDefault(i => i.Item.Item == itemName);
+                        PurchaseItemViewModel? itemVm = Items.FirstOrDefault(i => i.Item.Item == itemName);
                         if (itemVm != null)
                         {
-                            var participant = itemVm.Participants.FirstOrDefault(p => p.Person.Id == personId);
+                            ItemParticipantViewModel? participant = itemVm.Participants.FirstOrDefault(p => p.Person.Id == personId);
                             if (participant != null) participant.IsSelected = true;
                         }
                     }
@@ -122,14 +122,14 @@ public partial class TransactionDetailViewModel : ObservableObject
             }
 
             PaymentData.PurchaseItems.Clear();
-            foreach (var itemVm in Items)
+            foreach (PurchaseItemViewModel itemVm in Items)
             {
                 PaymentData.PurchaseItems.Add(itemVm.Item);
             }
 
             if (IsSplitExact)
             {
-                SplitByExactAmount exact = new SplitByExactAmount();
+                SplitByExactAmount exact = new();
                 foreach (SplitParticipantViewModel sp in SplitParticipants)
                 {
                     exact.PersonIdAmountDict[sp.Person.Id] = sp.Value;
@@ -138,7 +138,7 @@ public partial class TransactionDetailViewModel : ObservableObject
             }
             else if (IsSplitPercentage)
             {
-                SplitByPercentage percentage = new SplitByPercentage();
+                SplitByPercentage percentage = new();
                 foreach (SplitParticipantViewModel sp in SplitParticipants)
                 {
                     percentage.PersonPercentageDict[sp.Person.Id] = sp.Value;
@@ -147,13 +147,13 @@ public partial class TransactionDetailViewModel : ObservableObject
             }
             else if (IsSplitByItemOwnership)
             {
-                SplitByItemOwnership ownership = new SplitByItemOwnership();
-                foreach (var itemVm in Items)
+                SplitByItemOwnership ownership = new();
+                foreach (PurchaseItemViewModel itemVm in Items)
                 {
-                    foreach (var part in itemVm.Participants.Where(p => p.IsSelected))
+                    foreach (ItemParticipantViewModel part in itemVm.Participants.Where(p => p.IsSelected))
                     {
                         if (!ownership.OwnershipGroups.ContainsKey(part.Person.Id))
-                            ownership.OwnershipGroups[part.Person.Id] = new List<string>();
+                            ownership.OwnershipGroups[part.Person.Id] = [];
                         
                         ownership.OwnershipGroups[part.Person.Id].Add(itemVm.Item.Item);
                     }
@@ -181,7 +181,7 @@ public partial class TransactionDetailViewModel : ObservableObject
     [RelayCommand]
     public void AddItem()
     {
-        var newItem = new PurchaseItem("New Item", 0);
+        PurchaseItem newItem = new("New Item", 0);
         Items.Add(new PurchaseItemViewModel(newItem, _travelDetail.Participants));
     }
 

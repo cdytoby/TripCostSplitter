@@ -17,7 +17,7 @@ public partial class DebtResultViewModel : ObservableObject
     {
         _main = main;
         _travelDetail = travelDetail;
-        Debts = new();
+        Debts = [];
 
         foreach (DebtItem debt in debts)
         {

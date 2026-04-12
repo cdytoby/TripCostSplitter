@@ -4,6 +4,9 @@ namespace TripCostSplitter.Core.Services;
 
 public interface ITravelDataService
 {
-    Task SaveAsync(IEnumerable<Travel> travels);
-    Task<IEnumerable<Travel>> LoadAsync();
+    Task SaveAsync(Travel travel);
+    
+    Task SaveAllAsync(IEnumerable<Travel> travels);
+    
+    Task<IEnumerable<Travel>> LoadAllAsync();
 }

@@ -12,15 +12,15 @@ public partial class PurchaseItemViewModel : ObservableObject
     [ObservableProperty]
     public partial decimal Amount { get; set; }
 
-    public PurchaseItem Item => new PurchaseItem(ItemName, Amount);
+    public PurchaseItem Item => new(ItemName, Amount);
 
-    public ObservableCollection<ItemParticipantViewModel> Participants { get; } = new();
+    public ObservableCollection<ItemParticipantViewModel> Participants { get; } = [];
 
     public PurchaseItemViewModel(PurchaseItem item, IEnumerable<Person> allParticipants)
     {
         ItemName = item.Item;
         Amount = item.Amount;
-        foreach (var person in allParticipants)
+        foreach (Person person in allParticipants)
         {
             Participants.Add(new ItemParticipantViewModel(person));
         }

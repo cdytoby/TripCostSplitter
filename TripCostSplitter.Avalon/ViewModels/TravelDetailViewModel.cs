@@ -21,8 +21,8 @@ public partial class TravelDetailViewModel : ObservableObject
     {
         _main = main;
         Travel = travel;
-        Participants = new();
-        Debts = new();
+        Participants = [];
+        Debts = [];
         
         // In a real app, we'd load participants from somewhere.
         // For now, let's add some default ones if empty.
@@ -38,7 +38,7 @@ public partial class TravelDetailViewModel : ObservableObject
     [RelayCommand]
     public void UpdateDebts()
     {
-        DebtCalculator calculator = new DebtCalculator();
+        DebtCalculator calculator = new();
         List<DebtItem> debtsResult = calculator.CalculateDebts(Travel).ToList();
         
         Debts.Clear();
@@ -62,18 +62,18 @@ public partial class TravelDetailViewModel : ObservableObject
     [RelayCommand]
     public void AddTransaction()
     {
-        PaymentData transactionData = new PaymentData
+        PaymentData transactionData = new()
         {
             Date = DateTime.Now,
             Currency = Travel.CalculateCurrency,
-            PayerInfos = new(),
+            PayerInfos = [],
             ParticipantIds = new(Participants.Select(p => p.Id)),
-            PurchaseItems = new()
+            PurchaseItems = []
         };
-        Transaction transaction = new Transaction
+        Transaction transaction = new()
         {
             TransactionData = transactionData,
-            RecipientInfos = new()
+            RecipientInfos = []
         };
         Travel.Transactions.Add(transaction);
         _main.CurrentViewModel = _main.CreateViewModel<TransactionDetailViewModel>(this, transaction);
@@ -95,7 +95,7 @@ public partial class TravelDetailViewModel : ObservableObject
     [RelayCommand]
     public void ViewDebts()
     {
-        DebtCalculator calculator = new DebtCalculator();
+        DebtCalculator calculator = new();
         List<DebtItem> debts = calculator.CalculateDebts(Travel).ToList();
         _main.CurrentViewModel = _main.CreateViewModel<DebtResultViewModel>(this, debts);
     }

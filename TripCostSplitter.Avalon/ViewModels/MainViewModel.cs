@@ -24,19 +24,19 @@ public partial class MainViewModel : ObservableObject
     {
         _serviceProvider = null!;
         _dataService = null!;
-        Travels = new();
+        Travels = [];
     }
 
     public MainViewModel(IServiceProvider serviceProvider, ITravelDataService dataService)
     {
         _serviceProvider = serviceProvider;
         _dataService = dataService;
-        Travels = new();
+        Travels = [];
     }
 
     public async Task InitializeAsync()
     {
-        var loadedTravels = await _dataService.LoadAsync();
+        IEnumerable<Travel> loadedTravels = await _dataService.LoadAllAsync();
         Travels = new ObservableCollection<Travel>(loadedTravels);
 
         if (CurrentViewModel == null)
@@ -46,13 +46,13 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     public async Task SaveData()
     {
-        await _dataService.SaveAsync(Travels);
+        await _dataService.SaveAllAsync(Travels);
     }
 
     [RelayCommand]
     public async Task GoBack()
     {
-        await _dataService.SaveAsync(Travels);
+        await _dataService.SaveAllAsync(Travels);
         CurrentViewModel = _serviceProvider.GetRequiredService<TravelListViewModel>();
     }
 
