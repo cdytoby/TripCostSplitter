@@ -1,26 +1,31 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using TripCostSplitter.Avalon.Services;
 using TripCostSplitter.Core;
 using TripCostSplitter.Core.DataModels;
 
 namespace TripCostSplitter.Avalon.ViewModels;
 
-public partial class TravelDetailViewModel : ObservableObject
+public partial class TravelDetailViewModel: ObservableObject
 {
-    private readonly MainViewModel _main;
+    private readonly MainViewModel main;
+    private readonly AccessManager accessManager;
+    
     public Travel Travel { get; }
-
+    
     [ObservableProperty]
     public partial ObservableCollection<Person> Participants { get; set; }
-
+    
     [ObservableProperty]
     public partial ObservableCollection<DebtDisplayItem> Debts { get; set; }
-
-    public TravelDetailViewModel(MainViewModel main, Travel travel)
+    
+    public TravelDetailViewModel(MainViewModel _main, Travel _travel, AccessManager _accessManager)
     {
-        _main = main;
-        Travel = travel;
+        main = _main;
+        Travel = _travel;
+        accessManager = _accessManager;
+        
         Participants = [];
         Debts = [];
         
@@ -34,7 +39,7 @@ public partial class TravelDetailViewModel : ObservableObject
         
         UpdateDebts();
     }
-
+    
     [RelayCommand]
     public void UpdateDebts()
     {
@@ -45,11 +50,12 @@ public partial class TravelDetailViewModel : ObservableObject
         foreach (DebtItem debt in debtsResult)
         {
             string debtorName = Participants.FirstOrDefault(p => p.Id == debt.DebtorId)?.Name ?? $"ID {debt.DebtorId}";
-            string creditorName = Participants.FirstOrDefault(p => p.Id == debt.CreditorId)?.Name ?? $"ID {debt.CreditorId}";
+            string creditorName = Participants.FirstOrDefault(p => p.Id == debt.CreditorId)?.Name ??
+                $"ID {debt.CreditorId}";
             Debts.Add(new DebtDisplayItem(debtorName, creditorName, debt.Amount));
         }
     }
-
+    
     [RelayCommand]
     public void AddPerson(string name)
     {
@@ -58,7 +64,7 @@ public partial class TravelDetailViewModel : ObservableObject
         Participants.Add(new Person(newId, name));
         UpdateDebts();
     }
-
+    
     [RelayCommand]
     public void AddTransaction()
     {
@@ -72,37 +78,38 @@ public partial class TravelDetailViewModel : ObservableObject
         };
         Transaction transaction = new()
         {
+            TransactionId = accessManager.GetNextId(),
             TransactionData = transactionData,
             RecipientInfos = []
         };
         Travel.Transactions.Add(transaction);
-        _main.CurrentViewModel = _main.CreateViewModel<TransactionDetailViewModel>(this, transaction);
+        main.CurrentViewModel = main.CreateViewModel<TransactionDetailViewModel>(this, transaction);
     }
-
+    
     [RelayCommand]
     public void EditTransaction(Transaction transaction)
     {
-        _main.CurrentViewModel = _main.CreateViewModel<TransactionDetailViewModel>(this, transaction);
+        main.CurrentViewModel = main.CreateViewModel<TransactionDetailViewModel>(this, transaction);
     }
-
+    
     [RelayCommand]
     public void DeleteTransaction(Transaction transaction)
     {
         Travel.Transactions.Remove(transaction);
         UpdateDebts();
     }
-
+    
     [RelayCommand]
     public void ViewDebts()
     {
         DebtCalculator calculator = new();
         List<DebtItem> debts = calculator.CalculateDebts(Travel).ToList();
-        _main.CurrentViewModel = _main.CreateViewModel<DebtResultViewModel>(this, debts);
+        main.CurrentViewModel = main.CreateViewModel<DebtResultViewModel>(this, debts);
     }
-
+    
     [RelayCommand]
     public void Back()
     {
-        _main.GoBack();
+        main.GoBack();
     }
 }

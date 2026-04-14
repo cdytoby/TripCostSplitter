@@ -4,4 +4,4 @@ using TripCostSplitter.Avalon.Services;
 
 namespace TripCostSplitter.Avalon.Desktop.Services;
 
-public class DesktopTravelDataService(): JsonTravelDataService(AppContext.BaseDirectory);
+public class DesktopDataService(): JsonDataService(Path.Combine(AppContext.BaseDirectory, "AppData"));

@@ -23,7 +23,7 @@ public partial class App : Avalonia.Application
         serviceCollection.AddTripCostSplitterServices();
         
         // Register platform-specific services
-        serviceCollection.AddSingleton<ITravelDataService, AndroidTravelDataService>();
+        serviceCollection.AddSingleton<IDataService, AndroidDataService>();
 
         Services = serviceCollection.BuildServiceProvider();
     }

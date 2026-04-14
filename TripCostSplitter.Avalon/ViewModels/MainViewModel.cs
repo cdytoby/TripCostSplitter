@@ -11,7 +11,7 @@ namespace TripCostSplitter.Avalon.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ITravelDataService _dataService;
+    private readonly IDataService _dataService;
 
     [ObservableProperty]
     public partial ObservableObject? CurrentViewModel { get; set; }
@@ -27,7 +27,7 @@ public partial class MainViewModel : ObservableObject
         Travels = [];
     }
 
-    public MainViewModel(IServiceProvider serviceProvider, ITravelDataService dataService)
+    public MainViewModel(IServiceProvider serviceProvider, IDataService dataService)
     {
         _serviceProvider = serviceProvider;
         _dataService = dataService;
@@ -36,7 +36,7 @@ public partial class MainViewModel : ObservableObject
 
     public async Task InitializeAsync()
     {
-        IEnumerable<Travel> loadedTravels = await _dataService.LoadAllAsync();
+        IEnumerable<Travel> loadedTravels = await _dataService.LoadAllTravelsAsync();
         Travels = new ObservableCollection<Travel>(loadedTravels);
 
         if (CurrentViewModel == null)
@@ -46,19 +46,14 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     public async Task SaveData()
     {
-        await _dataService.SaveAllAsync(Travels);
+        await _dataService.SaveAllTravelsAsync(Travels);
     }
 
     [RelayCommand]
     public async Task GoBack()
     {
-        await _dataService.SaveAllAsync(Travels);
+        await _dataService.SaveAllTravelsAsync(Travels);
         CurrentViewModel = _serviceProvider.GetRequiredService<TravelListViewModel>();
-    }
-
-    public T ResolveViewModel<T>() where T : notnull
-    {
-        return _serviceProvider.GetRequiredService<T>();
     }
 
     public T CreateViewModel<T>(params object[] parameters) where T : notnull

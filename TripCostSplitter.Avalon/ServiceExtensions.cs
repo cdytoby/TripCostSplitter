@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TripCostSplitter.Avalon.Services;
 using TripCostSplitter.Avalon.ViewModels;
 using TripCostSplitter.Avalon.Views;
 using TripCostSplitter.Core;
@@ -27,6 +28,7 @@ public static class ServiceExtensions
 
         // Services
         services.AddSingleton<CurrencyService>();
+        services.AddSingleton<AccessManager>();
 
         // Split Calculators
         services.AddSingleton<ISplitCalculator, SplitEvenlyCalculator>();

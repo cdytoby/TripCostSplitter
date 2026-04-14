@@ -24,7 +24,7 @@ public partial class App : Application
         serviceCollection.AddTripCostSplitterServices();
         
         // Register platform-specific services
-        serviceCollection.AddSingleton<ITravelDataService, DesktopTravelDataService>();
+        serviceCollection.AddSingleton<IDataService, DesktopDataService>();
 
         Services = serviceCollection.BuildServiceProvider();
     }
