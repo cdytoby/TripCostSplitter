@@ -1,7 +1,13 @@
 <Solution>
-  <Project Path="TripCostSplitter.Avalon.Android/TripCostSplitter.Avalon.Android.csproj" />
-  <Project Path="TripCostSplitter.Avalon.Desktop/TripCostSplitter.Avalon.Desktop.csproj" />
-  <Project Path="TripCostSplitter.Avalon/TripCostSplitter.Avalon.csproj" />
-  <Project Path="TripCostSplitter.Core/TripCostSplitter.Core.csproj" />
-  <Project Path="TripCostSplitter.NTest/TripCostSplitter.NTest.csproj" />
+  <Folder Name="/ACore/">
+    <Project Path="TripCostSplitter.Core/TripCostSplitter.Core.csproj" />
+  </Folder>
+  <Folder Name="/LApp/">
+    <Project Path="TripCostSplitter.Avalon.Android/TripCostSplitter.Avalon.Android.csproj" />
+    <Project Path="TripCostSplitter.Avalon.Desktop/TripCostSplitter.Avalon.Desktop.csproj" />
+    <Project Path="TripCostSplitter.Avalon/TripCostSplitter.Avalon.csproj" />
+  </Folder>
+  <Folder Name="/ZTest/">
+    <Project Path="TripCostSplitter.NTest/TripCostSplitter.NTest.csproj" />
+  </Folder>
 </Solution>
