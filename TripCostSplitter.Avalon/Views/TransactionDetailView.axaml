@@ -1,13 +1,13 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+﻿<ContentPage xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:TripCostSplitter.Avalon.ViewModels"
              x:Class="TripCostSplitter.Avalon.Views.TransactionDetailView"
              x:DataType="vm:TransactionDetailViewModel"
-             x:CompileBindings="False">
+             x:CompileBindings="False"
+             Header="Transaction Details">
     <ScrollViewer>
         <DockPanel Margin="10">
             <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,10">
-                <TextBlock Text="Transaction Details" FontSize="24" FontWeight="Bold"/>
                 <TextBox Text="{Binding PaymentData.Description, FallbackValue=''}" PlaceholderText="Description"/>
                 <TextBox Text="{Binding PaymentData.Currency, FallbackValue=''}" PlaceholderText="Currency"/>
                 
@@ -58,7 +58,7 @@
                                             <Grid ColumnDefinitions="*,100,Auto">
                                                 <TextBox Grid.Column="0" Text="{Binding ItemName}" PlaceholderText="Item Name"/>
                                                 <TextBox Grid.Column="1" Text="{Binding Amount}" PlaceholderText="Price"/>
-                                                <Button Grid.Column="2" Content="X" Command="{Binding $parent[UserControl].((vm:TransactionDetailViewModel)DataContext).RemoveItemCommand}" CommandParameter="{Binding}"/>
+                                                <Button Grid.Column="2" Content="X" Command="{Binding $parent[ContentPage].((vm:TransactionDetailViewModel)DataContext).RemoveItemCommand}" CommandParameter="{Binding}"/>
                                             </Grid>
                                             <TextBlock Text="Owners:" FontSize="12" Foreground="Gray"/>
                                             <ItemsControl ItemsSource="{Binding Participants}">
@@ -89,4 +89,4 @@
             </StackPanel>
         </DockPanel>
     </ScrollViewer>
-</UserControl>
+</ContentPage>

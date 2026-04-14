@@ -50,7 +50,8 @@ public abstract class JsonDataService: IDataService
         AccessManagerData? loadData = null;
         try
         {
-            loadData = JsonSerializer.Deserialize<AccessManagerData>(await File.ReadAllTextAsync(fullPath));
+            string textData = await File.ReadAllTextAsync(fullPath).ConfigureAwait(false);
+            loadData = JsonSerializer.Deserialize<AccessManagerData>(textData);
         }
         catch
         {
@@ -91,7 +92,7 @@ public abstract class JsonDataService: IDataService
             IEnumerable<string> files = Directory.EnumerateFiles(folderPath);
             foreach (string fileName in files)
             {
-                string json = await File.ReadAllTextAsync(fileName);
+                string json = await File.ReadAllTextAsync(fileName).ConfigureAwait(false);
                 Travel? thisTravel = JsonSerializer.Deserialize<Travel>(json);
                 if (thisTravel != null)
                     result.Add(thisTravel);

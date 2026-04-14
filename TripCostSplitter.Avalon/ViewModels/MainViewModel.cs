@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using TripCostSplitter.Avalon.Services;
 using TripCostSplitter.Core;
 using TripCostSplitter.Core.DataModels;
 using TripCostSplitter.Core.Services;
@@ -12,9 +13,7 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IDataService _dataService;
-
-    [ObservableProperty]
-    public partial ObservableObject? CurrentViewModel { get; set; }
+    private readonly INavigationService _navigationService;
 
     [ObservableProperty]
     public partial ObservableCollection<Travel> Travels { get; set; }
@@ -24,13 +23,15 @@ public partial class MainViewModel : ObservableObject
     {
         _serviceProvider = null!;
         _dataService = null!;
+        _navigationService = null!;
         Travels = [];
     }
 
-    public MainViewModel(IServiceProvider serviceProvider, IDataService dataService)
+    public MainViewModel(IServiceProvider serviceProvider, IDataService dataService, INavigationService navigationService)
     {
         _serviceProvider = serviceProvider;
         _dataService = dataService;
+        _navigationService = navigationService;
         Travels = [];
     }
 
@@ -39,8 +40,7 @@ public partial class MainViewModel : ObservableObject
         IEnumerable<Travel> loadedTravels = await _dataService.LoadAllTravelsAsync();
         Travels = new ObservableCollection<Travel>(loadedTravels);
 
-        if (CurrentViewModel == null)
-            CurrentViewModel = _serviceProvider.GetRequiredService<TravelListViewModel>();
+        await _navigationService.PushAsync<TravelListViewModel>();
     }
 
     [RelayCommand]
@@ -53,7 +53,7 @@ public partial class MainViewModel : ObservableObject
     public async Task GoBack()
     {
         await _dataService.SaveAllTravelsAsync(Travels);
-        CurrentViewModel = _serviceProvider.GetRequiredService<TravelListViewModel>();
+        await _navigationService.PopAsync();
     }
 
     public T CreateViewModel<T>(params object[] parameters) where T : notnull

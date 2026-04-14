@@ -11,6 +11,7 @@ public partial class TravelDetailViewModel: ObservableObject
 {
     private readonly MainViewModel main;
     private readonly AccessManager accessManager;
+    private readonly INavigationService navigationService;
     
     public Travel Travel { get; }
     
@@ -20,11 +21,12 @@ public partial class TravelDetailViewModel: ObservableObject
     [ObservableProperty]
     public partial ObservableCollection<DebtDisplayItem> Debts { get; set; }
     
-    public TravelDetailViewModel(MainViewModel _main, Travel _travel, AccessManager _accessManager)
+    public TravelDetailViewModel(MainViewModel _main, Travel _travel, AccessManager _accessManager, INavigationService _navigationService)
     {
         main = _main;
         Travel = _travel;
         accessManager = _accessManager;
+        navigationService = _navigationService;
         
         Participants = [];
         Debts = [];
@@ -66,7 +68,7 @@ public partial class TravelDetailViewModel: ObservableObject
     }
     
     [RelayCommand]
-    public void AddTransaction()
+    public async Task AddTransaction()
     {
         PaymentData transactionData = new()
         {
@@ -83,13 +85,13 @@ public partial class TravelDetailViewModel: ObservableObject
             RecipientInfos = []
         };
         Travel.Transactions.Add(transaction);
-        main.CurrentViewModel = main.CreateViewModel<TransactionDetailViewModel>(this, transaction);
+        await navigationService.PushAsync<TransactionDetailViewModel>(this, transaction);
     }
     
     [RelayCommand]
-    public void EditTransaction(Transaction transaction)
+    public async Task EditTransaction(Transaction transaction)
     {
-        main.CurrentViewModel = main.CreateViewModel<TransactionDetailViewModel>(this, transaction);
+        await navigationService.PushAsync<TransactionDetailViewModel>(this, transaction);
     }
     
     [RelayCommand]
@@ -100,16 +102,17 @@ public partial class TravelDetailViewModel: ObservableObject
     }
     
     [RelayCommand]
-    public void ViewDebts()
+    public async Task ViewDebts()
     {
         DebtCalculator calculator = new();
         List<DebtItem> debts = calculator.CalculateDebts(Travel).ToList();
-        main.CurrentViewModel = main.CreateViewModel<DebtResultViewModel>(this, debts);
+        await navigationService.PushAsync<DebtResultViewModel>(this, debts);
     }
     
     [RelayCommand]
-    public void Back()
+    public async Task Back()
     {
-        main.GoBack();
+        await main.SaveDataCommand.ExecuteAsync(null);
+        await navigationService.PopAsync();
     }
 }

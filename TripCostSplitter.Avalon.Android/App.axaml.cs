@@ -33,10 +33,12 @@ public partial class App : Avalonia.Application
         if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)
         {
             var mainViewModel = Services?.GetRequiredService<MainViewModel>();
-            singleView.MainView = new MainView
+            var mainView = Services?.GetRequiredService<MainView>();
+            if (mainView != null)
             {
-                DataContext = mainViewModel
-            };
+                mainView.DataContext = mainViewModel;
+                singleView.MainView = mainView;
+            }
             
             _ = mainViewModel?.InitializeAsync();
         }

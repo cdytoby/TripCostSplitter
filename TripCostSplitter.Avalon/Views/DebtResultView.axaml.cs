@@ -2,7 +2,7 @@
 
 namespace TripCostSplitter.Avalon.Views;
 
-public partial class DebtResultView : UserControl
+public partial class DebtResultView : ContentPage
 {
     public DebtResultView()
     {

@@ -4,9 +4,9 @@ namespace TripCostSplitter.Core.Services;
 
 public interface IDataService
 {
-    public Task SaveAccessData(AccessManagerData accessData);
+    Task SaveAccessData(AccessManagerData accessData);
     
-    public Task<AccessManagerData> LoadAccessData();
+    Task<AccessManagerData> LoadAccessData();
     
     Task SaveTravelAsync(Travel travel);
     

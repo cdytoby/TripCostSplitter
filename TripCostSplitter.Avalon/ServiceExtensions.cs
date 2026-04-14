@@ -27,6 +27,8 @@ public static class ServiceExtensions
         services.AddTransient<DebtResultView>();
 
         // Services
+        services.AddSingleton<INavigationService, NavigationService>();
+        services.AddSingleton<NavigationService>(sp => (NavigationService)sp.GetRequiredService<INavigationService>());
         services.AddSingleton<CurrencyService>();
         services.AddSingleton<AccessManager>();
 

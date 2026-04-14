@@ -1,15 +1,11 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+﻿<ContentPage xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:TripCostSplitter.Avalon.ViewModels"
              x:Class="TripCostSplitter.Avalon.Views.DebtResultView"
              x:DataType="vm:DebtResultViewModel"
-             x:CompileBindings="False">
+             x:CompileBindings="False"
+             Header="Who owes who">
     <DockPanel Margin="10">
-        <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,10">
-            <Button Content="Back" Command="{Binding BackCommand}"/>
-            <TextBlock Text="Who owes who" FontSize="24" FontWeight="Bold"/>
-        </StackPanel>
-
         <ListBox ItemsSource="{Binding Debts}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -25,4 +21,4 @@
             </ListBox.ItemTemplate>
         </ListBox>
     </DockPanel>
-</UserControl>
+</ContentPage>

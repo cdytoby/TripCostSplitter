@@ -9,5 +9,4 @@
         mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="800"
         x:Class="TripCostSplitter.Avalon.Desktop.Views.MainWindow"
         Title="Trip Cost Splitter">
-    <views:MainView />
 </Window>

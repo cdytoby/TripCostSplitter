@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<NavigationPage
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,20 +11,4 @@
     d:DesignHeight="800"
     x:DataType="vm:MainViewModel">
 
-    <UserControl.DataTemplates>
-        <DataTemplate DataType="vm:TravelListViewModel">
-            <views:TravelListView />
-        </DataTemplate>
-        <DataTemplate DataType="vm:TravelDetailViewModel">
-            <views:TravelDetailView />
-        </DataTemplate>
-        <DataTemplate DataType="vm:TransactionDetailViewModel">
-            <views:TransactionDetailView />
-        </DataTemplate>
-        <DataTemplate DataType="vm:DebtResultViewModel">
-            <views:DebtResultView />
-        </DataTemplate>
-    </UserControl.DataTemplates>
-
-    <ContentControl Content="{Binding CurrentViewModel}" />
-</UserControl>
+</NavigationPage>

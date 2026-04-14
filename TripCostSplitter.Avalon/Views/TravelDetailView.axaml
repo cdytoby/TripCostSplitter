@@ -1,18 +1,13 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+﻿<ContentPage xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:TripCostSplitter.Avalon.ViewModels"
              xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
              x:Class="TripCostSplitter.Avalon.Views.TravelDetailView"
              x:DataType="vm:TravelDetailViewModel"
-             x:CompileBindings="False">
-    <Grid RowDefinitions="Auto,*">
-        <!-- Top bar with Back button -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="10,5">
-            <Button Content="Back" Command="{Binding BackCommand}"/>
-            <TextBlock Text="{Binding Travel.Name}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
-        </StackPanel>
-
-        <TabControl Grid.Row="1" TabStripPlacement="Bottom">
+             x:CompileBindings="False"
+             Header="{Binding Travel.Name}">
+    <Grid RowDefinitions="*">
+        <TabControl Grid.Row="0" TabStripPlacement="Bottom">
             <!-- Tab 1: Details & Participants -->
             <TabItem Header="Details">
                 <ScrollViewer>
@@ -55,8 +50,8 @@
                                         <TextBlock Text="{Binding TransactionData.Date, StringFormat='{}{0:d}'}" FontSize="12" Foreground="Gray"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
-                                        <Button Content="Edit" Command="{Binding $parent[UserControl].((vm:TravelDetailViewModel)DataContext).EditTransactionCommand}" CommandParameter="{Binding}"/>
-                                        <Button Content="Del" Command="{Binding $parent[UserControl].((vm:TravelDetailViewModel)DataContext).DeleteTransactionCommand}" CommandParameter="{Binding}"/>
+                                        <Button Content="Edit" Command="{Binding $parent[ContentPage].((vm:TravelDetailViewModel)DataContext).EditTransactionCommand}" CommandParameter="{Binding}"/>
+                                        <Button Content="Del" Command="{Binding $parent[ContentPage].((vm:TravelDetailViewModel)DataContext).DeleteTransactionCommand}" CommandParameter="{Binding}"/>
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>
@@ -90,4 +85,4 @@
             </TabItem>
         </TabControl>
     </Grid>
-</UserControl>
+</ContentPage>

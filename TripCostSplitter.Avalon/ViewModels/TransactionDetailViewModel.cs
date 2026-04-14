@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using TripCostSplitter.Avalon.Services;
 using TripCostSplitter.Core.DataModels;
 using TripCostSplitter.Core.SplitData;
 
@@ -11,6 +12,7 @@ public partial class TransactionDetailViewModel : ObservableObject
     private readonly MainViewModel _main;
     private readonly TravelDetailViewModel _travelDetail;
     private readonly IEnumerable<ISplitCalculator> _splitCalculators;
+    private readonly INavigationService _navigationService;
     public Transaction Transaction { get; }
     public PaymentData? PaymentData => Transaction.TransactionData as PaymentData;
 
@@ -35,11 +37,12 @@ public partial class TransactionDetailViewModel : ObservableObject
     [ObservableProperty]
     public partial ObservableCollection<PurchaseItemViewModel> Items { get; set; }
 
-    public TransactionDetailViewModel(MainViewModel main, TravelDetailViewModel travelDetail, Transaction transaction, IEnumerable<ISplitCalculator> splitCalculators)
+    public TransactionDetailViewModel(MainViewModel main, TravelDetailViewModel travelDetail, Transaction transaction, IEnumerable<ISplitCalculator> splitCalculators, INavigationService navigationService)
     {
         _main = main;
         _travelDetail = travelDetail;
         _splitCalculators = splitCalculators;
+        _navigationService = navigationService;
         Transaction = transaction;
         Payers = [];
         SplitParticipants = [];
@@ -111,7 +114,7 @@ public partial class TransactionDetailViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void Save()
+    public async Task Save()
     {
         if (PaymentData != null)
         {
@@ -175,7 +178,7 @@ public partial class TransactionDetailViewModel : ObservableObject
         }
         
         _travelDetail.UpdateDebts();
-        _main.CurrentViewModel = _travelDetail;
+        await _navigationService.PopAsync();
     }
 
     [RelayCommand]
@@ -192,8 +195,8 @@ public partial class TransactionDetailViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void Cancel()
+    public async Task Cancel()
     {
-        _main.CurrentViewModel = _travelDetail;
+        await _navigationService.PopAsync();
     }
 }

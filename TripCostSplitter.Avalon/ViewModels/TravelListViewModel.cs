@@ -10,13 +10,15 @@ public partial class TravelListViewModel: ObservableObject
 {
     private readonly MainViewModel main;
     private readonly AccessManager accessManager;
+    private readonly INavigationService navigationService;
     
     public ObservableCollection<Travel> Travels => main.Travels;
     
-    public TravelListViewModel(MainViewModel _main, AccessManager _accessManager)
+    public TravelListViewModel(MainViewModel _main, AccessManager _accessManager, INavigationService _navigationService)
     {
         main = _main;
         accessManager = _accessManager;
+        navigationService = _navigationService;
     }
     
     [RelayCommand]
@@ -31,13 +33,13 @@ public partial class TravelListViewModel: ObservableObject
         };
         main.Travels.Add(travel);
         await main.SaveDataCommand.ExecuteAsync(null);
-        main.CurrentViewModel = main.CreateViewModel<TravelDetailViewModel>(travel);
+        await navigationService.PushAsync<TravelDetailViewModel>(travel);
     }
     
     [RelayCommand]
-    public void EditTravel(Travel travel)
+    public async Task EditTravel(Travel travel)
     {
-        main.CurrentViewModel = main.CreateViewModel<TravelDetailViewModel>(travel);
+        await navigationService.PushAsync<TravelDetailViewModel>(travel);
     }
     
     [RelayCommand]
