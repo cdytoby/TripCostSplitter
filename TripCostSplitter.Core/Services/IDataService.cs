@@ -13,4 +13,6 @@ public interface IDataService
     Task SaveAllTravelsAsync(IEnumerable<Travel> travels);
     
     Task<IEnumerable<Travel>> LoadAllTravelsAsync();
+    
+    Task DeleteTravelAsync(Travel travel);
 }

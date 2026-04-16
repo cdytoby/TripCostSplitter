@@ -3,8 +3,8 @@
              xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
              xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
              x:Class="TripCostSplitter.Avalon.Views.TravelDetailView"
-             x:DataType="vm:TravelDetailViewModel"
              x:CompileBindings="False"
+             DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}"
              Header="{Binding Travel.Name}">
     <Grid RowDefinitions="*">
         <TabControl Grid.Row="0" TabStripPlacement="Bottom">

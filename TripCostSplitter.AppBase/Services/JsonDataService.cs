@@ -106,4 +106,13 @@ public abstract class JsonDataService: IDataService
         
         return result;
     }
+    
+    public Task DeleteTravelAsync(Travel travel)
+    {
+        string fileName = travel.TravelId + ".json";
+        string fullPath = Path.Combine(appDataRootPath, TravelFolderName, fileName);
+        File.Delete(fullPath);
+        
+        return Task.CompletedTask;
+    }
 }

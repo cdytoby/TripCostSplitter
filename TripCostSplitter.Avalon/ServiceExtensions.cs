@@ -27,9 +27,11 @@ public static class ServiceExtensions
         services.AddTransient<DebtResultView>();
 
         // Services
+        services.AddSingleton<IAppDispatcherService, AvalonDispatcherService>();
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<CurrencyService>();
         services.AddSingleton<AccessManager>();
+        services.AddSingleton<SessionService>();
 
         // Split Calculators
         services.AddSingleton<ISplitCalculator, SplitEvenlyCalculator>();

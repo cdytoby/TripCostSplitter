@@ -10,6 +10,7 @@ namespace TripCostSplitter.AppBase.ViewModels;
 public partial class TravelDetailViewModel: ObservableObject
 {
     private readonly AccessManager accessManager;
+    private readonly SessionService sessionService;
     private readonly INavigationService navigationService;
     
     public Travel Travel { get; }
@@ -20,11 +21,17 @@ public partial class TravelDetailViewModel: ObservableObject
     [ObservableProperty]
     public partial ObservableCollection<DebtDisplayItem> Debts { get; set; }
     
-    public TravelDetailViewModel(Travel _travel, AccessManager _accessManager, INavigationService _navigationService)
+    public TravelDetailViewModel(
+        AccessManager _accessManager,
+        INavigationService _navigationService,
+        SessionService _sessionService)
     {
-        Travel = _travel;
         accessManager = _accessManager;
         navigationService = _navigationService;
+        sessionService = _sessionService;
+        
+        //todo exception or load state with nullable
+        Travel = sessionService.CurrentTravel!;
         
         Participants = [];
         Debts = [];
