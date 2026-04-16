@@ -1,3 +1,3 @@
-﻿namespace TripCostSplitter.Avalon.ViewModels;
+﻿namespace TripCostSplitter.AppBase.ViewModels;
 
 public record DebtDisplayItem(string DebtorName, string CreditorName, decimal Amount);

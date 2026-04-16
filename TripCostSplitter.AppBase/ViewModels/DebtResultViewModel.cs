@@ -1,23 +1,21 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using TripCostSplitter.Avalon.Services;
+using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.Core.DataModels;
 
-namespace TripCostSplitter.Avalon.ViewModels;
+namespace TripCostSplitter.AppBase.ViewModels;
 
 public partial class DebtResultViewModel : ObservableObject
 {
-    private readonly MainViewModel _main;
     private readonly TravelDetailViewModel _travelDetail;
     private readonly INavigationService _navigationService;
 
     [ObservableProperty]
     public partial ObservableCollection<DebtDisplayItem> Debts { get; set; }
 
-    public DebtResultViewModel(MainViewModel main, TravelDetailViewModel travelDetail, List<DebtItem> debts, INavigationService navigationService)
+    public DebtResultViewModel(TravelDetailViewModel travelDetail, List<DebtItem> debts, INavigationService navigationService)
     {
-        _main = main;
         _travelDetail = travelDetail;
         _navigationService = navigationService;
         Debts = [];

@@ -20,6 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TripCostSplitter.Core\TripCostSplitter.Core.csproj" />
+      <ProjectReference Include="..\TripCostSplitter.AppBase\TripCostSplitter.AppBase.csproj" />
     </ItemGroup>
 </Project>

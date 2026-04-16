@@ -2,51 +2,52 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using TripCostSplitter.Avalon.ViewModels;
+using TripCostSplitter.AppBase;
+using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.Avalon.Views;
 
 namespace TripCostSplitter.Avalon.Services;
 
-public class NavigationService : INavigationService
+public class NavigationService: INavigationService
 {
     private readonly IServiceProvider _serviceProvider;
     private NavigationPage? _navigationPage;
-
+    
     public NavigationService(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
-
+    
     public void SetNavigationPage(NavigationPage navigationPage)
     {
         _navigationPage = navigationPage;
     }
-
-    public async Task PushAsync<TViewModel>(params object[] parameters) where TViewModel : class
+    
+    public async Task PushAsync(string pageId)
     {
-        if (_navigationPage == null) throw new InvalidOperationException("NavigationPage not set.");
-
-        TViewModel viewModel = ActivatorUtilities.CreateInstance<TViewModel>(_serviceProvider, parameters);
-        Page view = GetViewForViewModel(viewModel);
-        view.DataContext = viewModel;
+        if (_navigationPage == null)
+            throw new InvalidOperationException("NavigationPage not set.");
+        
+        Page view = GetPageFromId(pageId);
         await _navigationPage.PushAsync(view);
     }
-
+    
     public async Task PopAsync()
     {
-        if (_navigationPage == null) throw new InvalidOperationException("NavigationPage not set.");
+        if (_navigationPage == null)
+            throw new InvalidOperationException("NavigationPage not set.");
+        
         await _navigationPage.PopAsync();
     }
-
-    private Page GetViewForViewModel(object viewModel)
+    
+    private Page GetPageFromId(string pageId)
     {
-        return viewModel switch
+        return pageId switch
         {
-            TravelListViewModel => (Page)_serviceProvider.GetRequiredService<TravelListView>(),
-            TravelDetailViewModel => (Page)_serviceProvider.GetRequiredService<TravelDetailView>(),
-            TransactionDetailViewModel => (Page)_serviceProvider.GetRequiredService<TransactionDetailView>(),
-            DebtResultViewModel => (Page)_serviceProvider.GetRequiredService<DebtResultView>(),
-            _ => throw new Exception($"Unknown view model type: {viewModel.GetType()}")
+            ViewDefinition.TravelListView => _serviceProvider.GetRequiredService<TravelListView>(),
+            ViewDefinition.TravelDetailView => _serviceProvider.GetRequiredService<TravelDetailView>(),
+            ViewDefinition.TransactionDetailView => _serviceProvider.GetRequiredService<TransactionDetailView>(),
+            _ => throw new Exception($"Unknown pageId: {pageId}")
         };
     }
 }

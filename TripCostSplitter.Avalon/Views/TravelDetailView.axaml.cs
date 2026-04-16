@@ -2,7 +2,7 @@
 
 namespace TripCostSplitter.Avalon.Views;
 
-public partial class TravelDetailView : ContentPage
+public partial class TravelDetailView: ContentPage
 {
     public TravelDetailView()
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TripCostSplitter.AppBase.Services;
+using TripCostSplitter.AppBase.ViewModels;
 using TripCostSplitter.Avalon.Services;
-using TripCostSplitter.Avalon.ViewModels;
 using TripCostSplitter.Avalon.Views;
 using TripCostSplitter.Core;
 using TripCostSplitter.Core.Services;
@@ -13,7 +14,6 @@ public static class ServiceExtensions
     public static void AddTripCostSplitterServices(this IServiceCollection services)
     {
         // ViewModels
-        services.AddSingleton<MainViewModel>();
         services.AddTransient<TravelListViewModel>();
         services.AddTransient<TravelDetailViewModel>();
         services.AddTransient<TransactionDetailViewModel>();
@@ -28,7 +28,6 @@ public static class ServiceExtensions
 
         // Services
         services.AddSingleton<INavigationService, NavigationService>();
-        services.AddSingleton<NavigationService>(sp => (NavigationService)sp.GetRequiredService<INavigationService>());
         services.AddSingleton<CurrencyService>();
         services.AddSingleton<AccessManager>();
 

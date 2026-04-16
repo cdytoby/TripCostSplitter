@@ -1,15 +1,14 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using TripCostSplitter.Avalon.Services;
+using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.Core;
 using TripCostSplitter.Core.DataModels;
 
-namespace TripCostSplitter.Avalon.ViewModels;
+namespace TripCostSplitter.AppBase.ViewModels;
 
 public partial class TravelDetailViewModel: ObservableObject
 {
-    private readonly MainViewModel main;
     private readonly AccessManager accessManager;
     private readonly INavigationService navigationService;
     
@@ -21,9 +20,8 @@ public partial class TravelDetailViewModel: ObservableObject
     [ObservableProperty]
     public partial ObservableCollection<DebtDisplayItem> Debts { get; set; }
     
-    public TravelDetailViewModel(MainViewModel _main, Travel _travel, AccessManager _accessManager, INavigationService _navigationService)
+    public TravelDetailViewModel(Travel _travel, AccessManager _accessManager, INavigationService _navigationService)
     {
-        main = _main;
         Travel = _travel;
         accessManager = _accessManager;
         navigationService = _navigationService;
@@ -85,13 +83,13 @@ public partial class TravelDetailViewModel: ObservableObject
             RecipientInfos = []
         };
         Travel.Transactions.Add(transaction);
-        await navigationService.PushAsync<TransactionDetailViewModel>(this, transaction);
+        await navigationService.PushAsync(ViewDefinition.TransactionDetailView);
     }
     
     [RelayCommand]
     public async Task EditTransaction(Transaction transaction)
     {
-        await navigationService.PushAsync<TransactionDetailViewModel>(this, transaction);
+        await navigationService.PushAsync(ViewDefinition.TransactionDetailView);
     }
     
     [RelayCommand]
@@ -106,13 +104,13 @@ public partial class TravelDetailViewModel: ObservableObject
     {
         DebtCalculator calculator = new();
         List<DebtItem> debts = calculator.CalculateDebts(Travel).ToList();
-        await navigationService.PushAsync<DebtResultViewModel>(this, debts);
+        // await navigationService.PushAsync<DebtResultViewModel>(this, debts);
     }
     
     [RelayCommand]
     public async Task Back()
     {
-        await main.SaveDataCommand.ExecuteAsync(null);
+        // await main.SaveDataCommand.ExecuteAsync(null);
         await navigationService.PopAsync();
     }
 }

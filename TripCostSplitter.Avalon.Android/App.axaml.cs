@@ -4,7 +4,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using TripCostSplitter.Avalon.Android.Services;
-using TripCostSplitter.Avalon.ViewModels;
 using TripCostSplitter.Avalon.Views;
 using TripCostSplitter.Core;
 using TripCostSplitter.Core.Services;
@@ -19,7 +18,7 @@ public partial class App : Avalonia.Application
     {
         AvaloniaXamlLoader.Load(this);
 
-        var serviceCollection = new ServiceCollection();
+        ServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection.AddTripCostSplitterServices();
         
         // Register platform-specific services
@@ -30,17 +29,13 @@ public partial class App : Avalonia.Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)
+        if (ApplicationLifetime is IActivityApplicationLifetime singleView)
         {
-            var mainViewModel = Services?.GetRequiredService<MainViewModel>();
-            var mainView = Services?.GetRequiredService<MainView>();
+            MainView? mainView = Services?.GetRequiredService<MainView>();
             if (mainView != null)
             {
-                mainView.DataContext = mainViewModel;
-                singleView.MainView = mainView;
+                singleView.MainViewFactory = () => mainView;
             }
-            
-            _ = mainViewModel?.InitializeAsync();
         }
 
         base.OnFrameworkInitializationCompleted();

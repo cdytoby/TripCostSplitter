@@ -1,22 +1,20 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using TripCostSplitter.Avalon.Services;
+using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.Core.DataModels;
 
-namespace TripCostSplitter.Avalon.ViewModels;
+namespace TripCostSplitter.AppBase.ViewModels;
 
 public partial class TravelListViewModel: ObservableObject
 {
-    private readonly MainViewModel main;
     private readonly AccessManager accessManager;
     private readonly INavigationService navigationService;
     
-    public ObservableCollection<Travel> Travels => main.Travels;
+    public ObservableCollection<Travel> Travels = new();
     
-    public TravelListViewModel(MainViewModel _main, AccessManager _accessManager, INavigationService _navigationService)
+    public TravelListViewModel(AccessManager _accessManager, INavigationService _navigationService)
     {
-        main = _main;
         accessManager = _accessManager;
         navigationService = _navigationService;
     }
@@ -31,21 +29,21 @@ public partial class TravelListViewModel: ObservableObject
             CalculateCurrency = "USD",
             Transactions = []
         };
-        main.Travels.Add(travel);
-        await main.SaveDataCommand.ExecuteAsync(null);
-        await navigationService.PushAsync<TravelDetailViewModel>(travel);
+        // main.Travels.Add(travel);
+        // await main.SaveDataCommand.ExecuteAsync(null);
+        await navigationService.PushAsync(ViewDefinition.TravelDetailView);
     }
     
     [RelayCommand]
     public async Task EditTravel(Travel travel)
     {
-        await navigationService.PushAsync<TravelDetailViewModel>(travel);
+        await navigationService.PushAsync(ViewDefinition.TravelDetailView);
     }
     
     [RelayCommand]
     public async Task DeleteTravel(Travel travel)
     {
-        main.Travels.Remove(travel);
-        await main.SaveDataCommand.ExecuteAsync(null);
+        // main.Travels.Remove(travel);
+        // await main.SaveDataCommand.ExecuteAsync(null);
     }
 }

@@ -1,9 +1,7 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using TripCostSplitter.Core.DataModels;
+﻿using TripCostSplitter.Core.DataModels;
 using TripCostSplitter.Core.Services;
 
-namespace TripCostSplitter.Avalon.Services;
+namespace TripCostSplitter.AppBase.Services;
 
 public class AccessManager
 {

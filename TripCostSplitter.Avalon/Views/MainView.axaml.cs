@@ -1,19 +1,23 @@
 ﻿using Avalonia.Controls;
+using TripCostSplitter.AppBase;
+using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.Avalon.Services;
-using TripCostSplitter.Avalon.ViewModels;
 
 namespace TripCostSplitter.Avalon.Views;
 
-public partial class MainView : NavigationPage
+public partial class MainView: UserControl
 {
     public MainView()
     {
         InitializeComponent();
     }
-
-    public MainView(NavigationService navigationService)
+    
+    public MainView(INavigationService navigationService)
     {
         InitializeComponent();
-        navigationService.SetNavigationPage(this);
+        if (navigationService is NavigationService myNavigation)
+            myNavigation.SetNavigationPage(MainNavigationPage);
+        
+        navigationService.PushAsync(ViewDefinition.TravelListView);
     }
 }

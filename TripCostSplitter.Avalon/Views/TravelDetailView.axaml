@@ -1,6 +1,6 @@
 ﻿<ContentPage xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="clr-namespace:TripCostSplitter.Avalon.ViewModels"
+             xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
              xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
              x:Class="TripCostSplitter.Avalon.Views.TravelDetailView"
              x:DataType="vm:TravelDetailViewModel"

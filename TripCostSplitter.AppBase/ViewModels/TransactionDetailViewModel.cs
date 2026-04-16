@@ -1,15 +1,14 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using TripCostSplitter.Avalon.Services;
+using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.Core.DataModels;
 using TripCostSplitter.Core.SplitData;
 
-namespace TripCostSplitter.Avalon.ViewModels;
+namespace TripCostSplitter.AppBase.ViewModels;
 
 public partial class TransactionDetailViewModel : ObservableObject
 {
-    private readonly MainViewModel _main;
     private readonly TravelDetailViewModel _travelDetail;
     private readonly IEnumerable<ISplitCalculator> _splitCalculators;
     private readonly INavigationService _navigationService;
@@ -37,9 +36,8 @@ public partial class TransactionDetailViewModel : ObservableObject
     [ObservableProperty]
     public partial ObservableCollection<PurchaseItemViewModel> Items { get; set; }
 
-    public TransactionDetailViewModel(MainViewModel main, TravelDetailViewModel travelDetail, Transaction transaction, IEnumerable<ISplitCalculator> splitCalculators, INavigationService navigationService)
+    public TransactionDetailViewModel(TravelDetailViewModel travelDetail, Transaction transaction, IEnumerable<ISplitCalculator> splitCalculators, INavigationService navigationService)
     {
-        _main = main;
         _travelDetail = travelDetail;
         _splitCalculators = splitCalculators;
         _navigationService = navigationService;
