@@ -14,5 +14,8 @@ public partial class Travel: ObservableObject
     public required partial string CalculateCurrency { get; set; }
     
     [ObservableProperty]
-    public required partial ObservableCollection<Transaction> Transactions { get; set; }
+    public partial ObservableCollection<string> AdditionalCurrencies { get; set; } = [];
+    
+    [ObservableProperty]
+    public partial ObservableCollection<Transaction> Transactions { get; set; } = [];
 }

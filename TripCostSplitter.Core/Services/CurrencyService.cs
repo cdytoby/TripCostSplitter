@@ -5,6 +5,11 @@ namespace TripCostSplitter.Core.Services;
 
 public class CurrencyService
 {
+    public CurrencyModel[] GetAllCurrencyInfos()
+    {
+        return knownCurrencies.Values.ToArray();
+    }
+    
     public string GetDescription(string key)
     {
         return GetDescription(knownCurrencies[key]);

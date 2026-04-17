@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.Core;
 using TripCostSplitter.Core.DataModels;
+using TripCostSplitter.Core.Services;
 
 namespace TripCostSplitter.AppBase.ViewModels;
 
@@ -14,6 +15,7 @@ public partial class TravelDetailViewModel: ObservableObject
     private readonly INavigationService navigationService;
     
     public Travel Travel { get; }
+    public CurrencyModel[] AllCurrencies { get; }
     
     [ObservableProperty]
     public partial ObservableCollection<Person> Participants { get; set; }
@@ -24,11 +26,14 @@ public partial class TravelDetailViewModel: ObservableObject
     public TravelDetailViewModel(
         AccessManager _accessManager,
         INavigationService _navigationService,
-        SessionService _sessionService)
+        SessionService _sessionService,
+        CurrencyService _currencyService)
     {
         accessManager = _accessManager;
         navigationService = _navigationService;
         sessionService = _sessionService;
+        
+        AllCurrencies = _currencyService.GetAllCurrencyInfos();
         
         //todo exception or load state with nullable
         Travel = sessionService.CurrentTravel!;
@@ -45,6 +50,25 @@ public partial class TravelDetailViewModel: ObservableObject
         }
         
         UpdateDebts();
+    }
+    
+    [RelayCommand]
+    private void AddAdditionalCurrency(string code)
+    {
+        if (string.IsNullOrWhiteSpace(code))
+            return;
+        if (Travel.CalculateCurrency == code)
+            return;
+        if (Travel.AdditionalCurrencies.Contains(code))
+            return;
+        
+        Travel.AdditionalCurrencies.Add(code);
+    }
+    
+    [RelayCommand]
+    private void DeleteAdditionalCurrency(string code)
+    {
+        Travel.AdditionalCurrencies.Remove(code);
     }
     
     [RelayCommand]
@@ -71,6 +95,8 @@ public partial class TravelDetailViewModel: ObservableObject
         Participants.Add(new Person(newId, name));
         UpdateDebts();
     }
+    
+    //todo delete person when a person doesn't involve any transactions
     
     [RelayCommand]
     public async Task AddTransaction()

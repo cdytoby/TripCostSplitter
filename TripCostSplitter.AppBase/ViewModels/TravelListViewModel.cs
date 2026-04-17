@@ -58,8 +58,7 @@ public partial class TravelListViewModel: ObservableObject
         {
             TravelId = accessManager.GetNextId(),
             Name = "New Trip",
-            CalculateCurrency = "USD",
-            Transactions = []
+            CalculateCurrency = "USD"
         };
         Travels.Add(newTravel);
         await dataService.SaveTravelAsync(newTravel);
