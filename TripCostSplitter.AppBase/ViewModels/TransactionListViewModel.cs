@@ -8,20 +8,23 @@ namespace TripCostSplitter.AppBase.ViewModels;
 
 public partial class TransactionListViewModel: ObservableObject
 {
+    public Travel Travel { get; }
+    
+    private readonly IDataService dataService;
     private readonly AccessManager accessManager;
     private readonly SessionService sessionService;
     private readonly INavigationService navigationService;
     
-    public Travel Travel { get; }
-    
     public TransactionListViewModel(
         AccessManager _accessManager,
+        IDataService _dataService,
         INavigationService _navigationService,
         SessionService _sessionService)
     {
         accessManager = _accessManager;
         navigationService = _navigationService;
         sessionService = _sessionService;
+        dataService = _dataService;
         
         //todo exception or load state with nullable
         Travel = sessionService.CurrentTravel!;
@@ -57,9 +60,10 @@ public partial class TransactionListViewModel: ObservableObject
     }
     
     [RelayCommand]
-    public void DeleteTransaction(Transaction transaction)
+    public async Task DeleteTransaction(Transaction transaction)
     {
         Travel.Transactions.Remove(transaction);
+        await dataService.SaveTravelAsync(Travel);
         //todo update debts here
     }
 }

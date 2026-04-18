@@ -3,28 +3,19 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.Core.DataModels;
+using TripCostSplitter.Core.Services;
 using TripCostSplitter.Core.SplitData;
 
 namespace TripCostSplitter.AppBase.ViewModels;
 
 public partial class TransactionDetailViewModel: ObservableObject
 {
+    public List<CurrencyModel> AvailableCurrencies { get; }
+    
     public PaymentData? PaymentData => transaction.TransactionData as PaymentData;
     
     [ObservableProperty]
     public partial ObservableCollection<PayerViewModel> Payers { get; set; }
-    
-    [ObservableProperty]
-    public partial bool IsSplitEvenly { get; set; }
-    
-    [ObservableProperty]
-    public partial bool IsSplitExact { get; set; }
-    
-    [ObservableProperty]
-    public partial bool IsSplitPercentage { get; set; }
-    
-    [ObservableProperty]
-    public partial bool IsSplitByItemOwnership { get; set; }
     
     [ObservableProperty]
     public partial ObservableCollection<SplitParticipantViewModel> SplitParticipants { get; set; }
@@ -32,30 +23,33 @@ public partial class TransactionDetailViewModel: ObservableObject
     [ObservableProperty]
     public partial ObservableCollection<PurchaseItemViewModel> Items { get; set; }
     
-    private readonly IEnumerable<ISplitCalculator> _splitCalculators;
-    private readonly INavigationService _navigationService;
+    private string? splitMethod;
+    private readonly List<ISplitCalculator> splitCalculators;
+    private readonly INavigationService navigationService;
     private Transaction transaction;
     private List<Person> participants;
     
     public TransactionDetailViewModel(
         SessionService _sessionService,
-        IEnumerable<ISplitCalculator> splitCalculators,
-        INavigationService navigationService)
+        IEnumerable<ISplitCalculator> _splitCalculators,
+        INavigationService _navigationService,
+        CurrencyService _currencyService)
     {
-        _splitCalculators = splitCalculators;
-        _navigationService = navigationService;
+        splitCalculators = _splitCalculators.ToList();
+        navigationService = _navigationService;
         
         //todo exception or load state with nullable
         transaction = _sessionService.CurrentTransaction!;
         participants = _sessionService.CurrentTravel!.Participants.ToList();
+        AvailableCurrencies =
+        [
+            .._currencyService.GetCurrencyInfos(
+                [_sessionService.CurrentTravel.CalculateCurrency, .._sessionService.CurrentTravel.AdditionalCurrencies])
+        ];
         
         Payers = [];
         SplitParticipants = [];
         Items = [];
-        IsSplitEvenly = true;
-        IsSplitExact = false;
-        IsSplitPercentage = false;
-        IsSplitByItemOwnership = false;
         
         if (PaymentData != null)
         {
@@ -75,8 +69,7 @@ public partial class TransactionDetailViewModel: ObservableObject
             // Initialize split method from existing data
             if (PaymentData.SplitData is SplitByExactAmount exact)
             {
-                IsSplitEvenly = false;
-                IsSplitExact = true;
+                splitMethod = SplitByExactAmount.Key;
                 foreach (SplitParticipantViewModel sp in SplitParticipants)
                 {
                     if (exact.PersonIdAmountDict.TryGetValue(sp.Person.Id, out decimal amount))
@@ -85,8 +78,7 @@ public partial class TransactionDetailViewModel: ObservableObject
             }
             else if (PaymentData.SplitData is SplitByPercentage percentage)
             {
-                IsSplitEvenly = false;
-                IsSplitPercentage = true;
+                splitMethod = SplitByPercentage.Key;
                 foreach (SplitParticipantViewModel sp in SplitParticipants)
                 {
                     if (percentage.PersonPercentageDict.TryGetValue(sp.Person.Id, out decimal p))
@@ -95,8 +87,7 @@ public partial class TransactionDetailViewModel: ObservableObject
             }
             else if (PaymentData.SplitData is SplitByItemOwnership ownership)
             {
-                IsSplitEvenly = false;
-                IsSplitByItemOwnership = true;
+                splitMethod = SplitByItemOwnership.Key;
                 foreach (KeyValuePair<int, List<string>> kvp in ownership.OwnershipGroups)
                 {
                     int personId = kvp.Key;
@@ -114,7 +105,7 @@ public partial class TransactionDetailViewModel: ObservableObject
             }
             else
             {
-                IsSplitEvenly = true;
+                splitMethod = SplitEvenly.Key;
             }
         }
     }
@@ -136,7 +127,7 @@ public partial class TransactionDetailViewModel: ObservableObject
                 PaymentData.PurchaseItems.Add(itemVm.Item);
             }
             
-            if (IsSplitExact)
+            if (splitMethod.Equals(SplitByExactAmount.Key))
             {
                 SplitByExactAmount exact = new();
                 foreach (SplitParticipantViewModel sp in SplitParticipants)
@@ -146,7 +137,7 @@ public partial class TransactionDetailViewModel: ObservableObject
                 
                 PaymentData.SplitData = exact;
             }
-            else if (IsSplitPercentage)
+            else if (splitMethod.Equals(SplitByPercentage.Key))
             {
                 SplitByPercentage percentage = new();
                 foreach (SplitParticipantViewModel sp in SplitParticipants)
@@ -156,7 +147,7 @@ public partial class TransactionDetailViewModel: ObservableObject
                 
                 PaymentData.SplitData = percentage;
             }
-            else if (IsSplitByItemOwnership)
+            else if (splitMethod.Equals(SplitByItemOwnership.Key))
             {
                 SplitByItemOwnership ownership = new();
                 foreach (PurchaseItemViewModel itemVm in Items)
@@ -177,7 +168,7 @@ public partial class TransactionDetailViewModel: ObservableObject
                 PaymentData.SplitData = new SplitEvenly();
             }
             
-            ISplitCalculator? calculator = _splitCalculators.FirstOrDefault(c => c.CanHandle(PaymentData.SplitData));
+            ISplitCalculator? calculator = splitCalculators.FirstOrDefault(c => c.CanHandle(PaymentData.SplitData));
             
             if (calculator != null)
             {
@@ -187,7 +178,7 @@ public partial class TransactionDetailViewModel: ObservableObject
         }
         
         //todo update depts after pop
-        await _navigationService.PopAsync();
+        await navigationService.PopAsync();
     }
     
     [RelayCommand]
@@ -206,6 +197,6 @@ public partial class TransactionDetailViewModel: ObservableObject
     [RelayCommand]
     public async Task Cancel()
     {
-        await _navigationService.PopAsync();
+        await navigationService.PopAsync();
     }
 }

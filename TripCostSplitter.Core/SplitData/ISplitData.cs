@@ -2,10 +2,10 @@
 
 namespace TripCostSplitter.Core.SplitData;
 
-[JsonDerivedType(typeof(SplitByExactAmount), typeDiscriminator: "ByExactAmount")]
-[JsonDerivedType(typeof(SplitByItemOwnership), typeDiscriminator: "ByItemOwnership")]
-[JsonDerivedType(typeof(SplitByPercentage), typeDiscriminator: "ByPercentage")]
-[JsonDerivedType(typeof(SplitEvenly), typeDiscriminator: "Evenly")]
+[JsonDerivedType(typeof(SplitByExactAmount), typeDiscriminator: SplitByExactAmount.Key)]
+[JsonDerivedType(typeof(SplitByItemOwnership), typeDiscriminator: SplitByItemOwnership.Key)]
+[JsonDerivedType(typeof(SplitByPercentage), typeDiscriminator: SplitByPercentage.Key)]
+[JsonDerivedType(typeof(SplitEvenly), typeDiscriminator: SplitEvenly.Key)]
 public interface ISplitData
 {
 }

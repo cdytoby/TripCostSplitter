@@ -9,28 +9,24 @@ namespace TripCostSplitter.AppBase.ViewModels;
 
 public partial class TravelDetailViewModel: ObservableObject
 {
-    private readonly SessionService sessionService;
-    
     public Travel Travel { get; }
     public CurrencyModel[] AllCurrencies { get; }
     
+    private readonly SessionService sessionService;
+    private readonly IDataService dataService;
+    
     public TravelDetailViewModel(
+        IDataService _dataService,
         SessionService _sessionService,
         CurrencyService _currencyService)
     {
         sessionService = _sessionService;
+        dataService = _dataService;
         
         AllCurrencies = _currencyService.GetAllCurrencyInfos();
         
         //todo exception or load state with nullable
         Travel = sessionService.CurrentTravel!;
-        
-        // todo In a real app, we'd load participants from somewhere. For now, let's add some default ones if empty.
-        if (Travel.Participants.Count == 0)
-        {
-            Travel.Participants.Add(new Person(1, "Alice"));
-            Travel.Participants.Add(new Person(2, "Bob"));
-        }
     }
     
     [RelayCommand]
@@ -44,21 +40,26 @@ public partial class TravelDetailViewModel: ObservableObject
             return;
         
         Travel.AdditionalCurrencies.Add(code);
+        dataService.SaveTravelAsync(Travel);
     }
     
     [RelayCommand]
     private void DeleteAdditionalCurrency(string code)
     {
         Travel.AdditionalCurrencies.Remove(code);
+        dataService.SaveTravelAsync(Travel);
     }
     
     [RelayCommand]
     public void AddPerson(string name)
     {
-        if (string.IsNullOrWhiteSpace(name)) return;
+        if (string.IsNullOrWhiteSpace(name)) 
+            return;
         int newId = Travel.Participants.Count > 0 ? Travel.Participants.Max(p => p.Id) + 1 : 1;
         Travel.Participants.Add(new Person(newId, name));
+        dataService.SaveTravelAsync(Travel);
     }
     
     //todo delete person when a person doesn't involve any transactions
+    //todo make person name editable
 }

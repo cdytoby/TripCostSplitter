@@ -10,6 +10,11 @@ public class CurrencyService
         return knownCurrencies.Values.ToArray();
     }
     
+    public CurrencyModel[] GetCurrencyInfos(IEnumerable<string> keys)
+    {
+        return knownCurrencies.Values.Where(kvp => keys.Contains(kvp.Code)).ToArray();
+    }
+    
     public string GetDescription(string key)
     {
         return GetDescription(knownCurrencies[key]);

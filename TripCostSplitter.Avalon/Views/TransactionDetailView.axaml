@@ -33,9 +33,20 @@
                 <TextBox
                     Text="{Binding PaymentData.Description, FallbackValue=''}"
                     PlaceholderText="Description" />
-                <TextBox
-                    Text="{Binding PaymentData.Currency, FallbackValue=''}"
-                    PlaceholderText="Currency" />
+                <ComboBox
+                    ItemsSource="{Binding AvailableCurrencies}"
+                    SelectedValue="{Binding PaymentData.Currency, FallbackValue=''}"
+                    SelectedValueBinding="{Binding Path=Code}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding Code}" />
+                                <Run Text="{Binding Symbol}" />
+                                <Run Text="{Binding Name}" />
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <Separator />
                 <TextBlock
