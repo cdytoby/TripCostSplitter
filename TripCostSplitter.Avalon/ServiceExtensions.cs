@@ -17,22 +17,25 @@ public static class ServiceExtensions
         services.AddTransient<TravelListViewModel>();
         services.AddTransient<TravelDetailViewModel>();
         services.AddTransient<TransactionDetailViewModel>();
-        services.AddTransient<DebtResultViewModel>();
-
+        services.AddTransient<TransactionListViewModel>();
+        services.AddTransient<DebtsViewModel>();
+        
         // Views
         services.AddTransient<MainView>();
         services.AddTransient<TravelListView>();
-        services.AddTransient<TravelDetailView>();
+        services.AddTransient<TravelView>();
         services.AddTransient<TransactionDetailView>();
-        services.AddTransient<DebtResultView>();
-
+        services.AddTransient<TravelDetailsTab>();
+        services.AddTransient<TravelTransactionsTab>();
+        services.AddTransient<TravelDebtsTab>();
+        
         // Services
         services.AddSingleton<IAppDispatcherService, AvalonDispatcherService>();
-        services.AddSingleton<INavigationService, NavigationService>();
+        services.AddSingleton<INavigationService, AvalonNavigationService>();
         services.AddSingleton<CurrencyService>();
         services.AddSingleton<AccessManager>();
         services.AddSingleton<SessionService>();
-
+        
         // Split Calculators
         services.AddSingleton<ISplitCalculator, SplitEvenlyCalculator>();
         services.AddSingleton<ISplitCalculator, SplitByExactAmountCalculator>();

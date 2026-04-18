@@ -1,0 +1,58 @@
+﻿<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
+    xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
+    x:Class="TripCostSplitter.Avalon.Views.TravelTransactionsTab"
+    x:CompileBindings="False"
+    d:DesignWidth="400"
+    d:DesignHeight="800"
+    DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}">
+    <DockPanel
+        Margin="10">
+        <Button
+            DockPanel.Dock="Top"
+            Content="Add Transaction"
+            Command="{Binding AddTransactionCommand}"
+            HorizontalAlignment="Stretch"
+            Margin="0,0,0,10" />
+
+        <ListBox
+            ItemsSource="{Binding Travel.Transactions}">
+            <ListBox.ItemTemplate>
+                <DataTemplate
+                    x:DataType="core:Transaction">
+                    <Grid
+                        ColumnDefinitions="*,Auto">
+                        <StackPanel
+                            Grid.Column="0"
+                            Margin="5">
+                            <TextBlock
+                                Text="{Binding TransactionData.Description}"
+                                FontWeight="Bold" />
+                            <TextBlock
+                                Text="{Binding TransactionData.Date, StringFormat='{}{0:d}'}"
+                                FontSize="12"
+                                Foreground="Gray" />
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Column="1"
+                            Orientation="Horizontal"
+                            Spacing="5">
+                            <Button
+                                Content="Edit"
+                                Command="{Binding $parent[UserControl].((vm:TransactionListViewModel)DataContext).EditTransactionCommand}"
+                                CommandParameter="{Binding}" />
+                            <Button
+                                Content="Del"
+                                Command="{Binding $parent[UserControl].((vm:TransactionListViewModel)DataContext).DeleteTransactionCommand}"
+                                CommandParameter="{Binding}" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</UserControl>

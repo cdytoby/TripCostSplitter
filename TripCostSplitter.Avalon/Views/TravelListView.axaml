@@ -1,10 +1,15 @@
 ﻿<ContentPage
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
+    mc:Ignorable="d"
     x:Class="TripCostSplitter.Avalon.Views.TravelListView"
     x:DataType="vm:TravelListViewModel"
     x:CompileBindings="False"
+    d:DesignWidth="400"
+    d:DesignHeight="800"
     DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}"
     Header="Travels">
     <DockPanel Margin="10">

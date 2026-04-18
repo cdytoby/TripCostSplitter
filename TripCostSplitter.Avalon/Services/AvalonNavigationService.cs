@@ -8,12 +8,12 @@ using TripCostSplitter.Avalon.Views;
 
 namespace TripCostSplitter.Avalon.Services;
 
-public class NavigationService: INavigationService
+public class AvalonNavigationService: INavigationService
 {
     private readonly IServiceProvider _serviceProvider;
     private NavigationPage? _navigationPage;
     
-    public NavigationService(IServiceProvider serviceProvider)
+    public AvalonNavigationService(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
@@ -45,7 +45,7 @@ public class NavigationService: INavigationService
         return pageId switch
         {
             ViewDefinition.TravelListView => _serviceProvider.GetRequiredService<TravelListView>(),
-            ViewDefinition.TravelDetailView => _serviceProvider.GetRequiredService<TravelDetailView>(),
+            ViewDefinition.TravelDetailView => _serviceProvider.GetRequiredService<TravelView>(),
             ViewDefinition.TransactionDetailView => _serviceProvider.GetRequiredService<TransactionDetailView>(),
             _ => throw new Exception($"Unknown pageId: {pageId}")
         };

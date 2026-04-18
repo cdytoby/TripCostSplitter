@@ -15,7 +15,7 @@ public partial class MainView: UserControl
     public MainView(INavigationService navigationService)
     {
         InitializeComponent();
-        if (navigationService is NavigationService myNavigation)
+        if (navigationService is AvalonNavigationService myNavigation)
             myNavigation.SetNavigationPage(MainNavigationPage);
         
         navigationService.PushAsync(ViewDefinition.TravelListView);

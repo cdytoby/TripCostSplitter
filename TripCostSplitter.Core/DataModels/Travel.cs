@@ -17,5 +17,8 @@ public partial class Travel: ObservableObject
     public partial ObservableCollection<string> AdditionalCurrencies { get; set; } = [];
     
     [ObservableProperty]
+    public partial ObservableCollection<Person> Participants { get; set; } = [];
+    
+    [ObservableProperty]
     public partial ObservableCollection<Transaction> Transactions { get; set; } = [];
 }

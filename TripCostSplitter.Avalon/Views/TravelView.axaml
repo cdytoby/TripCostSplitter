@@ -1,0 +1,33 @@
+﻿<ContentPage
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
+    xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
+    xmlns:views="clr-namespace:TripCostSplitter.Avalon.Views"
+    x:Class="TripCostSplitter.Avalon.Views.TravelView"
+    x:CompileBindings="False"
+    d:DesignWidth="400"
+    d:DesignHeight="800">
+    <TabControl
+        TabStripPlacement="Bottom">
+        <!-- Tab 1: Details & Participants -->
+        <TabItem
+            Name="DetailsTab"
+            Header="Details">
+        </TabItem>
+
+        <!-- Tab 2: Transactions -->
+        <TabItem
+            Name="TransactionsTab"
+            Header="Transactions">
+        </TabItem>
+
+        <!-- Tab 3: Debts -->
+        <TabItem
+            Name="DebtsTab"
+            Header="Debts">
+        </TabItem>
+    </TabControl>
+</ContentPage>

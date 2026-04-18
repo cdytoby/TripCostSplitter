@@ -1,0 +1,63 @@
+﻿<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
+    xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
+    x:Class="TripCostSplitter.Avalon.Views.TravelDebtsTab"
+    x:CompileBindings="False"
+    d:DesignWidth="400"
+    d:DesignHeight="800"
+    DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}">
+    <DockPanel
+        Margin="10">
+        <Button
+            DockPanel.Dock="Top"
+            Content="Refresh Debts"
+            Command="{Binding UpdateDebtsCommand}"
+            HorizontalAlignment="Stretch"
+            Margin="0,0,0,10" />
+
+        <ListBox
+            ItemsSource="{Binding Debts}">
+            <ListBox.ItemTemplate>
+                <DataTemplate
+                    x:DataType="vm:DebtDisplayItem">
+                    <Border
+                        BorderBrush="LightGray"
+                        BorderThickness="0,0,0,1"
+                        Padding="5">
+                        <Grid
+                            ColumnDefinitions="*,Auto,*">
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{Binding DebtorName}"
+                                TextAlignment="Right"
+                                FontWeight="SemiBold" />
+                            <TextBlock
+                                Grid.Column="1"
+                                Text=" owes "
+                                Foreground="Gray"
+                                Margin="5,0" />
+                            <Grid
+                                Grid.Column="2"
+                                ColumnDefinitions="*,Auto">
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Text="{Binding CreditorName}"
+                                    FontWeight="SemiBold" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding Amount, StringFormat='{}{0:N2}'}"
+                                    Margin="5,0,0,0"
+                                    Foreground="Green"
+                                    FontWeight="Bold" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</UserControl>
