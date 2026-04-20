@@ -13,15 +13,12 @@ public partial class TravelDetailViewModel: ObservableObject
     public CurrencyModel[] AllCurrencies { get; }
     
     private readonly SessionService sessionService;
-    private readonly IDataService dataService;
     
     public TravelDetailViewModel(
-        IDataService _dataService,
         SessionService _sessionService,
         CurrencyService _currencyService)
     {
         sessionService = _sessionService;
-        dataService = _dataService;
         
         AllCurrencies = _currencyService.GetAllCurrencyInfos();
         
@@ -30,7 +27,7 @@ public partial class TravelDetailViewModel: ObservableObject
     }
     
     [RelayCommand]
-    private void AddAdditionalCurrency(string code)
+    private async Task AddAdditionalCurrency(string code)
     {
         if (string.IsNullOrWhiteSpace(code))
             return;
@@ -40,24 +37,26 @@ public partial class TravelDetailViewModel: ObservableObject
             return;
         
         Travel.AdditionalCurrencies.Add(code);
-        dataService.SaveTravelAsync(Travel);
+        await sessionService.Save();
     }
     
     [RelayCommand]
-    private void DeleteAdditionalCurrency(string code)
+    private async Task DeleteAdditionalCurrency(string code)
     {
+        //todo delete only when currency is not used
         Travel.AdditionalCurrencies.Remove(code);
-        dataService.SaveTravelAsync(Travel);
+        
+        await sessionService.Save();
     }
     
     [RelayCommand]
-    public void AddPerson(string name)
+    public async Task AddPerson(string name)
     {
-        if (string.IsNullOrWhiteSpace(name)) 
+        if (string.IsNullOrWhiteSpace(name))
             return;
         int newId = Travel.Participants.Count > 0 ? Travel.Participants.Max(p => p.Id) + 1 : 1;
         Travel.Participants.Add(new Person(newId, name));
-        dataService.SaveTravelAsync(Travel);
+        await sessionService.Save();
     }
     
     //todo delete person when a person doesn't involve any transactions

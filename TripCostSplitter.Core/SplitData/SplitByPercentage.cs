@@ -8,5 +8,5 @@ public class SplitByPercentage: ISplitData
 
     public Dictionary<int, decimal> PersonPercentageDict { get; set; } = new();
     
-    public bool TotalExactValidation { get; set; }
+    public bool TotalExactValidation { get; set; } = true;
 }

@@ -37,6 +37,7 @@ public class SplitCalculatorTests
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             Currency = "USD",
             ParticipantIds = [_alice.Id],
             PayerInfos = 
@@ -66,6 +67,7 @@ public class SplitCalculatorTests
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             Currency = "USD",
             ParticipantIds = 
             [
@@ -100,6 +102,7 @@ public class SplitCalculatorTests
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             Currency = "USD",
             ParticipantIds = 
             [
@@ -140,6 +143,7 @@ public class SplitCalculatorTests
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             Currency = "USD",
             ParticipantIds = 
             [
@@ -178,6 +182,7 @@ public class SplitCalculatorTests
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             Currency = "USD",
             ParticipantIds = [_alice.Id],
             PayerInfos = 
@@ -215,6 +220,7 @@ public class SplitCalculatorTests
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             Currency = "USD",
             ParticipantIds = 
             [
@@ -260,6 +266,7 @@ public class SplitCalculatorTests
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             Currency = "USD",
             ParticipantIds = 
             [
@@ -300,6 +307,7 @@ public class SplitCalculatorTests
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             Currency = "USD",
             ParticipantIds = 
             [
@@ -346,6 +354,7 @@ public class SplitCalculatorTests
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             Currency = "USD",
             ParticipantIds = 
             [
@@ -400,6 +409,7 @@ public class SplitCalculatorTests
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             Currency = "USD",
             ParticipantIds = 
             [

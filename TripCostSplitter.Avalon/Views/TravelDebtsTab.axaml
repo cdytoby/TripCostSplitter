@@ -5,11 +5,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
     xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
+    xmlns:converters="clr-namespace:TripCostSplitter.Avalon.Converters"
     x:Class="TripCostSplitter.Avalon.Views.TravelDebtsTab"
     x:CompileBindings="False"
     d:DesignWidth="400"
     d:DesignHeight="800"
     DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}">
+
+    <UserControl.Resources>
+        <converters:PersonIdNameConverter
+            x:Key="PersonIdNameConverter" />
+    </UserControl.Resources>
+
     <DockPanel
         Margin="10">
         <Button
@@ -23,7 +30,7 @@
             ItemsSource="{Binding Debts}">
             <ListBox.ItemTemplate>
                 <DataTemplate
-                    x:DataType="vm:DebtDisplayItem">
+                    x:DataType="core:DebtItem">
                     <Border
                         BorderBrush="LightGray"
                         BorderThickness="0,0,0,1"
@@ -32,9 +39,18 @@
                             ColumnDefinitions="*,Auto,*">
                             <TextBlock
                                 Grid.Column="0"
-                                Text="{Binding DebtorName}"
                                 TextAlignment="Right"
-                                FontWeight="SemiBold" />
+                                FontWeight="SemiBold">
+                                <TextBlock.Text>
+                                    <MultiBinding
+                                        Converter="{StaticResource PersonIdNameConverter}">
+                                        <Binding
+                                            Path="DebtorId" />
+                                        <Binding
+                                            Path="$parent[ContentPage].((vm:DebtsViewModel)DataContext).TravelParticipants" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                             <TextBlock
                                 Grid.Column="1"
                                 Text=" owes "
@@ -45,8 +61,17 @@
                                 ColumnDefinitions="*,Auto">
                                 <TextBlock
                                     Grid.Column="0"
-                                    Text="{Binding CreditorName}"
-                                    FontWeight="SemiBold" />
+                                    FontWeight="SemiBold">
+                                    <TextBlock.Text>
+                                        <MultiBinding
+                                            Converter="{StaticResource PersonIdNameConverter}">
+                                            <Binding
+                                                Path="CreditorId" />
+                                            <Binding
+                                                Path="$parent[ContentPage].((vm:DebtsViewModel)DataContext).TravelParticipants" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
                                 <TextBlock
                                     Grid.Column="1"
                                     Text="{Binding Amount, StringFormat='{}{0:N2}'}"

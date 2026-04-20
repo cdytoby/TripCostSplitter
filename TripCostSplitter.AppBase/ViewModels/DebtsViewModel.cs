@@ -10,12 +10,13 @@ namespace TripCostSplitter.AppBase.ViewModels;
 
 public partial class DebtsViewModel: ObservableObject
 {
-    private readonly SessionService sessionService;
+    public IReadOnlyList<Person> TravelParticipants { get; }
     
-    public Travel Travel { get; }
+    private readonly SessionService sessionService;
+    private Travel travel;
     
     [ObservableProperty]
-    public partial ObservableCollection<DebtDisplayItem> Debts { get; set; }
+    public partial ObservableCollection<DebtItem> Debts { get; private set; } = [];
     
     public DebtsViewModel(
         SessionService _sessionService)
@@ -23,9 +24,8 @@ public partial class DebtsViewModel: ObservableObject
         sessionService = _sessionService;
         
         //todo exception or load state with nullable
-        Travel = sessionService.CurrentTravel!;
-        
-        Debts = [];
+        travel = sessionService.CurrentTravel!;
+        TravelParticipants = travel.Participants;
         
         UpdateDebts();
     }
@@ -33,17 +33,12 @@ public partial class DebtsViewModel: ObservableObject
     [RelayCommand]
     public void UpdateDebts()
     {
-        DebtCalculator calculator = new();
-        List<DebtItem> debtsResult = calculator.CalculateDebts(Travel).ToList();
-        
         Debts.Clear();
-        foreach (DebtItem debt in debtsResult)
+        DebtCalculator calculator = new();
+        DebtItem[] debtsResult = calculator.CalculateDebts(travel).ToArray();
+        foreach (DebtItem debtItem in debtsResult)
         {
-            string debtorName = Travel.Participants.FirstOrDefault(p => p.Id == debt.DebtorId)?.Name ??
-                $"ID {debt.DebtorId}";
-            string creditorName = Travel.Participants.FirstOrDefault(p => p.Id == debt.CreditorId)?.Name ??
-                $"ID {debt.CreditorId}";
-            Debts.Add(new DebtDisplayItem(debtorName, creditorName, debt.Amount));
+            Debts.Add(debtItem);
         }
     }
 }

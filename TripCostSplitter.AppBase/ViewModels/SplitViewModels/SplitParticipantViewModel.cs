@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using TripCostSplitter.Core.DataModels;
 
-namespace TripCostSplitter.AppBase.ViewModels;
+namespace TripCostSplitter.AppBase.ViewModels.SplitViewModels;
 
 public partial class SplitParticipantViewModel : ObservableObject
 {

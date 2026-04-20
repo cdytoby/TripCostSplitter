@@ -23,6 +23,7 @@ public class DebtCalculatorSimpleTest
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id],
             Currency = "USD",
             PayerInfos = [new PayerInfo(alice.Id, 100)],
@@ -66,6 +67,7 @@ public class DebtCalculatorSimpleTest
         PaymentData payment1 = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id],
             Currency = "USD",
             PayerInfos = [new PayerInfo(alice.Id, 60)],
@@ -85,6 +87,7 @@ public class DebtCalculatorSimpleTest
         PaymentData payment2 = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id],
             Currency = "USD",
             PayerInfos = [new PayerInfo(bob.Id, 40)],
@@ -133,6 +136,7 @@ public class DebtCalculatorSimpleTest
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id, charlie.Id],
             Currency = "USD",
             PayerInfos = [new PayerInfo(alice.Id, 150)],
@@ -175,6 +179,7 @@ public class DebtCalculatorSimpleTest
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id],
             Currency = "USD",
             PayerInfos = [new PayerInfo(alice.Id, 100)],
@@ -213,6 +218,7 @@ public class DebtCalculatorSimpleTest
         PaymentData payment1 = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id, charlie.Id, dave.Id],
             Currency = "USD",
             PayerInfos = [new PayerInfo(alice.Id, 120)],
@@ -234,6 +240,7 @@ public class DebtCalculatorSimpleTest
         PaymentData payment2 = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id, charlie.Id, dave.Id],
             Currency = "USD",
             PayerInfos = [new PayerInfo(bob.Id, 80)],
@@ -282,6 +289,7 @@ public class DebtCalculatorSimpleTest
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id, charlie.Id],
             Currency = "USD",
             PayerInfos = 

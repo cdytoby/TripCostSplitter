@@ -16,7 +16,7 @@ public static class ServiceExtensions
         // ViewModels
         services.AddTransient<TravelListViewModel>();
         services.AddTransient<TravelDetailViewModel>();
-        services.AddTransient<TransactionDetailViewModel>();
+        services.AddTransient<PaymentDetailViewModel>();
         services.AddTransient<TransactionListViewModel>();
         services.AddTransient<DebtsViewModel>();
         
@@ -24,7 +24,7 @@ public static class ServiceExtensions
         services.AddTransient<MainView>();
         services.AddTransient<TravelListView>();
         services.AddTransient<TravelView>();
-        services.AddTransient<TransactionDetailView>();
+        services.AddTransient<PaymentDetailView>();
         services.AddTransient<TravelDetailsTab>();
         services.AddTransient<TravelTransactionsTab>();
         services.AddTransient<TravelDebtsTab>();
@@ -35,6 +35,7 @@ public static class ServiceExtensions
         services.AddSingleton<CurrencyService>();
         services.AddSingleton<AccessManager>();
         services.AddSingleton<SessionService>();
+        services.AddSingleton<SplitDataViewModelService>();
         
         // Split Calculators
         services.AddSingleton<ISplitCalculator, SplitEvenlyCalculator>();

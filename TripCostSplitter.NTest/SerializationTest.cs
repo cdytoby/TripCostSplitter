@@ -18,6 +18,7 @@ public class TravelSerializationTests
         PaymentData paymentData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id],
             Currency = "USD",
             PayerInfos = [new PayerInfo(alice.Id, 100)],
@@ -28,7 +29,7 @@ public class TravelSerializationTests
             ],
             SplitData = new SplitByItemOwnership
             {
-                OwnershipGroups = new Dictionary<int, List<string>>
+                OwnershipGroups = new Dictionary<int, List<string>?>
                 {
                     { alice.Id, ["Apple", "Orange"] }
                 }
@@ -67,5 +68,11 @@ public class TravelSerializationTests
         // Assert
         Assert.That(deserializedTravel!.Transactions.First().TransactionData is PaymentData);
         Assert.That(deserializedTravel!.Transactions.First().TransactionId.Equals(1234));
+    }
+    
+    [Test]
+    public void GUIDTest()
+    {
+        Console.WriteLine(Guid.NewGuid());
     }
 }

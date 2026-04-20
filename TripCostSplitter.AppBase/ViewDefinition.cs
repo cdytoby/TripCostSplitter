@@ -4,5 +4,5 @@ public static class ViewDefinition
 {
     public const string TravelListView = "TravelList";
     public const string TravelDetailView = "TravelDetail";
-    public const string TransactionDetailView = "TransactionDetail";
+    public const string PaymentDetailView = "PaymentDetail";
 }

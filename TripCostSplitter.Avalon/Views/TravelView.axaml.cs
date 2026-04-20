@@ -5,6 +5,8 @@ namespace TripCostSplitter.Avalon.Views;
 
 public partial class TravelView: ContentPage
 {
+    private TravelDebtsTab? travelDebtsTab;
+    
     public TravelView()
     {
         InitializeComponent();
@@ -23,5 +25,12 @@ public partial class TravelView: ContentPage
         DetailsTab.Content = _travelDetailsTab;
         TransactionsTab.Content = _travelTransactionsTab;
         DebtsTab.Content = _travelDebtsTab;
+        
+        travelDebtsTab = _travelDebtsTab;
+    }
+    
+    private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        travelDebtsTab?.ViewModel?.UpdateDebts();
     }
 }

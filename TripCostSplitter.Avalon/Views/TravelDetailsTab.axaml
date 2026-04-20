@@ -109,6 +109,7 @@
             <StackPanel
                 Orientation="Horizontal"
                 Spacing="5">
+                <!-- todo rename capability -->
                 <TextBox
                     x:Name="PersonNameBox"
                     Width="200"

@@ -86,10 +86,10 @@ public abstract class JsonDataService: IDataService
             return result;
         }
         
-        try
+        IEnumerable<string> files = Directory.EnumerateFiles(folderPath);
+        foreach (string fileName in files)
         {
-            IEnumerable<string> files = Directory.EnumerateFiles(folderPath);
-            foreach (string fileName in files)
+            try
             {
                 string json = await File.ReadAllTextAsync(fileName).ConfigureAwait(false);
                 Travel? thisTravel = JsonSerializer.Deserialize<Travel>(json);
@@ -97,11 +97,10 @@ public abstract class JsonDataService: IDataService
                     result.Add(thisTravel);
                 //todo delete when read fail?
             }
-        }
-        catch (Exception)
-        {
-            //Todo: In a real app, we might want to log this or notify the user
-            return result;
+            catch (Exception)
+            {
+                continue;
+            }
         }
         
         return result;

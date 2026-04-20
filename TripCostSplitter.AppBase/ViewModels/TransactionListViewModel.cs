@@ -10,21 +10,18 @@ public partial class TransactionListViewModel: ObservableObject
 {
     public Travel Travel { get; }
     
-    private readonly IDataService dataService;
     private readonly AccessManager accessManager;
     private readonly SessionService sessionService;
     private readonly INavigationService navigationService;
     
     public TransactionListViewModel(
         AccessManager _accessManager,
-        IDataService _dataService,
         INavigationService _navigationService,
         SessionService _sessionService)
     {
         accessManager = _accessManager;
         navigationService = _navigationService;
         sessionService = _sessionService;
-        dataService = _dataService;
         
         //todo exception or load state with nullable
         Travel = sessionService.CurrentTravel!;
@@ -36,6 +33,7 @@ public partial class TransactionListViewModel: ObservableObject
         PaymentData transactionData = new()
         {
             Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             Currency = Travel.CalculateCurrency,
             PayerInfos = [],
             ParticipantIds = new(Travel.Participants.Select(p => p.Id)),
@@ -49,21 +47,21 @@ public partial class TransactionListViewModel: ObservableObject
         };
         Travel.Transactions.Add(transaction);
         sessionService.CurrentTransaction = transaction;
-        await navigationService.PushAsync(ViewDefinition.TransactionDetailView);
+        await navigationService.PushAsync(ViewDefinition.PaymentDetailView);
     }
     
     [RelayCommand]
     public async Task EditTransaction(Transaction transaction)
     {
         sessionService.CurrentTransaction = transaction;
-        await navigationService.PushAsync(ViewDefinition.TransactionDetailView);
+        await navigationService.PushAsync(ViewDefinition.PaymentDetailView);
     }
     
     [RelayCommand]
     public async Task DeleteTransaction(Transaction transaction)
     {
         Travel.Transactions.Remove(transaction);
-        await dataService.SaveTravelAsync(Travel);
+        await sessionService.Save();
         //todo update debts here
     }
 }

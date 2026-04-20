@@ -46,7 +46,7 @@ public class AvalonNavigationService: INavigationService
         {
             ViewDefinition.TravelListView => _serviceProvider.GetRequiredService<TravelListView>(),
             ViewDefinition.TravelDetailView => _serviceProvider.GetRequiredService<TravelView>(),
-            ViewDefinition.TransactionDetailView => _serviceProvider.GetRequiredService<TransactionDetailView>(),
+            ViewDefinition.PaymentDetailView => _serviceProvider.GetRequiredService<PaymentDetailView>(),
             _ => throw new Exception($"Unknown pageId: {pageId}")
         };
     }

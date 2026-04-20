@@ -6,7 +6,6 @@
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
     mc:Ignorable="d"
     x:Class="TripCostSplitter.Avalon.Views.TravelListView"
-    x:DataType="vm:TravelListViewModel"
     x:CompileBindings="False"
     d:DesignWidth="400"
     d:DesignHeight="800"
