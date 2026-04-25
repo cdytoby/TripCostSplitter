@@ -12,5 +12,5 @@ public partial class Transaction: ObservableObject
     public required partial ITransactionData TransactionData { get; set; }
     
     [ObservableProperty]
-    public required partial ObservableCollection<RecipientInfo> RecipientInfos { get; set; }
+    public partial ObservableCollection<RecipientInfo> RecipientInfos { get; set; } = [];
 }

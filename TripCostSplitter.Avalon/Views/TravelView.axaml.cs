@@ -1,11 +1,13 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Interactivity;
 using TripCostSplitter.AppBase.Services;
 
 namespace TripCostSplitter.Avalon.Views;
 
 public partial class TravelView: ContentPage
 {
-    private TravelDebtsTab? travelDebtsTab;
+    private TravelDebtsTab? travelDebtsView;
+    private TravelTransactionsTab? travelTransactionsView;
     
     public TravelView()
     {
@@ -14,23 +16,41 @@ public partial class TravelView: ContentPage
     
     public TravelView(
         SessionService _sessionService,
-        TravelDetailsTab _travelDetailsTab,
-        TravelTransactionsTab _travelTransactionsTab,
-        TravelDebtsTab _travelDebtsTab)
+        TravelDetailsTab _travelDetailsView,
+        TravelTransactionsTab _travelTransactionsView,
+        TravelDebtsTab _travelDebtsView)
     {
         InitializeComponent();
         
         Header = _sessionService.CurrentTravel?.Name;
         
-        DetailsTab.Content = _travelDetailsTab;
-        TransactionsTab.Content = _travelTransactionsTab;
-        DebtsTab.Content = _travelDebtsTab;
+        DetailsTab.Content = _travelDetailsView;
+        TransactionsTab.Content = _travelTransactionsView;
+        DebtsTab.Content = _travelDebtsView;
         
-        travelDebtsTab = _travelDebtsTab;
+        travelDebtsView = _travelDebtsView;
+        travelTransactionsView = _travelTransactionsView;
     }
     
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        travelDebtsTab?.ViewModel?.UpdateDebts();
+        TabItem[] addedTabItems = e.AddedItems.OfType<TabItem>().ToArray();
+        if (addedTabItems.Length == 0)
+            return;
+        TabItem tabItem = addedTabItems[0];
+        
+        if (tabItem == TransactionsTab)
+        {
+            NavigationPage.SetTopCommandBar(this, travelTransactionsView?.FindResource("TopBar") as Control);
+        }
+        else if (tabItem == DebtsTab)
+        {
+            travelDebtsView?.ViewModel?.UpdateDebts();
+            NavigationPage.SetTopCommandBar(this, null);
+        }
+        else if( tabItem == DetailsTab)
+        {
+            NavigationPage.SetTopCommandBar(this, null);
+        }
     }
 }

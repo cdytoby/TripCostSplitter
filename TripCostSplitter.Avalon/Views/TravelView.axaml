@@ -10,6 +10,7 @@
     x:CompileBindings="False"
     d:DesignWidth="400"
     d:DesignHeight="800">
+    
     <TabControl
         TabStripPlacement="Bottom"
         SelectionChanged="SelectingItemsControl_OnSelectionChanged">

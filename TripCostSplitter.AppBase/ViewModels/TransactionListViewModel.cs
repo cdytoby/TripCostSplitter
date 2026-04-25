@@ -42,8 +42,7 @@ public partial class TransactionListViewModel: ObservableObject
         Transaction transaction = new()
         {
             TransactionId = AccessManager.GetNewId(),
-            TransactionData = transactionData,
-            RecipientInfos = []
+            TransactionData = transactionData
         };
         Travel.Transactions.Add(transaction);
         sessionService.CurrentTransaction = transaction;

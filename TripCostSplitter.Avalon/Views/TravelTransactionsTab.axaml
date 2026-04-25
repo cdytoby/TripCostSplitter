@@ -9,50 +9,65 @@
     x:CompileBindings="False"
     d:DesignWidth="400"
     d:DesignHeight="800"
-    DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}">
-    <DockPanel
-        Margin="10">
-        <Button
-            DockPanel.Dock="Top"
-            Content="Add Transaction"
-            Command="{Binding AddTransactionCommand}"
-            HorizontalAlignment="Stretch"
-            Margin="0,0,0,10" />
+    DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}"
+    x:Name="TransactionView">
 
-        <ListBox
-            ItemsSource="{Binding Travel.Transactions}">
-            <ListBox.ItemTemplate>
-                <DataTemplate
-                    x:DataType="core:Transaction">
-                    <Grid
-                        ColumnDefinitions="*,Auto">
-                        <StackPanel
-                            Grid.Column="0"
-                            Margin="5">
-                            <TextBlock
-                                Text="{Binding TransactionData.Description}"
-                                FontWeight="Bold" />
-                            <TextBlock
-                                Text="{Binding TransactionData.Date, StringFormat='{}{0:d}'}"
-                                FontSize="12"
-                                Foreground="Gray" />
-                        </StackPanel>
-                        <StackPanel
-                            Grid.Column="1"
-                            Orientation="Horizontal"
-                            Spacing="5">
-                            <Button
-                                Content="Edit"
-                                Command="{Binding $parent[UserControl].((vm:TransactionListViewModel)DataContext).EditTransactionCommand}"
-                                CommandParameter="{Binding}" />
-                            <Button
-                                Content="Del"
-                                Command="{Binding $parent[UserControl].((vm:TransactionListViewModel)DataContext).DeleteTransactionCommand}"
-                                CommandParameter="{Binding}" />
-                        </StackPanel>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </DockPanel>
+    <UserControl.Resources>
+        <!-- ReSharper disable Xaml.RedundantResource -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Resources/AppResources.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        <CommandBar
+            x:Key="TopBar"
+            DataContext="{Binding #TransactionView.((vm:TransactionListViewModel)DataContext)}">
+            <CommandBar.PrimaryCommands>
+                <CommandBarButton
+                    Label="Payment"
+                    Command="{Binding AddTransactionCommand}">
+                    <CommandBarButton.Icon>
+                        <PathIcon Data="{StaticResource IconAddRegular}"/>
+                    </CommandBarButton.Icon>
+                </CommandBarButton>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </UserControl.Resources>
+
+    <ListBox
+        ItemsSource="{Binding Travel.Transactions}">
+        <ListBox.ItemTemplate>
+            <DataTemplate
+                x:DataType="core:Transaction">
+                <Grid
+                    ColumnDefinitions="*,Auto">
+                    <StackPanel
+                        Grid.Column="0"
+                        Margin="5">
+                        <TextBlock
+                            Text="{Binding TransactionData.Description}"
+                            FontWeight="Bold" />
+                        <TextBlock
+                            Text="{Binding TransactionData.Date, StringFormat='{}{0:d}'}"
+                            FontSize="12"
+                            Foreground="Gray" />
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="5">
+                        <Button
+                            Content="Edit"
+                            Command="{Binding $parent[UserControl].((vm:TransactionListViewModel)DataContext).EditTransactionCommand}"
+                            CommandParameter="{Binding}" />
+                        <Button
+                            Content="Del"
+                            Command="{Binding $parent[UserControl].((vm:TransactionListViewModel)DataContext).DeleteTransactionCommand}"
+                            CommandParameter="{Binding}" />
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+
 </UserControl>
