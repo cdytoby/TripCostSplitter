@@ -9,14 +9,14 @@ public class SplitByPercentageCalculator : ISplitCalculator
     public IList<RecipientInfo> CalculateDebit(PaymentData paymentData)
     {
         SplitByPercentage splitData = (SplitByPercentage)paymentData.SplitData!;
-        Dictionary<int, decimal> percentages = splitData.PersonPercentageDict;
+        Dictionary<string, decimal> percentages = splitData.PersonPercentageDict;
 
         if (!percentages.Any() || !paymentData.PayerInfos.Any())
             return new List<RecipientInfo>();
         
         decimal totalPaid = paymentData.PayerInfos.Sum(p => p.Amount);
         List<RecipientInfo> result = [];
-        foreach ((int participant, decimal percentage) in percentages)
+        foreach ((string participant, decimal percentage) in percentages)
         {
             result.Add(new RecipientInfo(participant, totalPaid * (percentage / 100)));
         }

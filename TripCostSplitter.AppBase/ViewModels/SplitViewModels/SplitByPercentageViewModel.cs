@@ -16,7 +16,7 @@ public partial class SplitByPercentageViewModel: SplitDataViewModelBase
     {
         if (splitData is SplitByPercentage percentageData)
         {
-            foreach (KeyValuePair<int, decimal> kvp in percentageData.PersonPercentageDict)
+            foreach (KeyValuePair<string, decimal> kvp in percentageData.PersonPercentageDict)
             {
                 SplitParticipants.Add(
                     new SplitParticipantViewModel(
@@ -30,7 +30,7 @@ public partial class SplitByPercentageViewModel: SplitDataViewModelBase
             {
                 evenlyData.SplitParticipants.AddRange(travelParticipants.Select(p => p.Id));
             }
-            foreach (int personId in evenlyData.SplitParticipants)
+            foreach (string personId in evenlyData.SplitParticipants)
             {
                 SplitParticipants.Add(
                     new SplitParticipantViewModel(

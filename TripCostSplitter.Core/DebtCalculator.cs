@@ -7,7 +7,7 @@ public class DebtCalculator
     public IEnumerable<DebtItem> CalculateDebts(Travel travel)
     {
         // Calculate net balance for each person
-        Dictionary<int, decimal> balances = new();
+        Dictionary<string, decimal> balances = new();
 
         foreach (Transaction transactions in travel.Transactions)
         {
@@ -28,8 +28,8 @@ public class DebtCalculator
         }
 
         // Separate creditors (positive balance) and debtors (negative balance)
-        List<KeyValuePair<int, decimal>> creditors = balances.Where(b => b.Value > 0).OrderByDescending(b => b.Value).ToList();
-        List<KeyValuePair<int, decimal>> debtors = balances.Where(b => b.Value < 0).OrderBy(b => b.Value).ToList();
+        List<KeyValuePair<string, decimal>> creditors = balances.Where(b => b.Value > 0).OrderByDescending(b => b.Value).ToList();
+        List<KeyValuePair<string, decimal>> debtors = balances.Where(b => b.Value < 0).OrderBy(b => b.Value).ToList();
 
         List<DebtItem> debts = [];
 
@@ -39,15 +39,15 @@ public class DebtCalculator
         // Match debtors with creditors
         while (creditorIndex < creditors.Count && debtorIndex < debtors.Count)
         {
-            KeyValuePair<int, decimal> creditor = creditors[creditorIndex];
-            KeyValuePair<int, decimal> debtor = debtors[debtorIndex];
+            KeyValuePair<string, decimal> creditor = creditors[creditorIndex];
+            KeyValuePair<string, decimal> debtor = debtors[debtorIndex];
 
             decimal amountToSettle = Math.Min(creditor.Value, Math.Abs(debtor.Value));
 
             debts.Add(new DebtItem(debtor.Key, creditor.Key, amountToSettle));
 
-            creditors[creditorIndex] = new KeyValuePair<int, decimal>(creditor.Key, creditor.Value - amountToSettle);
-            debtors[debtorIndex] = new KeyValuePair<int, decimal>(debtor.Key, debtor.Value + amountToSettle);
+            creditors[creditorIndex] = new KeyValuePair<string, decimal>(creditor.Key, creditor.Value - amountToSettle);
+            debtors[debtorIndex] = new KeyValuePair<string, decimal>(debtor.Key, debtor.Value + amountToSettle);
 
             if (creditors[creditorIndex].Value == 0)
                 creditorIndex++;

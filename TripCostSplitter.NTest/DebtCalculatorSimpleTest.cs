@@ -17,8 +17,8 @@ public class DebtCalculatorSimpleTest
     public void CalculateDebts_SimpleOneToOne_ReturnsCorrectDebt()
     {
         // Arrange
-        Person alice = new(1, "Alice");
-        Person bob = new(2, "Bob");
+        Person alice = new("1", "Alice");
+        Person bob = new("2", "Bob");
         
         PaymentData paymentData = new()
         {
@@ -61,8 +61,8 @@ public class DebtCalculatorSimpleTest
     public void CalculateDebts_MultiplePayments_CalculatesNetBalance()
     {
         // Arrange
-        Person alice = new(1, "Alice");
-        Person bob = new(2, "Bob");
+        Person alice = new("1", "Alice");
+        Person bob = new("2", "Bob");
         
         PaymentData payment1 = new()
         {
@@ -129,9 +129,9 @@ public class DebtCalculatorSimpleTest
     public void CalculateDebts_ThreePeople_OptimizesDebts()
     {
         // Arrange
-        Person alice = new(1, "Alice");
-        Person bob = new(2, "Bob");
-        Person charlie = new(3, "Charlie");
+        Person alice = new("1", "Alice");
+        Person bob = new("2", "Bob");
+        Person charlie = new("3", "Charlie");
         
         PaymentData paymentData = new()
         {
@@ -174,7 +174,7 @@ public class DebtCalculatorSimpleTest
     public void CalculateDebts_NoDebts_ReturnsEmpty()
     {
         // Arrange
-        Person alice = new(1, "Alice");
+        Person alice = new("1", "Alice");
         
         PaymentData paymentData = new()
         {
@@ -210,10 +210,10 @@ public class DebtCalculatorSimpleTest
     public void CalculateDebts_ComplexScenario_CorrectlyBalances()
     {
         // Arrange
-        Person alice = new(1, "Alice");
-        Person bob = new(2, "Bob");
-        Person charlie = new(3, "Charlie");
-        Person dave = new(4, "Dave");
+        Person alice = new("1", "Alice");
+        Person bob = new("2", "Bob");
+        Person charlie = new("3", "Charlie");
+        Person dave = new("4", "Dave");
         
         PaymentData payment1 = new()
         {
@@ -282,9 +282,9 @@ public class DebtCalculatorSimpleTest
     public void CalculateDebts_MultiplePayersOnOnePayment_HandlesCorrectly()
     {
         // Arrange
-        Person alice = new(1, "Alice");
-        Person bob = new(2, "Bob");
-        Person charlie = new(3, "Charlie");
+        Person alice = new("1", "Alice");
+        Person bob = new("2", "Bob");
+        Person charlie = new("3", "Charlie");
         
         PaymentData paymentData = new()
         {

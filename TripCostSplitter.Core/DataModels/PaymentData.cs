@@ -27,7 +27,7 @@ public partial class PaymentData: ObservableObject, ITransactionData
     public required partial ObservableCollection<PayerInfo> PayerInfos { get; set; }
     
     [ObservableProperty]
-    public required partial ObservableCollection<int> ParticipantIds { get; set; }
+    public required partial ObservableCollection<string> ParticipantIds { get; set; }
     
     [ObservableProperty]
     public required partial ObservableCollection<PurchaseItem> PurchaseItems { get; set; }

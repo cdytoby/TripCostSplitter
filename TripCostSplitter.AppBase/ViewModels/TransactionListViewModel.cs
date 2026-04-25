@@ -41,7 +41,7 @@ public partial class TransactionListViewModel: ObservableObject
         };
         Transaction transaction = new()
         {
-            TransactionId = accessManager.GetNextId(),
+            TransactionId = AccessManager.GetNewId(),
             TransactionData = transactionData,
             RecipientInfos = []
         };

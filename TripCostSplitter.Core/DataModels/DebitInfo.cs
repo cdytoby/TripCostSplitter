@@ -1,3 +1,3 @@
 ﻿namespace TripCostSplitter.Core.DataModels;
 
-public record RecipientInfo(int RecipientId, decimal Amount);
+public record RecipientInfo(string RecipientId, decimal Amount);

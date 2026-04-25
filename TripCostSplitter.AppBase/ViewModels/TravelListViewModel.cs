@@ -56,7 +56,7 @@ public partial class TravelListViewModel: ObservableObject
     {
         Travel newTravel = new()
         {
-            TravelId = accessManager.GetNextId(),
+            TravelId = AccessManager.GetNewId(),
             Name = "New Trip",
             CalculateCurrency = "USD"
         };

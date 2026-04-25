@@ -1,3 +1,3 @@
 ﻿namespace TripCostSplitter.Core.DataModels;
 
-public record Person(int Id, string Name);
+public record Person(string Id, string Name);

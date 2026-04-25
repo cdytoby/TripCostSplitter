@@ -14,7 +14,7 @@ public partial class SplitByExactAmountViewModel : SplitDataViewModelBase
     {
         if (splitData is SplitByExactAmount exactAmountData)
         {
-            foreach (KeyValuePair<int, decimal> kvp in exactAmountData.PersonIdAmountDict)
+            foreach (KeyValuePair<string, decimal> kvp in exactAmountData.PersonIdAmountDict)
             {
                 SplitParticipants.Add(
                     new SplitParticipantViewModel(

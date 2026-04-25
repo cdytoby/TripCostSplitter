@@ -6,7 +6,7 @@ public class SplitByPercentage: ISplitData
 {
     public const string Key = "ByPercentage";
 
-    public Dictionary<int, decimal> PersonPercentageDict { get; set; } = new();
+    public Dictionary<string, decimal> PersonPercentageDict { get; set; } = new();
     
     public bool TotalExactValidation { get; set; } = true;
 }

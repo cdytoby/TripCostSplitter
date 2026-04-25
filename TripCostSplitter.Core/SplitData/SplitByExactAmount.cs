@@ -6,5 +6,5 @@ public class SplitByExactAmount: ISplitData
 {
     public const string Key = "ByExactAmount";
     
-    public Dictionary<int, decimal> PersonIdAmountDict { get; set; } = new();
+    public Dictionary<string, decimal> PersonIdAmountDict { get; set; } = new();
 }

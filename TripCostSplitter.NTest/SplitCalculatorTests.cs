@@ -22,9 +22,9 @@ public class SplitCalculatorTests
         _exactAmountCalculator = new SplitByExactAmountCalculator();
         _ownershipCalculator = new SplitByItemOwnershipCalculator();
         
-        _alice = new Person(1, "Alice");
-        _bob = new Person(2, "Bob");
-        _charlie = new Person(3, "Charlie");
+        _alice = new Person("1", "Alice");
+        _bob = new Person("2", "Bob");
+        _charlie = new Person("3", "Charlie");
     }
     
     // Test case: Single payer, single participant, amount should be divided evenly
@@ -173,7 +173,7 @@ public class SplitCalculatorTests
         // Arrange
         SplitByPercentage splitData = new()
         {
-            PersonPercentageDict = new Dictionary<int, decimal>
+            PersonPercentageDict = new Dictionary<string, decimal>
             {
                 { _alice.Id, 100 }
             }
@@ -209,7 +209,7 @@ public class SplitCalculatorTests
         // Arrange
         SplitByPercentage splitData = new()
         {
-            PersonPercentageDict = new Dictionary<int, decimal>
+            PersonPercentageDict = new Dictionary<string, decimal>
             {
                 { _alice.Id, 50 },
                 { _bob.Id, 30 },
@@ -254,7 +254,7 @@ public class SplitCalculatorTests
         // Arrange
         SplitByPercentage splitData = new()
         {
-            PersonPercentageDict = new Dictionary<int, decimal>
+            PersonPercentageDict = new Dictionary<string, decimal>
             {
                 { _alice.Id, 50 },
                 { _bob.Id, 30 },
@@ -296,7 +296,7 @@ public class SplitCalculatorTests
         // Arrange
         SplitByExactAmount splitData = new()
         {
-            PersonIdAmountDict = new Dictionary<int, decimal>
+            PersonIdAmountDict = new Dictionary<string, decimal>
             {
                 { _alice.Id, 50 },
                 { _bob.Id, 30 },
@@ -340,7 +340,7 @@ public class SplitCalculatorTests
         // Arrange
         SplitByItemOwnership splitData = new()
         {
-            OwnershipGroups = new Dictionary<int, List<string>>
+            OwnershipGroups = new Dictionary<string, List<string>?>
             {
                 {
                     _bob.Id, ["Apple"]
@@ -391,7 +391,7 @@ public class SplitCalculatorTests
         // Arrange
         SplitByItemOwnership splitData = new()
         {
-            OwnershipGroups = new Dictionary<int, List<string>>
+            OwnershipGroups = new Dictionary<string, List<string>?>
             {
                 {
                     _bob.Id, ["Groceries"]

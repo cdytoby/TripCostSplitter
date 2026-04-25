@@ -6,7 +6,7 @@ namespace TripCostSplitter.Core.DataModels;
 
 public partial class Transaction: ObservableObject
 {
-    public int TransactionId { get; init; }
+    public string TransactionId { get; init; } = "";
     
     [ObservableProperty]
     public required partial ITransactionData TransactionData { get; set; }

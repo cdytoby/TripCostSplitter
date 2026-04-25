@@ -19,10 +19,10 @@ public partial class TransferData : ObservableObject, ITransactionData
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PayerInfos))]
-    public required partial int FromPersonId { get; set; }
+    public required partial string FromPersonId { get; set; }
 
     [ObservableProperty]
-    public required partial int ToPersonId { get; set; }
+    public required partial string ToPersonId { get; set; }
 
     [ObservableProperty]
     public required partial decimal Amount { get; set; }

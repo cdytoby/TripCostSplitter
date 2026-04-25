@@ -20,7 +20,7 @@ public partial class SplitByItemOwnershipViewModel: SplitDataViewModelBase
         {
             Items = paymentData.PurchaseItems.Select(pi => pi.Item).ToList();
             Participants = travelParticipants;
-            foreach (KeyValuePair<int, List<string>?> kvp in itemOwnershipData.OwnershipGroups)
+            foreach (KeyValuePair<string, List<string>?> kvp in itemOwnershipData.OwnershipGroups)
             {
                 foreach (string itemName in kvp.Value)
                 {

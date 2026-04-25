@@ -9,7 +9,7 @@ public class SplitEvenlyCalculator : ISplitCalculator
     public IList<RecipientInfo> CalculateDebit(PaymentData paymentData)
     {
         SplitEvenly splitData = (SplitEvenly)paymentData.SplitData!;
-        IList<int> allParticipants = paymentData.ParticipantIds;
+        IList<string> allParticipants = paymentData.ParticipantIds;
 
         if (!allParticipants.Any() || !paymentData.PayerInfos.Any())
             return new List<RecipientInfo>();
@@ -19,7 +19,7 @@ public class SplitEvenlyCalculator : ISplitCalculator
 
         List<RecipientInfo> result = [];
         
-        foreach (int participant in allParticipants)
+        foreach (string participant in allParticipants)
         {
             result.Add(new RecipientInfo(participant, perPerson));
         }

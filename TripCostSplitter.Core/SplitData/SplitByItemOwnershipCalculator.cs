@@ -9,8 +9,8 @@ public class SplitByItemOwnershipCalculator : ISplitCalculator
     public IList<RecipientInfo> CalculateDebit(PaymentData paymentData)
     {
         SplitByItemOwnership splitDataTyped = (SplitByItemOwnership)paymentData.SplitData!;
-        Dictionary<int, List<string>> ownershipDict = splitDataTyped.OwnershipGroups;
-        IList<int> allParticipants = paymentData.ParticipantIds;
+        Dictionary<string, List<string>?> ownershipDict = splitDataTyped.OwnershipGroups;
+        IList<string> allParticipants = paymentData.ParticipantIds;
 
         if (!ownershipDict.Any() || !paymentData.PayerInfos.Any() || !allParticipants.Any())
             return new List<RecipientInfo>();
@@ -18,7 +18,7 @@ public class SplitByItemOwnershipCalculator : ISplitCalculator
         List<RecipientInfo> result = [];
         
         
-        foreach (int participant in allParticipants)
+        foreach (string participant in allParticipants)
         {
             decimal personTotal = 0;
             if (ownershipDict.TryGetValue(participant, out List<string>? itemNames))

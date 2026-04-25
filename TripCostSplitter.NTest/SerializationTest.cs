@@ -12,8 +12,8 @@ public class TravelSerializationTests
     public void Travel_SerializationRoundTrip_ShouldPreserveData()
     {
         // Arrange
-        Person alice = new(1, "Alice");
-        Person bob = new(2, "Bob");
+        Person alice = new("1", "Alice");
+        Person bob = new("2", "Bob");
         
         PaymentData paymentData = new()
         {
@@ -29,7 +29,7 @@ public class TravelSerializationTests
             ],
             SplitData = new SplitByItemOwnership
             {
-                OwnershipGroups = new Dictionary<int, List<string>?>
+                OwnershipGroups = new Dictionary<string, List<string>?>
                 {
                     { alice.Id, ["Apple", "Orange"] }
                 }
@@ -38,7 +38,7 @@ public class TravelSerializationTests
         
         Transaction transaction = new()
         {
-            TransactionId = 1234,
+            TransactionId = "1234",
             TransactionData = paymentData,
             RecipientInfos =
             [
@@ -49,7 +49,7 @@ public class TravelSerializationTests
         
         Travel originalTravel = new()
         {
-            TravelId = 5678,
+            TravelId = "5678",
             Name = "Trip",
             CalculateCurrency = "USD",
             Transactions = [transaction]
@@ -67,7 +67,7 @@ public class TravelSerializationTests
         
         // Assert
         Assert.That(deserializedTravel!.Transactions.First().TransactionData is PaymentData);
-        Assert.That(deserializedTravel!.Transactions.First().TransactionId.Equals(1234));
+        Assert.That(deserializedTravel!.Transactions.First().TransactionId.Equals("1234"));
     }
     
     [Test]

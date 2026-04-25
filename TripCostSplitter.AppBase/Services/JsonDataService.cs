@@ -7,7 +7,6 @@ namespace TripCostSplitter.AppBase.Services;
 public abstract class JsonDataService: IDataService
 {
     protected const string TravelFolderName = "Travels";
-    protected const string AccessDataFileName = "access.json";
     
     private JsonSerializerOptions jsonOptions = new()
     {
@@ -36,30 +35,6 @@ public abstract class JsonDataService: IDataService
     {
         string fullPath = Path.Combine(appDataRootPath, relativeFilePath);
         await File.WriteAllTextAsync(fullPath, content).ConfigureAwait(false);
-    }
-    
-    public async Task SaveAccessData(AccessManagerData accessData)
-    {
-        await SaveFileAsync(AccessDataFileName, JsonSerializer.Serialize(accessData, jsonOptions));
-    }
-    
-    public async Task<AccessManagerData> LoadAccessData()
-    {
-        string fullPath = Path.Combine(appDataRootPath, AccessDataFileName);
-        AccessManagerData? loadData = null;
-        try
-        {
-            string textData = await File.ReadAllTextAsync(fullPath).ConfigureAwait(false);
-            loadData = JsonSerializer.Deserialize<AccessManagerData>(textData);
-        }
-        catch
-        {
-            // ignored
-        }
-        
-        loadData ??= new AccessManagerData();
-        
-        return loadData;
     }
     
     public async Task SaveTravelAsync(Travel travel)

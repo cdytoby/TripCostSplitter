@@ -13,12 +13,15 @@ public partial class TravelDetailViewModel: ObservableObject
     public CurrencyModel[] AllCurrencies { get; }
     
     private readonly SessionService sessionService;
+    private readonly AccessManager accessManager;
     
     public TravelDetailViewModel(
         SessionService _sessionService,
+        AccessManager _accessManager,
         CurrencyService _currencyService)
     {
         sessionService = _sessionService;
+        accessManager = _accessManager;
         
         AllCurrencies = _currencyService.GetAllCurrencyInfos();
         
@@ -54,7 +57,7 @@ public partial class TravelDetailViewModel: ObservableObject
     {
         if (string.IsNullOrWhiteSpace(name))
             return;
-        int newId = Travel.Participants.Count > 0 ? Travel.Participants.Max(p => p.Id) + 1 : 1;
+        string newId = AccessManager.GetNewId();
         Travel.Participants.Add(new Person(newId, name));
         await sessionService.Save();
     }

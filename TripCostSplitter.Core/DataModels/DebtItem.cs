@@ -1,3 +1,3 @@
 ﻿namespace TripCostSplitter.Core.DataModels;
 
-public record DebtItem(int DebtorId, int CreditorId, decimal Amount);
+public record DebtItem(string DebtorId, string CreditorId, decimal Amount);
