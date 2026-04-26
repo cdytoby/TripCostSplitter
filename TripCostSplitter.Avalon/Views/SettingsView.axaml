@@ -1,0 +1,158 @@
+﻿<ContentPage
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
+    xmlns:dvms="clr-namespace:TripCostSplitter.Avalon.DesignViewModels;assembly=TripCostSplitter.Avalon"
+    mc:Ignorable="d"
+    x:Class="TripCostSplitter.Avalon.Views.SettingsView"
+    x:DataType="vm:SettingsViewModel"
+    d:DesignWidth="400"
+    d:DesignHeight="800"
+    d:DataContext="{x:Static dvms:DesignData.ExampleSettingsViewModel}"
+    Header="Settings">
+    
+    <ContentPage.Styles>
+        <StyleInclude Source="avares://TripCostSplitter.Avalon/Resources/AppStyles.axaml" />
+    </ContentPage.Styles>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude
+                    Source="/Resources/AppResources.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollViewer>
+        <StackPanel
+            Margin="20"
+            Spacing="5">
+            <Grid
+                ColumnDefinitions="Auto,*">
+                <TextBlock
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Margin="0,0,10,0"
+                    Text="Default Currency"
+                    FontWeight="Bold" />
+                <ComboBox
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{Binding AvailableCurrencies}"
+                    SelectedItem="{Binding DefaultCurrency}"
+                    ItemTemplate="{StaticResource CurrencyComboBoxTemplate}" />
+            </Grid>
+
+            <Grid
+                ColumnDefinitions="Auto,*"
+                Margin="0,10,0,0">
+                <TextBlock
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Global Exchange Rates"
+                    FontWeight="Bold" />
+                <Button
+                    Grid.Column="1"
+                    Classes="actionIcon"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    Command="{Binding AddExchangeRateCommand}">
+                    <PathIcon
+                        Data="{StaticResource IconAddRegular}"
+                        Width="16"
+                        Height="16" />
+                </Button>
+            </Grid>
+
+            <ItemsControl
+                ItemsSource="{Binding ExchangeRateViewModels}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid
+                            ColumnDefinitions="*,25,*,*,Auto"
+                            RowDefinitions="*,*"
+                            RowSpacing="5"
+                            ColumnSpacing="5"
+                            Margin="0,5">
+                            <ComboBox
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                ItemsSource="{Binding $parent[ContentPage].((vm:SettingsViewModel)DataContext).AvailableCurrencies}"
+                                SelectedItem="{Binding LeftCurrency}"
+                                ItemTemplate="{StaticResource CurrencyComboBoxTemplate}" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Text="→" />
+                            <ComboBox
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                ItemsSource="{Binding $parent[ContentPage].((vm:SettingsViewModel)DataContext).AvailableCurrencies}"
+                                SelectedItem="{Binding RightCurrency}"
+                                ItemTemplate="{StaticResource CurrencyComboBoxTemplate}" />
+                            <NumericUpDown
+                                Grid.Row="0"
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                Margin="0,0,2,0"
+                                VerticalAlignment="Center"
+                                Minimum="0"
+                                ShowButtonSpinner="False"
+                                AllowSpin="False"
+                                Value="{Binding LeftToRightRate}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right"
+                                Text="{Binding RightCurrency.Code}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Text="→" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                Text="{Binding LeftCurrency.Code}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="3"
+                                VerticalAlignment="Center"
+                                Text="{Binding RightToLeftRate}" />
+                            <Button
+                                Grid.Row="1"
+                                Grid.Column="4"
+                                Classes="actionIcon"
+                                VerticalAlignment="Center"
+                                Command="{Binding $parent[ContentPage].((vm:SettingsViewModel)DataContext).RemoveExchangeRateCommand}"
+                                CommandParameter="{Binding}">
+                                <PathIcon
+                                    Data="{StaticResource IconDeleteRegular}"
+                                    Width="16"
+                                    Height="16" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Button
+                Classes="actionText"
+                Content="Save"
+                Command="{Binding SaveSettingsCommand}"
+                HorizontalAlignment="Right"
+                Margin="0,20,0,0" />
+        </StackPanel>
+    </ScrollViewer>
+</ContentPage>

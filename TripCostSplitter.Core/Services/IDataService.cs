@@ -11,4 +11,8 @@ public interface IDataService
     Task<IEnumerable<Travel>> LoadAllTravelsAsync();
     
     Task DeleteTravelAsync(Travel travel);
+
+    Task<SettingsDataModel> LoadSettingsAsync();
+    
+    Task SaveSettingsAsync(SettingsDataModel settings);
 }

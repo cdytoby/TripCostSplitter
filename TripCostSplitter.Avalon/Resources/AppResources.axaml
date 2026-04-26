@@ -1,8 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dataModels="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core">
     <!-- https://avaloniaui.github.io/icons.html -->
     <!-- Add Resources Here -->
+
     <StreamGeometry
         x:Key="IconRemoveRegular">
         M3.7547787,12.4995322 L20.2466903,12.4995322 C20.6609039,12.4995322 20.9966903,12.1637458 20.9966903,11.7495322 C20.9966903,11.3353187 20.6609039,10.9995322 20.2466903,10.9995322 L3.7547787,10.9995322 C3.34056514,10.9995322 3.0047787,11.3353187 3.0047787,11.7495322 C3.0047787,12.1637458 3.34056514,12.4995322 3.7547787,12.4995322 Z
@@ -19,4 +21,18 @@
         x:Key="IconEditRegular">
         M27.3138 4.68622C28.8759 6.24832 28.8759 8.78098 27.3138 10.3431L12.5409 25.116C11.9001 25.7568 11.0972 26.2114 10.218 26.4312L5.63602 27.5767C4.90364 27.7598 4.24025 27.0964 4.42335 26.364L5.56885 21.782C5.78864 20.9028 6.24323 20.0999 6.88402 19.4591L21.6569 4.68622C23.219 3.12412 25.7517 3.12412 27.3138 4.68622ZM20.2426 8.92865L8.29824 20.8734C7.91376 21.2578 7.641 21.7396 7.50913 22.2671L6.76786 25.2322L9.73295 24.4909C10.2604 24.359 10.7422 24.0863 11.1267 23.7018L23.0706 11.7566L20.2426 8.92865ZM23.0712 6.10043L21.6566 7.51465L24.4846 10.3426L25.8996 8.92886C26.6806 8.14781 26.6806 6.88148 25.8996 6.10043C25.1185 5.31939 23.8522 5.31939 23.0712 6.10043Z
     </StreamGeometry>
+
+    <DataTemplate
+        x:Key="CurrencyComboBoxTemplate"
+        x:DataType="dataModels:CurrencyModel">
+        <TextBlock>
+            <Run
+                Text="{Binding Code}" />
+            <Run
+                Text="{Binding Symbol}" />
+            <Run
+                Text="{Binding Name}" />
+        </TextBlock>
+    </DataTemplate>
+
 </ResourceDictionary>

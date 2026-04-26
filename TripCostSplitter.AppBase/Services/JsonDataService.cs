@@ -7,6 +7,7 @@ namespace TripCostSplitter.AppBase.Services;
 public abstract class JsonDataService: IDataService
 {
     protected const string TravelFolderName = "Travels";
+    protected const string SettingsFileName = "settings.json";
     
     private JsonSerializerOptions jsonOptions = new()
     {
@@ -88,5 +89,30 @@ public abstract class JsonDataService: IDataService
         File.Delete(fullPath);
         
         return Task.CompletedTask;
+    }
+
+    public async Task<SettingsDataModel> LoadSettingsAsync()
+    {
+        string fullPath = Path.Combine(appDataRootPath, SettingsFileName);
+        if (!File.Exists(fullPath))
+        {
+            return new SettingsDataModel();
+        }
+
+        try
+        {
+            string json = await File.ReadAllTextAsync(fullPath).ConfigureAwait(false);
+            return JsonSerializer.Deserialize<SettingsDataModel>(json) ?? new SettingsDataModel();
+        }
+        catch
+        {
+            return new SettingsDataModel();
+        }
+    }
+
+    public async Task SaveSettingsAsync(SettingsDataModel settings)
+    {
+        string json = JsonSerializer.Serialize(settings, jsonOptions);
+        await SaveFileAsync(SettingsFileName, json);
     }
 }

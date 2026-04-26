@@ -16,6 +16,7 @@ public static class ServiceExtensions
         services.AddTransient<PaymentDetailViewModel>();
         services.AddTransient<TransactionListViewModel>();
         services.AddTransient<DebtsViewModel>();
+        services.AddTransient<SettingsViewModel>();
         
         // Services
         services.AddSingleton<CurrencyService>();

@@ -15,6 +15,18 @@ public class CurrencyService
         return knownCurrencies.Values.Where(kvp => keys.Contains(kvp.Code)).ToArray();
     }
     
+    public CurrencyModel? GetCurrencyInfo(string key)
+    {
+        return knownCurrencies.Values.SingleOrDefault(kvp => key.Equals(kvp.Code));
+    }
+    
+    public CurrencyModel GetCurrencyInfoFromCultureInfo(CultureInfo cultureInfo)
+    {
+        return knownCurrencies.Values.SingleOrDefault(
+            kvp => kvp.CultureInfoCode.Equals(cultureInfo.Name),
+            knownCurrencies["EUR"]);
+    }
+    
     public string GetDescription(string key)
     {
         return GetDescription(knownCurrencies[key]);

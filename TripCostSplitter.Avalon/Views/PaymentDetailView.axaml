@@ -16,6 +16,12 @@
     Header="Transaction Details">
 
     <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude
+                    Source="/Resources/AppResources.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
         <converters:PersonIdNameConverter
             x:Key="PersonIdNameConverter" />
     </ContentPage.Resources>
@@ -62,19 +68,8 @@
                 <ComboBox
                     ItemsSource="{Binding AvailableCurrencies}"
                     SelectedValue="{Binding PaymentData.Currency, FallbackValue=''}"
-                    SelectedValueBinding="{Binding Path=Code}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock>
-                                <Run
-                                    Text="{Binding Code}" />
-                                <Run
-                                    Text="{Binding Symbol}" />
-                                <Run
-                                    Text="{Binding Name}" />
-                            </TextBlock>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
+                    SelectedValueBinding="{Binding Path=Code}"
+                    ItemTemplate="{StaticResource CurrencyComboBoxTemplate}">
                 </ComboBox>
 
                 <!-- Who Paid -->

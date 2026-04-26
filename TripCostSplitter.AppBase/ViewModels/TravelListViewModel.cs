@@ -79,4 +79,10 @@ public partial class TravelListViewModel: ObservableObject
         Travels.Remove(travel);
         await dataService.DeleteTravelAsync(travel);
     }
+
+    [RelayCommand]
+    private async Task NavigateToSettings()
+    {
+        await navigationService.PushAsync(ViewDefinition.SettingsView);
+    }
 }

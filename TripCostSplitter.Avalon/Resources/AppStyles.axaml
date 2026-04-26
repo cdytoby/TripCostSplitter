@@ -1,0 +1,53 @@
+﻿<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <StackPanel
+            Width="500"
+            Height="500">
+            <!-- Add Controls for Previewer Here -->
+            <Button
+                Classes="actionIcon"
+                Content="+" />
+            <Button
+                Classes="actionText"
+                Content="Action" />
+            <Button
+                Classes="actionText"
+                Content="i" />
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <Style
+        Selector="Button.actionIcon">
+        <Setter
+            Property="Width"
+            Value="40" />
+        <Setter
+            Property="Height"
+            Value="40" />
+        <Setter
+            Property="HorizontalContentAlignment"
+            Value="Center" />
+        <Setter
+            Property="VerticalContentAlignment"
+            Value="Center" />
+    </Style>
+
+    <Style
+        Selector="Button.actionText">
+        <Setter
+            Property="MinWidth"
+            Value="50" />
+        <Setter
+            Property="Height"
+            Value="40" />
+        <Setter
+            Property="HorizontalContentAlignment"
+            Value="Center" />
+        <Setter
+            Property="VerticalContentAlignment"
+            Value="Center" />
+    </Style>
+    <!-- Add Styles Here -->
+</Styles>

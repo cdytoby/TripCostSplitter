@@ -10,6 +10,16 @@
     d:DesignWidth="400"
     d:DesignHeight="800"
     DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude
+                    Source="/Resources/AppResources.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <ScrollViewer>
         <StackPanel
             Spacing="15"
@@ -24,18 +34,10 @@
             <ComboBox
                 ItemsSource="{Binding AllCurrencies}"
                 SelectedValue="{Binding Travel.CalculateCurrency}"
-                SelectedValueBinding="{Binding Path=Code}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock>
-                            <Run Text="{Binding Code}" />
-                            <Run Text="{Binding Symbol}" />
-                            <Run Text="{Binding Name}" />
-                        </TextBlock>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
+                SelectedValueBinding="{Binding Path=Code}"
+                ItemTemplate="{StaticResource CurrencyComboBoxTemplate}">
             </ComboBox>
-            
+
             <TextBlock
                 Text="Additional Currencies"
                 FontSize="18"
@@ -63,26 +65,20 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            
-            <StackPanel Orientation="Horizontal" Spacing="5">
+
+            <StackPanel
+                Orientation="Horizontal"
+                Spacing="5">
                 <ComboBox
                     x:Name="AdditionalCurrencyBox"
                     ItemsSource="{Binding AllCurrencies}"
                     SelectedValueBinding="{Binding Path=Code}"
-                    Width="200">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock>
-                                <Run Text="{Binding Code}" />
-                                <Run Text="{Binding Symbol}" />
-                                <Run Text="{Binding Name}" />
-                            </TextBlock>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                <Button Content="+" 
-                        Command="{Binding AddAdditionalCurrencyCommand}"
-                        CommandParameter="{Binding #AdditionalCurrencyBox.SelectedValue}" />
+                    ItemTemplate="{StaticResource CurrencyComboBoxTemplate}"
+                    Width="200" />
+                <Button
+                    Content="+"
+                    Command="{Binding AddAdditionalCurrencyCommand}"
+                    CommandParameter="{Binding #AdditionalCurrencyBox.SelectedValue}" />
             </StackPanel>
 
             <Separator />

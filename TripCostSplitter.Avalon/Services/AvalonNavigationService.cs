@@ -26,7 +26,7 @@ public class AvalonNavigationService: INavigationService
     public async Task PushAsync(string pageId)
     {
         if (_navigationPage == null)
-            throw new InvalidOperationException("NavigationPage not set.");
+            return;
         
         Page view = GetPageFromId(pageId);
         await _navigationPage.PushAsync(view);
@@ -35,7 +35,7 @@ public class AvalonNavigationService: INavigationService
     public async Task PopAsync()
     {
         if (_navigationPage == null)
-            throw new InvalidOperationException("NavigationPage not set.");
+            return;
         
         await _navigationPage.PopAsync();
     }
@@ -47,6 +47,7 @@ public class AvalonNavigationService: INavigationService
             ViewDefinition.TravelListView => _serviceProvider.GetRequiredService<TravelListView>(),
             ViewDefinition.TravelDetailView => _serviceProvider.GetRequiredService<TravelView>(),
             ViewDefinition.PaymentDetailView => _serviceProvider.GetRequiredService<PaymentDetailView>(),
+            ViewDefinition.SettingsView => _serviceProvider.GetRequiredService<SettingsView>(),
             _ => throw new Exception($"Unknown pageId: {pageId}")
         };
     }
