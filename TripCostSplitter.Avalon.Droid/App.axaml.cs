@@ -19,7 +19,7 @@ public partial class App : Avalonia.Application
         AvaloniaXamlLoader.Load(this);
 
         ServiceCollection serviceCollection = new();
-        serviceCollection.AddTripCostSplitterServices();
+        serviceCollection.AddAvalonServices();
         
         // Register platform-specific services
         serviceCollection.AddSingleton<IDataService, AndroidDataService>();
