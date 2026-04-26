@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
     xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
-    x:Class="TripCostSplitter.Avalon.Views.TravelDetailsTab"
+    x:Class="TripCostSplitter.Avalon.Views.TravelDetailsView"
     x:CompileBindings="False"
     d:DesignWidth="400"
     d:DesignHeight="800"

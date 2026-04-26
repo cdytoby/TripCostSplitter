@@ -25,9 +25,9 @@ public static class ServiceExtensions
         services.AddTransient<TravelListView>();
         services.AddTransient<TravelView>();
         services.AddTransient<PaymentDetailView>();
-        services.AddTransient<TravelDetailsTab>();
-        services.AddTransient<TravelTransactionsTab>();
-        services.AddTransient<TravelDebtsTab>();
+        services.AddTransient<TravelDetailsView>();
+        services.AddTransient<TravelTransactionsView>();
+        services.AddTransient<TravelDebtsView>();
         
         // Services
         services.AddSingleton<IAppDispatcherService, AvalonDispatcherService>();

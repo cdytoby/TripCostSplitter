@@ -6,8 +6,8 @@ namespace TripCostSplitter.Avalon.Views;
 
 public partial class TravelView: ContentPage
 {
-    private TravelDebtsTab? travelDebtsView;
-    private TravelTransactionsTab? travelTransactionsView;
+    private TravelDebtsView? travelDebtsView;
+    private TravelTransactionsView? travelTransactionsView;
     
     public TravelView()
     {
@@ -16,9 +16,9 @@ public partial class TravelView: ContentPage
     
     public TravelView(
         SessionService _sessionService,
-        TravelDetailsTab _travelDetailsView,
-        TravelTransactionsTab _travelTransactionsView,
-        TravelDebtsTab _travelDebtsView)
+        TravelDetailsView _travelDetailsView,
+        TravelTransactionsView _travelTransactionsView,
+        TravelDebtsView _travelDebtsView)
     {
         InitializeComponent();
         

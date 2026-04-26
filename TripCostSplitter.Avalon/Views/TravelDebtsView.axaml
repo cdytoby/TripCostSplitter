@@ -6,7 +6,7 @@
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
     xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
     xmlns:converters="clr-namespace:TripCostSplitter.Avalon.Converters"
-    x:Class="TripCostSplitter.Avalon.Views.TravelDebtsTab"
+    x:Class="TripCostSplitter.Avalon.Views.TravelDebtsView"
     x:CompileBindings="False"
     d:DesignWidth="400"
     d:DesignHeight="800"

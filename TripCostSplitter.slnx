@@ -4,8 +4,8 @@
   </Folder>
   <Folder Name="/LApp/">
     <Project Path="TripCostSplitter.AppBase/TripCostSplitter.AppBase.csproj" />
-    <Project Path="TripCostSplitter.Avalon.Android/TripCostSplitter.Avalon.Android.csproj" />
     <Project Path="TripCostSplitter.Avalon.Desktop/TripCostSplitter.Avalon.Desktop.csproj" />
+    <Project Path="TripCostSplitter.Avalon.Droid/TripCostSplitter.Avalon.Droid.csproj" />
     <Project Path="TripCostSplitter.Avalon/TripCostSplitter.Avalon.csproj" />
   </Folder>
   <Folder Name="/ZTest/">

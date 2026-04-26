@@ -3,12 +3,12 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
-using TripCostSplitter.Avalon.Android.Services;
+using TripCostSplitter.Avalon.Droid.Services;
 using TripCostSplitter.Avalon.Views;
 using TripCostSplitter.Core;
 using TripCostSplitter.Core.Services;
 
-namespace TripCostSplitter.Avalon.Android;
+namespace TripCostSplitter.Avalon.Droid;
 
 public partial class App : Avalonia.Application
 {
@@ -18,7 +18,7 @@ public partial class App : Avalonia.Application
     {
         AvaloniaXamlLoader.Load(this);
 
-        ServiceCollection serviceCollection = new ServiceCollection();
+        ServiceCollection serviceCollection = new();
         serviceCollection.AddTripCostSplitterServices();
         
         // Register platform-specific services

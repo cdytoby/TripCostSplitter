@@ -3,16 +3,16 @@ using TripCostSplitter.AppBase.ViewModels;
 
 namespace TripCostSplitter.Avalon.Views;
 
-public partial class TravelDebtsTab : UserControl
+public partial class TravelTransactionsView : UserControl
 {
-    public DebtsViewModel? ViewModel { get; }
+    public TransactionListViewModel? ViewModel { get; }
     
-    public TravelDebtsTab()
+    public TravelTransactionsView()
     {
         InitializeComponent();
     }
     
-    public TravelDebtsTab(DebtsViewModel _viewModel)
+    public TravelTransactionsView(TransactionListViewModel _viewModel)
     {
         ViewModel = _viewModel;
         InitializeComponent();
