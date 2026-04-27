@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.AppBase.ViewModels;
+using TripCostSplitter.Core;
 using TripCostSplitter.Core.Services;
 using TripCostSplitter.Core.SplitData;
 
@@ -23,6 +24,7 @@ public static class ServiceExtensions
         services.AddSingleton<AccessManager>();
         services.AddSingleton<SessionService>();
         services.AddSingleton<SplitDataViewModelService>();
+        services.AddSingleton<DebtCalculator>();
         
         // Split Calculators
         services.AddSingleton<ISplitCalculator, SplitEvenlyCalculator>();

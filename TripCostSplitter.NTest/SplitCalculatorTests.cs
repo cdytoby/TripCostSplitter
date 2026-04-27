@@ -38,7 +38,6 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
-            Currency = "USD",
             ParticipantIds = [_alice.Id],
             PayerInfos = 
             [
@@ -68,7 +67,6 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
-            Currency = "USD",
             ParticipantIds = 
             [
                 _alice.Id,
@@ -103,7 +101,6 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
-            Currency = "USD",
             ParticipantIds = 
             [
                 _alice.Id,
@@ -144,7 +141,6 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
-            Currency = "USD",
             ParticipantIds = 
             [
                 _alice.Id,
@@ -183,7 +179,6 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
-            Currency = "USD",
             ParticipantIds = [_alice.Id],
             PayerInfos = 
             [
@@ -221,7 +216,6 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
-            Currency = "USD",
             ParticipantIds = 
             [
                 _alice.Id,
@@ -267,7 +261,6 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
-            Currency = "USD",
             ParticipantIds = 
             [
                 _alice.Id,
@@ -308,7 +301,6 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
-            Currency = "USD",
             ParticipantIds = 
             [
                 _alice.Id,
@@ -355,7 +347,6 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
-            Currency = "USD",
             ParticipantIds = 
             [
                 _alice.Id,
@@ -410,7 +401,6 @@ public class SplitCalculatorTests
         {
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
-            Currency = "USD",
             ParticipantIds = 
             [
                 _alice.Id,

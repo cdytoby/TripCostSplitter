@@ -20,7 +20,6 @@ public class TravelSerializationTests
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id],
-            Currency = "USD",
             PayerInfos = [new PayerInfo(alice.Id, 100)],
             PurchaseItems =
             [
@@ -39,6 +38,7 @@ public class TravelSerializationTests
         Transaction transaction = new()
         {
             TransactionId = "1234",
+            Currency = "USD",
             TransactionData = paymentData,
             RecipientInfos =
             [

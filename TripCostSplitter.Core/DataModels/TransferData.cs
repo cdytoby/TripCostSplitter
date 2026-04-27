@@ -12,12 +12,6 @@ public partial class TransferData : ObservableObject, ITransactionData
     public partial string? Description { get; set; }
 
     [ObservableProperty]
-    public required partial string Currency { get; set; }
-
-    [ObservableProperty]
-    public partial decimal? ExchangeRateOverride { get; set; }
-
-    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PayerInfos))]
     public required partial string FromPersonId { get; set; }
 

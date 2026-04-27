@@ -18,12 +18,6 @@ public partial class PaymentData: ObservableObject, ITransactionData
     public partial string? Description { get; set; }
     
     [ObservableProperty]
-    public required partial string Currency { get; set; }
-    
-    [ObservableProperty]
-    public partial decimal? ExchangeRateOverride { get; set; }
-    
-    [ObservableProperty]
     public required partial ObservableCollection<PayerInfo> PayerInfos { get; set; }
     
     [ObservableProperty]

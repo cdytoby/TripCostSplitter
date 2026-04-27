@@ -1,4 +1,5 @@
-﻿using TripCostSplitter.Core.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
+using TripCostSplitter.Core.Services;
 
 namespace TripCostSplitter.NTest;
 
@@ -9,7 +10,7 @@ public class CurrencyTest
     [TestCase("CNY", 3215.6789, "¥3215.68")]
     public void CheckCurrencyFormat(string key, decimal value, string expectedResult)
     {
-        CurrencyService service = new();
+        CurrencyService service = TestSetup.ServiceProvider.GetService<CurrencyService>()!;
         
         string result = service.GetFormattedString(key, value);
         Console.WriteLine(result);
@@ -22,7 +23,7 @@ public class CurrencyTest
     [TestCase("CNY", "3215.68", 3215.68)]
     public void CheckCurrencyInput(string key, string value, decimal expectedResult)
     {
-        CurrencyService service = new();
+        CurrencyService service = TestSetup.ServiceProvider.GetService<CurrencyService>()!;
         
         decimal result = service.ParseFormattedString(key, value);
         Console.WriteLine(result);

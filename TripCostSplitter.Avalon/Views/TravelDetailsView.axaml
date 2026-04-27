@@ -6,7 +6,7 @@
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
     xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
     x:Class="TripCostSplitter.Avalon.Views.TravelDetailsView"
-    x:CompileBindings="False"
+    x:DataType="vm:TravelDetailViewModel"
     d:DesignWidth="400"
     d:DesignHeight="800"
     DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}">
@@ -34,14 +34,30 @@
             <ComboBox
                 ItemsSource="{Binding AllCurrencies}"
                 SelectedValue="{Binding Travel.CalculateCurrency}"
-                SelectedValueBinding="{Binding Path=Code}"
+                SelectedValueBinding="{ReflectionBinding Path=Code}"
                 ItemTemplate="{StaticResource CurrencyComboBoxTemplate}">
             </ComboBox>
 
-            <TextBlock
-                Text="Additional Currencies"
-                FontSize="18"
-                FontWeight="Bold" />
+            <StackPanel
+                Orientation="Horizontal"
+                Spacing="10">
+                <TextBlock
+                    Text="Additional Currencies"
+                    FontSize="18"
+                    FontWeight="Bold" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="LightPink"
+                    Text="!!!"
+                    IsVisible="{Binding IsCurrencyExchangeMissing}"
+                    IsEnabled="{Binding IsCurrencyExchangeMissing}">
+                    <TextBlock.ContextFlyout>
+                        <Flyout>
+                            <TextBlock>Some currencies don't have exchange rate defined</TextBlock>
+                        </Flyout>
+                    </TextBlock.ContextFlyout>
+                </TextBlock>
+            </StackPanel>
             <ItemsControl
                 ItemsSource="{Binding Travel.AdditionalCurrencies}">
                 <ItemsControl.ItemTemplate>
@@ -72,7 +88,7 @@
                 <ComboBox
                     x:Name="AdditionalCurrencyBox"
                     ItemsSource="{Binding AllCurrencies}"
-                    SelectedValueBinding="{Binding Path=Code}"
+                    SelectedValueBinding="{ReflectionBinding Path=Code}"
                     ItemTemplate="{StaticResource CurrencyComboBoxTemplate}"
                     Width="200" />
                 <Button

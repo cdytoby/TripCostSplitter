@@ -12,7 +12,11 @@ public partial class TravelDetailViewModel: ObservableObject
     public Travel Travel { get; }
     public CurrencyModel[] AllCurrencies { get; }
     
+    [ObservableProperty]
+    public partial bool IsCurrencyExchangeMissing { get; set; }
+    
     private readonly SessionService sessionService;
+    private readonly CurrencyService currencyService;
     private readonly AccessManager accessManager;
     
     public TravelDetailViewModel(
@@ -22,7 +26,7 @@ public partial class TravelDetailViewModel: ObservableObject
     {
         sessionService = _sessionService;
         accessManager = _accessManager;
-        
+        currencyService = _currencyService;
         AllCurrencies = _currencyService.GetAllCurrencyInfos();
         
         //todo exception or load state with nullable
@@ -40,7 +44,22 @@ public partial class TravelDetailViewModel: ObservableObject
             return;
         
         Travel.AdditionalCurrencies.Add(code);
+        
+        CheckExchangeAvailable();
+        
         await sessionService.Save();
+    }
+    
+    private void CheckExchangeAvailable()
+    {
+        if (Travel.AdditionalCurrencies.Any(currency =>
+            currencyService.GetExchangeRate(Travel.CalculateCurrency, currency) == 0))
+        {
+            IsCurrencyExchangeMissing = true;
+            return;
+        }
+        
+        IsCurrencyExchangeMissing = false;
     }
     
     [RelayCommand]
@@ -48,6 +67,8 @@ public partial class TravelDetailViewModel: ObservableObject
     {
         //todo delete only when currency is not used
         Travel.AdditionalCurrencies.Remove(code);
+        
+        CheckExchangeAvailable();
         
         await sessionService.Save();
     }

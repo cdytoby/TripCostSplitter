@@ -49,5 +49,13 @@
             Property="VerticalContentAlignment"
             Value="Center" />
     </Style>
+    
+    <Style Selector="ComboBox.error">
+        <Setter Property="BorderBrush" Value="Red" />
+    </Style>
+    
+    <Style Selector="NumericUpDown.error">
+        <Setter Property="BorderBrush" Value="Red" />
+    </Style>
     <!-- Add Styles Here -->
 </Styles>

@@ -22,6 +22,8 @@ public partial class SplitByItemOwnershipViewModel: SplitDataViewModelBase
             Participants = travelParticipants;
             foreach (KeyValuePair<string, List<string>?> kvp in itemOwnershipData.OwnershipGroups)
             {
+                if (kvp.Value == null)
+                    continue;
                 foreach (string itemName in kvp.Value)
                 {
                     PurchaseItemOwnerViewModel itemVm =

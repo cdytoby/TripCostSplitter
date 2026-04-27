@@ -34,7 +34,6 @@ public partial class TransactionListViewModel: ObservableObject
         {
             Date = DateTime.Now,
             DateTimeZone = TimeZoneInfo.Local,
-            Currency = Travel.CalculateCurrency,
             PayerInfos = [],
             ParticipantIds = new(Travel.Participants.Select(p => p.Id)),
             PurchaseItems = []
@@ -42,6 +41,7 @@ public partial class TransactionListViewModel: ObservableObject
         Transaction transaction = new()
         {
             TransactionId = AccessManager.GetNewId(),
+            Currency = Travel.CalculateCurrency,
             TransactionData = transactionData
         };
         Travel.Transactions.Add(transaction);

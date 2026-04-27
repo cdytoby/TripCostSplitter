@@ -11,9 +11,5 @@ public interface ITransactionData
     
     string? Description { get; }
     
-    string Currency { get; }
-    
-    decimal? ExchangeRateOverride { get; }
-    
     ObservableCollection<PayerInfo> PayerInfos { get; }
 }

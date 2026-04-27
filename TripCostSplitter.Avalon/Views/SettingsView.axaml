@@ -12,9 +12,10 @@
     d:DesignHeight="800"
     d:DataContext="{x:Static dvms:DesignData.ExampleSettingsViewModel}"
     Header="Settings">
-    
+
     <ContentPage.Styles>
-        <StyleInclude Source="avares://TripCostSplitter.Avalon/Resources/AppStyles.axaml" />
+        <StyleInclude
+            Source="avares://TripCostSplitter.Avalon/Resources/AppStyles.axaml" />
     </ContentPage.Styles>
 
     <ContentPage.Resources>
@@ -81,6 +82,7 @@
                                 Grid.Row="0"
                                 Grid.Column="0"
                                 VerticalAlignment="Center"
+                                Classes.error="{Binding !IsLeftCurrencyValid}"
                                 ItemsSource="{Binding $parent[ContentPage].((vm:SettingsViewModel)DataContext).AvailableCurrencies}"
                                 SelectedItem="{Binding LeftCurrency}"
                                 ItemTemplate="{StaticResource CurrencyComboBoxTemplate}" />
@@ -94,19 +96,31 @@
                                 Grid.Row="0"
                                 Grid.Column="2"
                                 VerticalAlignment="Center"
+                                Classes.error="{Binding !IsRightCurrencyValid}"
                                 ItemsSource="{Binding $parent[ContentPage].((vm:SettingsViewModel)DataContext).AvailableCurrencies}"
                                 SelectedItem="{Binding RightCurrency}"
                                 ItemTemplate="{StaticResource CurrencyComboBoxTemplate}" />
                             <NumericUpDown
+                                x:CompileBindings="False"
                                 Grid.Row="0"
                                 Grid.Column="3"
                                 Grid.ColumnSpan="2"
+                                Classes.error="{Binding !LeftToRightRate}"
                                 Margin="0,0,2,0"
                                 VerticalAlignment="Center"
                                 Minimum="0"
                                 ShowButtonSpinner="False"
                                 AllowSpin="False"
-                                Value="{Binding LeftToRightRate}" />
+                                Value="{Binding LeftToRightRate, FallbackValue=0, TargetNullValue=0}" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="4"
+                                IsVisible="{Binding Duplicate}"
+                                Margin="0,0,5,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Foreground="Red"
+                                Text="!!" />
                             <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="0"
@@ -129,7 +143,7 @@
                                 Grid.Row="1"
                                 Grid.Column="3"
                                 VerticalAlignment="Center"
-                                Text="{Binding RightToLeftRate}" />
+                                Text="{Binding RightToLeftRate, StringFormat='F6'}" />
                             <Button
                                 Grid.Row="1"
                                 Grid.Column="4"

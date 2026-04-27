@@ -161,7 +161,7 @@ public partial class PaymentDetailViewModel: ObservableObject
         if (calculator != null)
         {
             IList<RecipientInfo> debits = calculator.CalculateDebit(PaymentData);
-            transaction.RecipientInfos = new(debits);
+            transaction.RecipientInfos = new List<RecipientInfo>(debits);
         }
     }
     

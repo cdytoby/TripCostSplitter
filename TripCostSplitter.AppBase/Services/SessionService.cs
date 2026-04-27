@@ -15,6 +15,7 @@ public class SessionService
         dataService = _dataService;
     }
     
+    //todo put it to AccessManager.
     public async Task Save()
     {
         if (CurrentTravel != null)
