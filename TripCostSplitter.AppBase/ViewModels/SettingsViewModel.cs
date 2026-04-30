@@ -26,8 +26,6 @@ public partial class SettingsViewModel: ObservableRecipient
     private readonly IAppDispatcherService dispatcher;
     private readonly CurrencyService currencyService;
     
-    private SettingsDataModel? settings;
-    
     public SettingsViewModel(
         IDataService _dataService,
         IAppDispatcherService _dispatcher,
@@ -43,37 +41,26 @@ public partial class SettingsViewModel: ObservableRecipient
         
         Messenger.Register<PropertyChangedMessage<CurrencyModel>>(this, MarkDuplicateExchangeRates);
         
-        Task.Run(LoadSettingsAsync);
-    }
-    
-    [RelayCommand]
-    public async Task LoadSettingsAsync()
-    {
-        settings = await dataService.LoadSettingsAsync();
-        
-        dispatcher.Invoke(() =>
-        {
-            LoadDefaultCurrency();
-            LoadLocalExchangeRate();
-        });
+        LoadDefaultCurrency();
+        LoadLocalExchangeRate();
     }
     
     private void LoadDefaultCurrency()
     {
-        if (string.IsNullOrEmpty(settings!.DefaultCurrency))
+        if (string.IsNullOrEmpty(dataService.Settings.DefaultCurrency))
         {
             DefaultCurrency = currencyService.GetCurrencyInfoFromCultureInfo(CultureInfo.CurrentCulture);
         }
         else
         {
-            DefaultCurrency = AvailableCurrencies.Single(m => m.Code.Equals(settings.DefaultCurrency));
+            DefaultCurrency = AvailableCurrencies.Single(m => m.Code.Equals(dataService.Settings.DefaultCurrency));
         }
     }
     
     private void LoadLocalExchangeRate()
     {
         ExchangeRateViewModels.Clear();
-        foreach (CurrencyExchangeRateModel model in settings!.CachedExchangeRates)
+        foreach (CurrencyExchangeRateModel model in dataService.Settings!.CachedExchangeRates)
         {
             ExchangeRateItemViewModel vm = new(Messenger);
             vm.Load(model, currencyService);
@@ -81,10 +68,10 @@ public partial class SettingsViewModel: ObservableRecipient
         }
     }
     
-    [RelayCommand(CanExecute = nameof(CanSave))]
+    [RelayCommand]
     public async Task SaveSettingsAsync()
     {
-        settings!.DefaultCurrency = DefaultCurrency!.Code;
+        dataService.Settings.DefaultCurrency = DefaultCurrency!.Code;
         List<CurrencyExchangeRateModel> result = [];
         foreach (ExchangeRateItemViewModel exchangeRateItemViewModel in ExchangeRateViewModels)
         {
@@ -93,9 +80,9 @@ public partial class SettingsViewModel: ObservableRecipient
                 result.Add(model);
         }
         
-        settings!.CachedExchangeRates = result;
+        dataService.Settings.CachedExchangeRates = result;
         
-        await dataService.SaveSettingsAsync(settings!);
+        await dataService.SaveSettingsAsync();
         await navigationService.PopAsync();
     }
     
@@ -133,10 +120,5 @@ public partial class SettingsViewModel: ObservableRecipient
         {
             vm.Duplicate = duplicates.Contains(vm);
         }
-    }
-    
-    private bool CanSave()
-    {
-        return settings != null;
     }
 }

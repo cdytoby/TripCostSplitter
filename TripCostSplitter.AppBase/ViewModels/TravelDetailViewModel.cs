@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TripCostSplitter.AppBase.Services;
-using TripCostSplitter.Core;
 using TripCostSplitter.Core.DataModels;
 using TripCostSplitter.Core.Services;
 
@@ -17,15 +16,12 @@ public partial class TravelDetailViewModel: ObservableObject
     
     private readonly SessionService sessionService;
     private readonly CurrencyService currencyService;
-    private readonly AccessManager accessManager;
     
     public TravelDetailViewModel(
         SessionService _sessionService,
-        AccessManager _accessManager,
         CurrencyService _currencyService)
     {
         sessionService = _sessionService;
-        accessManager = _accessManager;
         currencyService = _currencyService;
         AllCurrencies = _currencyService.GetAllCurrencyInfos();
         

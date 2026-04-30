@@ -6,21 +6,41 @@ namespace TripCostSplitter.AppBase.Services;
 
 public abstract class JsonDataService: IDataService
 {
+    public SettingsDataModel Settings { get; private set; }
+    public IEnumerable<Travel> Travels => travelsDict.Values;
+    
     protected const string TravelFolderName = "Travels";
     protected const string SettingsFileName = "settings.json";
     
-    private JsonSerializerOptions jsonOptions = new()
-    {
-        WriteIndented = true
-    };
-    
+    private Dictionary<string, Travel> travelsDict = [];
+    private bool loaded;
+    private readonly JsonSerializerOptions jsonOptions;
     private readonly string appDataRootPath;
     
     protected JsonDataService(string _appDataRootPath)
     {
         appDataRootPath = _appDataRootPath;
+        jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
         
         EnsureFolder(TravelFolderName);
+        Settings = new SettingsDataModel();
+    }
+    
+    public async Task Load()
+    {
+        if (loaded)
+            return;
+        await LoadAllTravelsAsync();
+        await LoadSettingsAsync();
+        loaded = true;
+    }
+    
+    public Travel? GetTravel(string travelId)
+    {
+        return travelsDict.GetValueOrDefault(travelId);
     }
     
     private void EnsureFolder(string folderName)
@@ -32,34 +52,13 @@ public abstract class JsonDataService: IDataService
         }
     }
     
-    private async Task SaveFileAsync(string relativeFilePath, string content)
-    {
-        string fullPath = Path.Combine(appDataRootPath, relativeFilePath);
-        await File.WriteAllTextAsync(fullPath, content).ConfigureAwait(false);
-    }
-    
-    public async Task SaveTravelAsync(Travel travel)
-    {
-        string json = JsonSerializer.Serialize(travel, jsonOptions);
-        string fileName = travel.TravelId + ".json";
-        await SaveFileAsync(Path.Combine(TravelFolderName, fileName), json);
-    }
-    
-    public async Task SaveAllTravelsAsync(IEnumerable<Travel> travels)
-    {
-        foreach (Travel travel in travels)
-        {
-            await SaveTravelAsync(travel);
-        }
-    }
-    
-    public async Task<IEnumerable<Travel>> LoadAllTravelsAsync()
+    private async Task LoadAllTravelsAsync()
     {
         List<Travel> result = [];
         string folderPath = Path.Combine(appDataRootPath, TravelFolderName);
         if (!Directory.Exists(folderPath))
         {
-            return result;
+            return;
         }
         
         IEnumerable<string> files = Directory.EnumerateFiles(folderPath);
@@ -79,40 +78,64 @@ public abstract class JsonDataService: IDataService
             }
         }
         
-        return result;
+        travelsDict = result.ToDictionary(t => t.TravelId);
     }
     
-    public Task DeleteTravelAsync(Travel travel)
+    private async Task LoadSettingsAsync()
     {
+        string fullPath = Path.Combine(appDataRootPath, SettingsFileName);
+        if (!File.Exists(fullPath))
+        {
+            return;
+        }
+        
+        try
+        {
+            string json = await File.ReadAllTextAsync(fullPath).ConfigureAwait(false);
+            Settings = JsonSerializer.Deserialize<SettingsDataModel>(json) ?? Settings;
+        }
+        catch
+        {
+            // ignored
+        }
+    }
+    
+    private async Task SaveFileAsync(string relativeFilePath, string content)
+    {
+        string fullPath = Path.Combine(appDataRootPath, relativeFilePath);
+        await File.WriteAllTextAsync(fullPath, content).ConfigureAwait(false);
+    }
+    
+    public async Task SaveTravelAsync(Travel newTravel)
+    {
+        string travelId = newTravel.TravelId;
+        travelsDict[travelId] = newTravel;
+        string json = JsonSerializer.Serialize(newTravel, jsonOptions);
+        string fileName = newTravel.TravelId + ".json";
+        await SaveFileAsync(Path.Combine(TravelFolderName, fileName), json);
+    }
+    
+    public async Task SaveAllTravelsAsync()
+    {
+        foreach (Travel travel in travelsDict.Values)
+        {
+            await SaveTravelAsync(travel);
+        }
+    }
+    
+    public Task DeleteTravelAsync(string travelId)
+    {
+        Travel travel = travelsDict[travelId];
         string fileName = travel.TravelId + ".json";
         string fullPath = Path.Combine(appDataRootPath, TravelFolderName, fileName);
         File.Delete(fullPath);
         
         return Task.CompletedTask;
     }
-
-    public async Task<SettingsDataModel> LoadSettingsAsync()
+    
+    public async Task SaveSettingsAsync()
     {
-        string fullPath = Path.Combine(appDataRootPath, SettingsFileName);
-        if (!File.Exists(fullPath))
-        {
-            return new SettingsDataModel();
-        }
-
-        try
-        {
-            string json = await File.ReadAllTextAsync(fullPath).ConfigureAwait(false);
-            return JsonSerializer.Deserialize<SettingsDataModel>(json) ?? new SettingsDataModel();
-        }
-        catch
-        {
-            return new SettingsDataModel();
-        }
-    }
-
-    public async Task SaveSettingsAsync(SettingsDataModel settings)
-    {
-        string json = JsonSerializer.Serialize(settings, jsonOptions);
+        string json = JsonSerializer.Serialize(Settings, jsonOptions);
         await SaveFileAsync(SettingsFileName, json);
     }
 }

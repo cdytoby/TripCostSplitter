@@ -5,7 +5,6 @@ namespace TripCostSplitter.Core.Services;
 
 public class CurrencyService
 {
-    //todo put it to access manager, or clear up DataService load/save
     private readonly IDataService dataService;
     private IReadOnlyList<CurrencyExchangeRateModel> exchangeRateModels = [];
     
@@ -18,8 +17,7 @@ public class CurrencyService
     
     private async Task LoadExchangeRates()
     {
-        SettingsDataModel settings = await dataService.LoadSettingsAsync();
-        exchangeRateModels = new List<CurrencyExchangeRateModel>(settings.CachedExchangeRates);
+        exchangeRateModels = new List<CurrencyExchangeRateModel>(dataService.Settings.CachedExchangeRates);
     }
     
     public decimal? GetExchangeRate(string fromCurrency, string toCurrency)

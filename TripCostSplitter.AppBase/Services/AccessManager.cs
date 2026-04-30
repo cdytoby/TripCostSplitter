@@ -16,4 +16,20 @@ public class AccessManager
     {
         return Guid.NewGuid().ToString();
     }
+    
+    public IEnumerable<Travel> GetAllTravels()
+    {
+        return dataService.Travels;
+    }
+    
+    public async Task SaveTravel(Travel? travel)
+    {
+        if (travel != null)
+            await dataService.SaveTravelAsync(travel);
+    }
+    
+    public async Task DeleteTravel(string travelId)
+    {
+        await dataService.DeleteTravelAsync(travelId);
+    }
 }

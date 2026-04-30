@@ -8,17 +8,26 @@ public class SessionService
     public Travel? CurrentTravel { get; set; }
     public Transaction? CurrentTransaction { get; set; }
     
-    private IDataService dataService;
+    private AccessManager accessManager;
     
-    public SessionService(IDataService _dataService)
+    public SessionService(AccessManager _accessManager)
     {
-        dataService = _dataService;
+        accessManager = _accessManager;
     }
     
-    //todo put it to AccessManager.
+    public IEnumerable<Travel> GetAllTravels()
+    {
+        return accessManager.GetAllTravels();
+    }
+    
     public async Task Save()
     {
         if (CurrentTravel != null)
-            await dataService.SaveTravelAsync(CurrentTravel);
+            await accessManager.SaveTravel(CurrentTravel);
+    }
+    
+    public async Task DeleteTravel(Travel travelToDelete)
+    {
+        await accessManager.DeleteTravel(travelToDelete.TravelId);
     }
 }

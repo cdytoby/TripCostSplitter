@@ -1,45 +1,50 @@
-﻿using TripCostSplitter.AppBase.Services;
-using TripCostSplitter.Core.DataModels;
+﻿using TripCostSplitter.Core.DataModels;
 using TripCostSplitter.Core.Services;
 
 namespace TripCostSplitter.Avalon.DesignViewModels;
 
 public class MockDataService: IDataService
 {
-    public Task SaveTravelAsync(Travel travel)
-    {
-        return Task.CompletedTask;
-    }
+    public IEnumerable<Travel> Travels { get; } = [];
     
-    public Task SaveAllTravelsAsync(IEnumerable<Travel> travels)
+    public SettingsDataModel Settings { get; } = new()
     {
-        return Task.CompletedTask;
-    }
-    
-    public async Task<IEnumerable<Travel>> LoadAllTravelsAsync()
-    {
-        return [];
-    }
-    
-    public Task DeleteTravelAsync(Travel travel)
-    {
-        return Task.CompletedTask;
-    }
-    
-    public async Task<SettingsDataModel> LoadSettingsAsync()
-    {
-        return new SettingsDataModel()
+        DefaultCurrency = "USD",
+        CachedExchangeRates = new List<CurrencyExchangeRateModel>
         {
-            DefaultCurrency = "USD",
-            CachedExchangeRates = new List<CurrencyExchangeRateModel>
-            {
-                new("USD", "EUR", 0.9m),
-                new("EUR", "JPY", 150m)
-            }
-        };
+            new("USD", "EUR", 0.9m),
+            new("EUR", "JPY", 150m)
+        }
+    };
+    
+    private Dictionary<string, Travel> travelsDict = new();
+    
+    public Task Load()
+    {
+        return Task.CompletedTask;
     }
     
-    public Task SaveSettingsAsync(SettingsDataModel settings)
+    public Travel? GetTravel(string travelId)
+    {
+        return travelsDict.GetValueOrDefault(travelId);
+    }
+    
+    public Task SaveTravelAsync(Travel newTravel)
+    {
+        return Task.CompletedTask;
+    }
+    
+    public Task SaveAllTravelsAsync()
+    {
+        return Task.CompletedTask;
+    }
+    
+    public Task DeleteTravelAsync(string travelId)
+    {
+        return Task.CompletedTask;
+    }
+    
+    public Task SaveSettingsAsync()
     {
         return Task.CompletedTask;
     }

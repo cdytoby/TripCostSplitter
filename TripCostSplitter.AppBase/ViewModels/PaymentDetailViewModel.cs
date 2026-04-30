@@ -118,7 +118,7 @@ public partial class PaymentDetailViewModel: ObservableObject
     {
         if (PaymentData == null)
             return;
-        (CurrentSplitMethod, SplitDataViewModel) = 
+        (CurrentSplitMethod, SplitDataViewModel) =
             splitDataViewModelService.LoadSplitDataViewModel(TravelParticipants, PaymentData);
     }
     
@@ -126,7 +126,7 @@ public partial class PaymentDetailViewModel: ObservableObject
     {
         if (PaymentData == null)
             return;
-        SplitDataViewModel=splitDataViewModelService.LoadSplitDataViewModel(
+        SplitDataViewModel = splitDataViewModelService.LoadSplitDataViewModel(
             CurrentSplitMethod, TravelParticipants, PaymentData);
     }
     
@@ -144,10 +144,9 @@ public partial class PaymentDetailViewModel: ObservableObject
     
     private void ApplyPaymentData()
     {
-        if (PaymentData != null && CurrentSplitMethod != null)
+        if (PaymentData != null && CurrentSplitMethod != null && SplitDataViewModel != null)
         {
-            //todo convert null case
-            PaymentData.SplitData = SplitDataViewModel!.Save();
+            PaymentData.SplitData = SplitDataViewModel.Save();
         }
     }
     

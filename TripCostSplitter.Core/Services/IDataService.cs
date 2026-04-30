@@ -4,15 +4,19 @@ namespace TripCostSplitter.Core.Services;
 
 public interface IDataService
 {
-    Task SaveTravelAsync(Travel travel);
+    IEnumerable<Travel> Travels { get; }
     
-    Task SaveAllTravelsAsync(IEnumerable<Travel> travels);
+    SettingsDataModel Settings { get; }
     
-    Task<IEnumerable<Travel>> LoadAllTravelsAsync();
+    Task Load();
     
-    Task DeleteTravelAsync(Travel travel);
-
-    Task<SettingsDataModel> LoadSettingsAsync();
+    Travel? GetTravel(string travelId);
     
-    Task SaveSettingsAsync(SettingsDataModel settings);
+    Task SaveTravelAsync(Travel newTravel);
+    
+    Task SaveAllTravelsAsync();
+    
+    Task DeleteTravelAsync(string travelId);
+    
+    Task SaveSettingsAsync();
 }
