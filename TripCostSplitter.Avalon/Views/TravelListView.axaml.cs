@@ -16,6 +16,7 @@ public partial class TravelListView: ContentPage
     public TravelListView(TravelListViewModel _viewModel)
     {
         ViewModel = _viewModel;
+        DataContext = _viewModel;
         InitializeComponent();
     }
 }

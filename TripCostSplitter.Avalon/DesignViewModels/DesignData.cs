@@ -9,6 +9,8 @@ public static class DesignData
 {
     private static IServiceProvider serviceProvider { get; } = GetProvider();
     
+    public static TravelListViewModel TravelListViewModelDesign { get; } = GetTravelListViewModel();
+    
     public static SettingsViewModel ExampleSettingsViewModel { get; } = GetSettingsViewModel();
     
     private static IServiceProvider GetProvider()
@@ -21,7 +23,13 @@ public static class DesignData
     
     private static SettingsViewModel GetSettingsViewModel()
     {
-        SettingsViewModel settingsViewModel = serviceProvider.GetService<SettingsViewModel>()!;
-        return settingsViewModel;
+        SettingsViewModel viewModel = serviceProvider.GetService<SettingsViewModel>()!;
+        return viewModel;
+    }
+    
+    private static TravelListViewModel GetTravelListViewModel()
+    {
+        TravelListViewModel viewModel = serviceProvider.GetService<TravelListViewModel>()!;
+        return viewModel;
     }
 }

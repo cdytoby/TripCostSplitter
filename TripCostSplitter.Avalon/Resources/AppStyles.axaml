@@ -2,9 +2,11 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
-        <StackPanel
+        <UniformGrid
             Width="500"
-            Height="500">
+            Height="500"
+            Rows="9"
+            Columns="6">
             <!-- Add Controls for Previewer Here -->
             <Button
                 Classes="actionIcon"
@@ -15,7 +17,13 @@
             <Button
                 Classes="actionText"
                 Content="i" />
-        </StackPanel>
+            <TextBlock
+                Classes="h3"
+                Text="Header 3" />
+            <TextBlock
+                Classes="sub"
+                Text="Sub text" />
+        </UniformGrid>
     </Design.PreviewWith>
 
     <Style
@@ -49,13 +57,36 @@
             Property="VerticalContentAlignment"
             Value="Center" />
     </Style>
-    
-    <Style Selector="ComboBox.error">
-        <Setter Property="BorderBrush" Value="Red" />
+
+    <Style
+        Selector="ComboBox.error">
+        <Setter
+            Property="BorderBrush"
+            Value="Red" />
     </Style>
-    
-    <Style Selector="NumericUpDown.error">
-        <Setter Property="BorderBrush" Value="Red" />
+
+    <Style
+        Selector="NumericUpDown.error">
+        <Setter
+            Property="BorderBrush"
+            Value="Red" />
+    </Style>
+
+    <Style
+        Selector="TextBlock.h3">
+        <Setter
+            Property="FontWeight"
+            Value="Bold" />
+        <Setter
+            Property="FontSize"
+            Value="18" />
+    </Style>
+
+    <Style
+        Selector="TextBlock.sub">
+        <Setter
+            Property="Foreground"
+            Value="Gray" />
     </Style>
     <!-- Add Styles Here -->
 </Styles>

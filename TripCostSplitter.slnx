@@ -9,6 +9,7 @@
     <Project Path="TripCostSplitter.Avalon/TripCostSplitter.Avalon.csproj" />
   </Folder>
   <Folder Name="/ZTest/">
+    <Project Path="TripCostSplitter.Avalon.NTest/TripCostSplitter.Avalon.NTest.csproj" />
     <Project Path="TripCostSplitter.NTest/TripCostSplitter.NTest.csproj" />
   </Folder>
 </Solution>

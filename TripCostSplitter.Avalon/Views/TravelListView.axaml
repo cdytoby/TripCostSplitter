@@ -4,23 +4,31 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
+    xmlns:dvms="clr-namespace:TripCostSplitter.Avalon.DesignViewModels;assembly=TripCostSplitter.Avalon"
     mc:Ignorable="d"
+    x:Name="TravelListPage"
     x:Class="TripCostSplitter.Avalon.Views.TravelListView"
-    x:CompileBindings="False"
+    x:DataType="vm:TravelListViewModel"
     d:DesignWidth="400"
     d:DesignHeight="800"
-    DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}"
+    d:DataContext="{x:Static dvms:DesignData.TravelListViewModelDesign}"
     Header="Travels"
-    NavigationPage.TopCommandBar="{StaticResource TopBar}"
-    x:Name="TravelListPage">
+    NavigationPage.TopCommandBar="{StaticResource TopBar}">
+
+    <ContentPage.Styles>
+        <StyleInclude
+            Source="avares://TripCostSplitter.Avalon/Resources/AppStyles.axaml" />
+    </ContentPage.Styles>
 
     <ContentPage.Resources>
+        <!-- ReSharper disable Xaml.RedundantResource -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude
                     Source="/Resources/AppResources.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
+        <!-- ReSharper restore Xaml.RedundantResource -->
         <CommandBar
             x:Key="TopBar"
             DataContext="{Binding #TravelListPage.((vm:TravelListViewModel)DataContext)}">
@@ -35,7 +43,12 @@
                 </CommandBarButton>
                 <CommandBarButton
                     Label="Settings"
-                    Command="{Binding NavigateToSettingsCommand}" />
+                    Command="{Binding NavigateToSettingsCommand}">
+                    <CommandBarButton.Icon>
+                        <PathIcon
+                            Data="{StaticResource IconSettingsRegular}" />
+                    </CommandBarButton.Icon>
+                </CommandBarButton>
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </ContentPage.Resources>
@@ -60,34 +73,59 @@
                     Background="Transparent"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
+                    Padding="15"
                     Command="{Binding $parent[ListBox].((vm:TravelListViewModel)DataContext).EditTravelCommand}"
                     CommandParameter="{Binding}">
                     <Grid
                         ColumnDefinitions="*,Auto">
                         <StackPanel
                             Grid.Column="0"
-                            Margin="5"
                             VerticalAlignment="Center">
-                            <TextBlock
-                                Text="{Binding Name}"
-                                FontWeight="Bold"
-                                FontSize="18" />
-                            <TextBlock
-                                Text="{Binding CalculateCurrency}"
-                                FontSize="12"
-                                Foreground="Gray" />
+                            <StackPanel
+                                Orientation="Horizontal"
+                                Spacing="10">
+                                <TextBlock
+                                    Classes="h3"
+                                    Margin="0,0,5,0"
+                                    Text="{Binding Name}" />
+                                <TextBlock
+                                    Classes="sub"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding CalculateCurrency}" />
+                                <ItemsControl
+                                    ItemsSource="{Binding AdditionalCurrencies}"
+                                    VerticalAlignment="Center"
+                                    Foreground="Gray">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel
+                                                Orientation="Horizontal" 
+                                                ItemSpacing="10"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </StackPanel>
+                            <ItemsControl
+                                ItemsSource="{Binding Participants}"
+                                DisplayMemberBinding="{Binding Name}"
+                                Foreground="Gray">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel
+                                            Orientation="Horizontal" 
+                                            ItemSpacing="10"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
                         </StackPanel>
-                        <StackPanel
+                        <Button
                             Grid.Column="1"
-                            Orientation="Horizontal"
-                            Spacing="5">
-                            <Button
-                                Command="{Binding $parent[ListBox].((vm:TravelListViewModel)DataContext).DeleteTravelCommand}"
-                                CommandParameter="{Binding}">
-                                <PathIcon
-                                    Data="{StaticResource IconDeleteRegular}" />
-                            </Button>
-                        </StackPanel>
+                            Classes="actionIcon"
+                            Command="{Binding $parent[ListBox].((vm:TravelListViewModel)DataContext).DeleteTravelCommand}"
+                            CommandParameter="{Binding}">
+                            <PathIcon
+                                Data="{StaticResource IconDeleteRegular}" />
+                        </Button>
                     </Grid>
                 </Button>
             </DataTemplate>
