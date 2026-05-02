@@ -1,3 +1,12 @@
-﻿namespace TripCostSplitter.Core.DataModels;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public record Person(string Id, string Name);
+namespace TripCostSplitter.Core.DataModels;
+
+public partial class Person(string id, string name): ObservableObject
+{
+    [ObservableProperty]
+    public partial string Id { get; set; } = id;
+    
+    [ObservableProperty]
+    public partial string Name { get; set; } = name;
+}

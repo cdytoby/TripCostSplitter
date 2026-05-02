@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Microsoft.Extensions.DependencyInjection;
+using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.AppBase.ViewModels;
 using TripCostSplitter.Core.Services;
 
@@ -9,9 +10,11 @@ public static class DesignData
 {
     private static IServiceProvider serviceProvider { get; } = GetProvider();
     
+    public static SettingsViewModel ExampleSettingsViewModel { get; } = GetSettingsViewModel();
+    
     public static TravelListViewModel TravelListViewModelDesign { get; } = GetTravelListViewModel();
     
-    public static SettingsViewModel ExampleSettingsViewModel { get; } = GetSettingsViewModel();
+    public static TravelDetailViewModel TravelDetailViewModelDesign { get; } = GetTravelDetailViewModel();
     
     private static IServiceProvider GetProvider()
     {
@@ -23,13 +26,21 @@ public static class DesignData
     
     private static SettingsViewModel GetSettingsViewModel()
     {
-        SettingsViewModel viewModel = serviceProvider.GetService<SettingsViewModel>()!;
+        SettingsViewModel viewModel = serviceProvider.GetRequiredService<SettingsViewModel>()!;
         return viewModel;
     }
     
     private static TravelListViewModel GetTravelListViewModel()
     {
-        TravelListViewModel viewModel = serviceProvider.GetService<TravelListViewModel>()!;
+        TravelListViewModel viewModel = serviceProvider.GetRequiredService<TravelListViewModel>()!;
+        return viewModel;
+    }
+    
+    private static TravelDetailViewModel GetTravelDetailViewModel()
+    {
+        SessionService session = serviceProvider.GetRequiredService<SessionService>();
+        session.CurrentTravel = session.GetAllTravels().First();
+        TravelDetailViewModel viewModel = serviceProvider.GetRequiredService<TravelDetailViewModel>()!;
         return viewModel;
     }
 }

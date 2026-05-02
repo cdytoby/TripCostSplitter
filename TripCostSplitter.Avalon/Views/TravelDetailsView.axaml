@@ -5,11 +5,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
     xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
+    xmlns:dvms="clr-namespace:TripCostSplitter.Avalon.DesignViewModels"
     x:Class="TripCostSplitter.Avalon.Views.TravelDetailsView"
     x:DataType="vm:TravelDetailViewModel"
     d:DesignWidth="400"
     d:DesignHeight="800"
-    DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}">
+    d:DataContext="{x:Static dvms:DesignData.TravelDetailViewModelDesign}">
+
+    <UserControl.Styles>
+        <StyleInclude
+            Source="avares://TripCostSplitter.Avalon/Resources/AppStyles.axaml" />
+    </UserControl.Styles>
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -24,29 +30,60 @@
         <StackPanel
             Spacing="15"
             Margin="10">
-            <TextBlock
-                Text="Trip Info"
-                FontSize="18"
-                FontWeight="Bold" />
-            <TextBox
-                Text="{Binding Travel.Name}"
-                PlaceholderText="Trip Name" />
-            <ComboBox
-                ItemsSource="{Binding AllCurrencies}"
-                SelectedValue="{Binding Travel.CalculateCurrency}"
-                SelectedValueBinding="{ReflectionBinding Path=Code}"
-                ItemTemplate="{StaticResource CurrencyComboBoxTemplate}">
-            </ComboBox>
 
-            <StackPanel
-                Orientation="Horizontal"
-                Spacing="10">
+            <!-- Name -->
+            <Grid
+                ColumnDefinitions="*,*"
+                RowSpacing="10">
                 <TextBlock
-                    Text="Additional Currencies"
-                    FontSize="18"
-                    FontWeight="Bold" />
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Classes="h3"
+                    Text="Trip Name" />
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Travel.Name}"
+                    PlaceholderText="Trip Name" />
+            </Grid>
+
+            <Separator
+                Margin="0,20,0,0" />
+
+            <!-- Currency -->
+            <Grid
+                ColumnDefinitions="*,*"
+                RowDefinitions="Auto,Auto,Auto"
+                RowSpacing="10">
+
                 <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Classes="h3"
+                    Text="Currency" />
+                <ComboBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{Binding AllCurrencies}"
+                    SelectedValue="{Binding Travel.CalculateCurrency}"
+                    SelectedValueBinding="{ReflectionBinding Path=Code}"
+                    ItemTemplate="{StaticResource CurrencyComboBoxTemplate}" />
+
+                <!-- Additional Currency -->
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    HorizontalAlignment="Right"
                     VerticalAlignment="Center"
+                    Margin="0,0,10,0"
+                    Text="Additional Currencies" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Padding="0,0,10,0"
                     Foreground="LightPink"
                     Text="!!!"
                     IsVisible="{Binding IsCurrencyExchangeMissing}"
@@ -57,80 +94,109 @@
                         </Flyout>
                     </TextBlock.ContextFlyout>
                 </TextBlock>
-            </StackPanel>
-            <ItemsControl
-                ItemsSource="{Binding Travel.AdditionalCurrencies}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border
-                            BorderBrush="LightGray"
-                            BorderThickness="0,0,0,1"
-                            Padding="5">
-                            <Grid
-                                ColumnDefinitions="*,Auto">
-                                <TextBlock
-                                    Text="{Binding}"
-                                    VerticalAlignment="Center" />
-                                <Button
-                                    Grid.Column="1"
-                                    Content="-"
-                                    Command="{Binding $parent[UserControl].((vm:TravelDetailViewModel)DataContext).DeleteAdditionalCurrencyCommand}"
-                                    CommandParameter="{Binding}" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-            <StackPanel
-                Orientation="Horizontal"
-                Spacing="5">
                 <ComboBox
                     x:Name="AdditionalCurrencyBox"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Margin="0,0,40,0"
                     ItemsSource="{Binding AllCurrencies}"
                     SelectedValueBinding="{ReflectionBinding Path=Code}"
-                    ItemTemplate="{StaticResource CurrencyComboBoxTemplate}"
-                    Width="200" />
+                    ItemTemplate="{StaticResource CurrencyComboBoxTemplate}" />
                 <Button
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Classes="actionIcon"
                     Content="+"
                     Command="{Binding AddAdditionalCurrencyCommand}"
                     CommandParameter="{Binding #AdditionalCurrencyBox.SelectedValue}" />
-            </StackPanel>
 
-            <Separator />
-            <TextBlock
-                Text="Participants"
-                FontSize="18"
-                FontWeight="Bold" />
+                <ItemsControl
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    ItemsSource="{Binding Travel.AdditionalCurrencies}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid
+                                Columns="3"
+                                RowSpacing="10"
+                                ColumnSpacing="10" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                BorderBrush="{DynamicResource ComboBoxBorderBrush}"
+                                CornerRadius="{DynamicResource ControlCornerRadius}"
+                                BorderThickness="1">
+                                <Grid
+                                    ColumnDefinitions="*,Auto">
+                                    <TextBlock
+                                        Padding="10,0,10,0"
+                                        Text="{Binding}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Classes="actionIcon"
+                                        Content="-"
+                                        Command="{Binding $parent[UserControl].((vm:TravelDetailViewModel)DataContext).DeleteAdditionalCurrencyCommand}"
+                                        CommandParameter="{Binding}" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+
+            <Separator
+                Margin="0,20,0,0" />
+
+            <Grid
+                ColumnDefinitions="*,*">
+                <TextBlock
+                    Grid.Column="0"
+                    Classes="h3"
+                    Text="Participants" />
+                <Button
+                    Grid.Column="1"
+                    Classes="actionIcon"
+                    HorizontalAlignment="Right"
+                    Content="+"
+                    Command="{Binding AddPersonCommand}" />
+            </Grid>
             <ItemsControl
                 ItemsSource="{Binding Travel.Participants}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel
+                            Spacing="10" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border
-                            BorderBrush="LightGray"
-                            BorderThickness="0,0,0,1"
-                            Padding="5">
-                            <TextBlock
-                                Text="{Binding Name}"
-                                FontSize="16" />
-                        </Border>
+                        <Grid
+                            ColumnDefinitions="*,*">
+                            <TextBox
+                                Grid.Column="0"
+                                Text="{Binding Name}" 
+                                TextChanged="TextBox_OnTextChanged"/>
+                            <Button
+                                Grid.Column="1"
+                                Classes="actionIcon"
+                                HorizontalAlignment="Right"
+                                Content="-"
+                                Command="{Binding $parent[UserControl].((vm:TravelDetailViewModel)DataContext).DeletePersonCommand}"
+                                CommandParameter="{Binding}" />
+                        </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <StackPanel
-                Orientation="Horizontal"
-                Spacing="5">
-                <!-- todo rename capability -->
-                <TextBox
-                    x:Name="PersonNameBox"
-                    Width="200"
-                    PlaceholderText="New Person Name" />
-                <Button
-                    Content="+"
-                    Command="{Binding AddPersonCommand}"
-                    CommandParameter="{Binding #PersonNameBox.Text}" />
-            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

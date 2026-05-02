@@ -95,7 +95,7 @@
                                 <ItemsControl
                                     ItemsSource="{Binding AdditionalCurrencies}"
                                     VerticalAlignment="Center"
-                                    Foreground="Gray">
+                                    Foreground="{DynamicResource SystemControlDescriptionTextForegroundBrush}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <WrapPanel
@@ -108,7 +108,7 @@
                             <ItemsControl
                                 ItemsSource="{Binding Participants}"
                                 DisplayMemberBinding="{Binding Name}"
-                                Foreground="Gray">
+                                Foreground="{DynamicResource SystemControlDescriptionTextForegroundBrush}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <WrapPanel

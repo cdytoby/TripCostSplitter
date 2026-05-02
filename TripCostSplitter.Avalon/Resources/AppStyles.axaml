@@ -23,6 +23,10 @@
             <TextBlock
                 Classes="sub"
                 Text="Sub text" />
+            <NumericUpDown 
+                Classes="error"
+                AllowSpin="False"
+                ShowButtonSpinner="False"/>
         </UniformGrid>
     </Design.PreviewWith>
 
@@ -30,10 +34,10 @@
         Selector="Button.actionIcon">
         <Setter
             Property="Width"
-            Value="40" />
+            Value="32" />
         <Setter
             Property="Height"
-            Value="40" />
+            Value="32" />
         <Setter
             Property="HorizontalContentAlignment"
             Value="Center" />
@@ -49,7 +53,7 @@
             Value="50" />
         <Setter
             Property="Height"
-            Value="40" />
+            Value="32" />
         <Setter
             Property="HorizontalContentAlignment"
             Value="Center" />
@@ -62,14 +66,14 @@
         Selector="ComboBox.error">
         <Setter
             Property="BorderBrush"
-            Value="Red" />
+            Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
     </Style>
 
     <Style
         Selector="NumericUpDown.error">
         <Setter
             Property="BorderBrush"
-            Value="Red" />
+            Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
     </Style>
 
     <Style
@@ -86,7 +90,7 @@
         Selector="TextBlock.sub">
         <Setter
             Property="Foreground"
-            Value="Gray" />
+            Value="{DynamicResource SystemControlDescriptionTextForegroundBrush}" />
     </Style>
     <!-- Add Styles Here -->
 </Styles>
