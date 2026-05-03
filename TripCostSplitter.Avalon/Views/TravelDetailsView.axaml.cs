@@ -21,7 +21,7 @@ public partial class TravelDetailsView: UserControl
     
     private async void TextBox_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (ViewModel == null)
+        if (ViewModel == null || !IsLoaded)
             return;
         
         await ViewModel.Save();

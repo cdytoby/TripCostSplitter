@@ -62,14 +62,14 @@ public class CurrencyService
         return GetDescription(knownCurrencies[key]);
     }
     
-    public string GetFormattedString(string key, decimal currencyValue)
+    public static string GetFormattedString(string key, decimal currencyValue)
     {
         NumberFormatInfo format = GetCultureInfo(key).NumberFormat;
         format.CurrencyGroupSeparator = string.Empty;
         return currencyValue.ToString("C", format);
     }
     
-    public decimal ParseFormattedString(string key, string currencyValueString)
+    public static decimal ParseFormattedString(string key, string currencyValueString)
     {
         bool success1 = decimal.TryParse(
             currencyValueString, NumberStyles.Currency, GetCultureInfo(key), out decimal currencyValue);

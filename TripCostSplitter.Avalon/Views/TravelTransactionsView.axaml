@@ -5,12 +5,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
     xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
+    xmlns:designViewModels="clr-namespace:TripCostSplitter.Avalon.DesignViewModels"
+    xmlns:converters="clr-namespace:TripCostSplitter.Avalon.Converters"
     x:Class="TripCostSplitter.Avalon.Views.TravelTransactionsView"
-    x:CompileBindings="False"
+    x:Name="TransactionView"
+    x:DataType="vm:TransactionListViewModel"
     d:DesignWidth="400"
     d:DesignHeight="800"
-    DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}"
-    x:Name="TransactionView">
+    d:DataContext="{x:Static designViewModels:DesignData.TransactionListViewModelDesign}">
+
+    <UserControl.Styles>
+        <StyleInclude
+            Source="avares://TripCostSplitter.Avalon/Resources/AppStyles.axaml" />
+    </UserControl.Styles>
 
     <UserControl.Resources>
         <!-- ReSharper disable Xaml.RedundantResource -->
@@ -34,6 +41,9 @@
                 </CommandBarButton>
             </CommandBar.PrimaryCommands>
         </CommandBar>
+        <!-- ReSharper restore Xaml.RedundantResource -->
+        <converters:TransactionSummeryConverter
+            x:Key="TransactionSummeryConverter" />
     </UserControl.Resources>
 
     <ListBox
@@ -56,32 +66,57 @@
                     Background="Transparent"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
+                    BorderBrush="{DynamicResource TextControlBorderBrush}"
+                    BorderThickness="0,0,0,1"
                     Command="{Binding $parent[UserControl].((vm:TransactionListViewModel)DataContext).EditTransactionCommand}"
                     CommandParameter="{Binding}">
                     <Grid
                         ColumnDefinitions="*,Auto">
                         <StackPanel
-                            Grid.Column="0"
-                            Margin="5">
+                            Grid.Column="0">
+                            <Grid
+                                ColumnDefinitions="*,Auto">
+                                <TextBlock
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,10,0"
+                                    TextWrapping="Wrap"
+                                    Text="{Binding Description}" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Classes="sub"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Margin="0,0,10,0">
+                                    <Run
+                                        Text="{Binding Date, StringFormat='{}{0:d}', Mode=OneWay}" />
+                                    <Run
+                                        Text="{Binding Date, StringFormat='{}{0:HH:mm}', Mode=OneWay}" />
+                                </TextBlock>
+                            </Grid>
                             <TextBlock
-                                Text="{Binding TransactionData.Description}"
-                                FontWeight="Bold" />
-                            <TextBlock
-                                Text="{Binding TransactionData.Date, StringFormat='{}{0:d}'}"
-                                FontSize="12"
-                                Foreground="Gray" />
+                                Classes="sub"
+                                Margin="10">
+                                <TextBlock.Text>
+                                    <MultiBinding
+                                        Converter="{StaticResource TransactionSummeryConverter}">
+                                        <Binding
+                                            Path="." />
+                                        <Binding
+                                            Path="$parent[UserControl].((vm:TransactionListViewModel)DataContext).Travel.Participants" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                         </StackPanel>
-                        <StackPanel
+                        <Button
                             Grid.Column="1"
-                            Orientation="Horizontal"
-                            Spacing="5">
-                            <Button
-                                Command="{Binding $parent[UserControl].((vm:TransactionListViewModel)DataContext).DeleteTransactionCommand}"
-                                CommandParameter="{Binding}">
-                                <PathIcon
-                                    Data="{StaticResource IconDeleteRegular}" />
-                            </Button>
-                        </StackPanel>
+                            Classes="actionIcon"
+                            VerticalAlignment="Top"
+                            Command="{Binding $parent[UserControl].((vm:TransactionListViewModel)DataContext).DeleteTransactionCommand}"
+                            CommandParameter="{Binding}">
+                            <PathIcon
+                                Data="{StaticResource IconDeleteRegular}" />
+                        </Button>
                     </Grid>
                 </Button>
             </DataTemplate>

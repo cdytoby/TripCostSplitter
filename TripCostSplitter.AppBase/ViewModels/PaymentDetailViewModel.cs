@@ -29,13 +29,15 @@ public partial class PaymentDetailViewModel: ObservableObject
     [ObservableProperty]
     public partial string? CurrentSplitMethod { get; set; }
     
+    public Transaction Transaction { get; }
     public PaymentData? PaymentData { get; }
     
     private readonly List<ISplitCalculator> splitCalculators;
     private readonly INavigationService navigationService;
     private readonly SessionService sessionService;
     private readonly SplitDataViewModelService splitDataViewModelService;
-    private Transaction transaction;
+    
+    private bool isLoaded;
     
     public PaymentDetailViewModel(
         SessionService _sessionService,
@@ -50,7 +52,7 @@ public partial class PaymentDetailViewModel: ObservableObject
         
         //todo exception or load state with nullable
         sessionService = _sessionService;
-        transaction = _sessionService.CurrentTransaction!;
+        Transaction = _sessionService.CurrentTransaction!;
         TravelParticipants = _sessionService.CurrentTravel!.Participants.ToList();
         AvailableCurrencies =
         [
@@ -59,16 +61,18 @@ public partial class PaymentDetailViewModel: ObservableObject
         ];
         
         //todo exception or load state with nullable
-        PaymentData = transaction.TransactionData as PaymentData;
+        PaymentData = Transaction.TransactionData as PaymentData;
         if (PaymentData != null && PaymentData.PurchaseItems.Count == 0)
         {
             PaymentData.PurchaseItems.Add(new PurchaseItem("total cost", 0));
         }
         
-        Date = PaymentData!.Date;
-        Time = new TimeSpan(PaymentData!.Date.Hour, PaymentData!.Date.Minute, PaymentData!.Date.Second);
+        Date = new DateTime(Transaction.Date.Year, Transaction.Date.Month, Transaction.Date.Day);
+        Time = new TimeSpan(Transaction.Date.Hour, Transaction.Date.Minute, Transaction.Date.Second);
         
         LoadSplitData();
+        
+        isLoaded = true;
     }
     
     partial void OnDateChanged(DateTime? oldValue, DateTime? newValue)
@@ -83,9 +87,9 @@ public partial class PaymentDetailViewModel: ObservableObject
     
     private void OnDateTimeChanged()
     {
-        if (PaymentData == null || Date == null || Time == null)
+        if (!isLoaded || Date == null || Time == null)
             return;
-        PaymentData.Date = new DateTime(
+        Transaction.Date = new DateTime(
             Date.Value.Year, Date.Value.Month, Date.Value.Day, Time.Value.Hours, Time.Value.Minutes, Time.Value.Seconds,
             DateTimeKind.Unspecified);
     }
@@ -160,7 +164,7 @@ public partial class PaymentDetailViewModel: ObservableObject
         if (calculator != null)
         {
             IList<RecipientInfo> debits = calculator.CalculateDebit(PaymentData);
-            transaction.RecipientInfos = new List<RecipientInfo>(debits);
+            Transaction.RecipientInfos = new List<RecipientInfo>(debits);
         }
     }
     

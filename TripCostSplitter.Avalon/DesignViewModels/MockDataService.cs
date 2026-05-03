@@ -31,6 +31,47 @@ public class MockDataService: IDataService
                     new Person("1", "Alice"),
                     new Person("2", "Bob")
                 ],
+                Transactions =
+                [
+                    new Transaction
+                    {
+                        Description = "Transaction 1",
+                        Date = DateTime.Now - TimeSpan.FromDays(5),
+                        DateTimeZone = TimeZoneInfo.Local,
+                        Currency = "EUR",
+                        ExchangeRateOverride = 1.2m,
+                        TransactionData = new PaymentData
+                        {
+                            ParticipantIds = ["1", "2"],
+                            PayerInfos = [new PayerInfo("1", 100)],
+                            PurchaseItems = []
+                        },
+                        RecipientInfos =
+                        [
+                            new RecipientInfo("1", 50),
+                            new RecipientInfo("2", 50)
+                        ]
+                    },
+                    new Transaction
+                    {
+                        Description = "Transaction 2 Lorem ipsum dolor sit amet, consectetur adipiscing ",
+                        Date = DateTime.Now - TimeSpan.FromDays(2) + TimeSpan.FromHours(14),
+                        DateTimeZone = TimeZoneInfo.Local,
+                        Currency = "USD",
+                        ExchangeRateOverride = 1.2m,
+                        TransactionData = new PaymentData
+                        {
+                            ParticipantIds = ["1", "2"],
+                            PayerInfos = [new PayerInfo("1", 100)],
+                            PurchaseItems = []
+                        },
+                        RecipientInfos =
+                        [
+                            new RecipientInfo("1", 50),
+                            new RecipientInfo("2", 50)
+                        ]
+                    }
+                ]
             }
         },
         {

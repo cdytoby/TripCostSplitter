@@ -12,7 +12,7 @@ public class CurrencyTest
     {
         CurrencyService service = TestSetup.ServiceProvider.GetService<CurrencyService>()!;
         
-        string result = service.GetFormattedString(key, value);
+        string result = CurrencyService.GetFormattedString(key, value);
         Console.WriteLine(result);
         Assert.That(result, Is.EqualTo(expectedResult));
     }
@@ -25,7 +25,7 @@ public class CurrencyTest
     {
         CurrencyService service = TestSetup.ServiceProvider.GetService<CurrencyService>()!;
         
-        decimal result = service.ParseFormattedString(key, value);
+        decimal result = CurrencyService.ParseFormattedString(key, value);
         Console.WriteLine(result);
         Assert.That(result, Is.EqualTo(expectedResult));
     }

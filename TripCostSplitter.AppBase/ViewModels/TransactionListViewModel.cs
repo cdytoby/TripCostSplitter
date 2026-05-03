@@ -10,16 +10,13 @@ public partial class TransactionListViewModel: ObservableObject
 {
     public Travel Travel { get; }
     
-    private readonly AccessManager accessManager;
     private readonly SessionService sessionService;
     private readonly INavigationService navigationService;
     
     public TransactionListViewModel(
-        AccessManager _accessManager,
         INavigationService _navigationService,
         SessionService _sessionService)
     {
-        accessManager = _accessManager;
         navigationService = _navigationService;
         sessionService = _sessionService;
         
@@ -32,14 +29,14 @@ public partial class TransactionListViewModel: ObservableObject
     {
         PaymentData transactionData = new()
         {
-            Date = DateTime.Now,
-            DateTimeZone = TimeZoneInfo.Local,
             PayerInfos = [],
             ParticipantIds = new(Travel.Participants.Select(p => p.Id)),
             PurchaseItems = []
         };
         Transaction transaction = new()
         {
+            Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             TransactionId = AccessManager.GetNewId(),
             Currency = Travel.CalculateCurrency,
             TransactionData = transactionData

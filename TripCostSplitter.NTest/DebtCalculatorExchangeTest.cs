@@ -23,8 +23,6 @@ public class DebtCalculatorExchangeTest
         
         PaymentData paymentData = new()
         {
-            Date = DateTime.Now,
-            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id],
             PayerInfos = [new PayerInfo(alice.Id, 100)],
             PurchaseItems = []
@@ -32,6 +30,8 @@ public class DebtCalculatorExchangeTest
         
         Transaction transaction = new()
         {
+            Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             TransactionData = paymentData,
             Currency = "EUR",
             ExchangeRateOverride = 1.2m, // 1 EUR = 1.2 USD
@@ -68,8 +68,6 @@ public class DebtCalculatorExchangeTest
         
         PaymentData paymentData = new()
         {
-            Date = DateTime.Now,
-            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id],
             PayerInfos = [new PayerInfo(alice.Id, 100)],
             PurchaseItems = []
@@ -77,6 +75,8 @@ public class DebtCalculatorExchangeTest
         
         Transaction transaction = new()
         {
+            Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             TransactionData = paymentData,
             Currency = "USD",
             RecipientInfos =
@@ -112,8 +112,6 @@ public class DebtCalculatorExchangeTest
         
         PaymentData paymentData = new()
         {
-            Date = DateTime.Now,
-            DateTimeZone = TimeZoneInfo.Local,
             ParticipantIds = [alice.Id, bob.Id],
             PayerInfos = [new PayerInfo(alice.Id, 90)],
             PurchaseItems = []
@@ -121,6 +119,8 @@ public class DebtCalculatorExchangeTest
         
         Transaction transaction = new()
         {
+            Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
             TransactionData = paymentData,
             Currency = "EUR", // Travel is in USD
             RecipientInfos =
@@ -164,30 +164,30 @@ public class DebtCalculatorExchangeTest
         // t1: Alice pays 100 USD (Travel currency)
         Transaction t1 = new()
         {
+            Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
+            Currency = "USD",
             TransactionData = new PaymentData
             {
-                Date = DateTime.Now,
-                DateTimeZone = TimeZoneInfo.Local,
                 ParticipantIds = [alice.Id, bob.Id],
                 PayerInfos = [new PayerInfo(alice.Id, 100)],
                 PurchaseItems = []
             },
-            Currency = "USD",
             RecipientInfos = [new RecipientInfo(alice.Id, 50), new RecipientInfo(bob.Id, 50)]
         };
         
         // t2: Bob pays 100 EUR (USD->EUR = 0.9, so 100 EUR = 111.111 USD)
         Transaction t2 = new()
         {
+            Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
+            Currency = "EUR",
             TransactionData = new PaymentData
             {
-                Date = DateTime.Now,
-                DateTimeZone = TimeZoneInfo.Local,
                 ParticipantIds = [alice.Id, bob.Id],
                 PayerInfos = [new PayerInfo(bob.Id, 100)],
                 PurchaseItems = []
             },
-            Currency = "EUR",
             RecipientInfos = [new RecipientInfo(alice.Id, 50), new RecipientInfo(bob.Id, 50)]
         };
         

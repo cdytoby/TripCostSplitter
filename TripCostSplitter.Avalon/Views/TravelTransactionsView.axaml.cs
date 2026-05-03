@@ -15,6 +15,7 @@ public partial class TravelTransactionsView : UserControl
     public TravelTransactionsView(TransactionListViewModel _viewModel)
     {
         ViewModel = _viewModel;
+        DataContext = _viewModel;
         InitializeComponent();
     }
 }

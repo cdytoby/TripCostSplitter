@@ -16,6 +16,8 @@ public static class DesignData
     
     public static TravelDetailViewModel TravelDetailViewModelDesign { get; } = GetTravelDetailViewModel();
     
+    public static TransactionListViewModel TransactionListViewModelDesign { get; } = GetTransactionListViewModel();
+    
     private static IServiceProvider GetProvider()
     {
         IServiceCollection serviceCollection = new ServiceCollection();
@@ -26,21 +28,33 @@ public static class DesignData
     
     private static SettingsViewModel GetSettingsViewModel()
     {
-        SettingsViewModel viewModel = serviceProvider.GetRequiredService<SettingsViewModel>()!;
+        SettingsViewModel viewModel = serviceProvider.GetRequiredService<SettingsViewModel>();
         return viewModel;
     }
     
     private static TravelListViewModel GetTravelListViewModel()
     {
-        TravelListViewModel viewModel = serviceProvider.GetRequiredService<TravelListViewModel>()!;
+        TravelListViewModel viewModel = serviceProvider.GetRequiredService<TravelListViewModel>();
         return viewModel;
     }
     
     private static TravelDetailViewModel GetTravelDetailViewModel()
     {
+        SetSession();
+        TravelDetailViewModel viewModel = serviceProvider.GetRequiredService<TravelDetailViewModel>();
+        return viewModel;
+    }
+    
+    private static TransactionListViewModel GetTransactionListViewModel()
+    {
+        SetSession();
+        TransactionListViewModel viewModel = serviceProvider.GetRequiredService<TransactionListViewModel>();
+        return viewModel;
+    }
+    
+    private static void SetSession()
+    {
         SessionService session = serviceProvider.GetRequiredService<SessionService>();
         session.CurrentTravel = session.GetAllTravels().First();
-        TravelDetailViewModel viewModel = serviceProvider.GetRequiredService<TravelDetailViewModel>()!;
-        return viewModel;
     }
 }

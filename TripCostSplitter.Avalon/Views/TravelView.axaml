@@ -7,7 +7,6 @@
     xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
     xmlns:views="clr-namespace:TripCostSplitter.Avalon.Views"
     x:Class="TripCostSplitter.Avalon.Views.TravelView"
-    x:CompileBindings="False"
     d:DesignWidth="400"
     d:DesignHeight="800">
     

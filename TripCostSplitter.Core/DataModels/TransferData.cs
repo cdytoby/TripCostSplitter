@@ -6,12 +6,6 @@ namespace TripCostSplitter.Core.DataModels;
 public partial class TransferData : ObservableObject, ITransactionData
 {
     [ObservableProperty]
-    public required partial DateTime Date { get; set; }
-
-    [ObservableProperty]
-    public partial string? Description { get; set; }
-
-    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PayerInfos))]
     public required partial string FromPersonId { get; set; }
 

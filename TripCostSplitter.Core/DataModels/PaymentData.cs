@@ -9,15 +9,6 @@ namespace TripCostSplitter.Core.DataModels;
 public partial class PaymentData: ObservableObject, ITransactionData
 {
     [ObservableProperty]
-    public required partial DateTime Date { get; set; }
-    
-    [JsonConverter(typeof(TimeZoneInfoConverter))]
-    public required TimeZoneInfo DateTimeZone { get; set; }
-    
-    [ObservableProperty]
-    public partial string? Description { get; set; }
-    
-    [ObservableProperty]
     public required partial ObservableCollection<PayerInfo> PayerInfos { get; set; }
     
     [ObservableProperty]

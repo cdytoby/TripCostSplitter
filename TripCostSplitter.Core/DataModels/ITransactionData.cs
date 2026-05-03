@@ -7,9 +7,5 @@ namespace TripCostSplitter.Core.DataModels;
 [JsonDerivedType(typeof(TransferData), typeDiscriminator: "Transfer")]
 public interface ITransactionData
 {
-    DateTime Date { get; }
-    
-    string? Description { get; }
-    
     ObservableCollection<PayerInfo> PayerInfos { get; }
 }
