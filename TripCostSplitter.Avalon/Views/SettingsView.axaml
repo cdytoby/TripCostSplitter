@@ -115,11 +115,11 @@
                             <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="4"
+                                Classes="error"
                                 IsVisible="{Binding Duplicate}"
                                 Margin="0,0,5,0"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
-                                Foreground="Red"
                                 Text="!!" />
                             <TextBlock
                                 Grid.Row="1"

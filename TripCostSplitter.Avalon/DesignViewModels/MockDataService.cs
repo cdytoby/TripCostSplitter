@@ -44,7 +44,7 @@ public class MockDataService: IDataService
                         {
                             ParticipantIds = ["1", "2"],
                             PayerInfos = [new PayerInfo("1", 100)],
-                            PurchaseItems = []
+                            PurchaseItems = [new PurchaseItem("ItemToPurchase", 100)]
                         },
                         RecipientInfos =
                         [

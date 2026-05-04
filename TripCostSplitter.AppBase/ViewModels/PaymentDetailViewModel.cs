@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TripCostSplitter.AppBase.Services;
@@ -11,11 +12,8 @@ namespace TripCostSplitter.AppBase.ViewModels;
 
 public partial class PaymentDetailViewModel: ObservableObject
 {
-    public IReadOnlyList<CurrencyModel> AvailableCurrencies { get; }
-    public IReadOnlyList<Person> TravelParticipants { get; }
-    
-    public List<string> AvailableSplitMethods { get; } =
-        [SplitByExactAmount.Key, SplitByPercentage.Key, SplitByItemOwnership.Key, SplitEvenly.Key];
+    [ObservableProperty]
+    public partial CurrencyModel? Currency { get; set; }
     
     [ObservableProperty]
     public partial DateTime? Date { get; set; }
@@ -24,20 +22,41 @@ public partial class PaymentDetailViewModel: ObservableObject
     public partial TimeSpan? Time { get; set; }
     
     [ObservableProperty]
+    public partial bool EnableItemList { get; set; }
+    
+    [ObservableProperty]
+    public partial bool HasPurchaseItemValidationError { get; set; } = false;
+    
+    [ObservableProperty]
     public partial SplitDataViewModelBase? SplitDataViewModel { get; set; }
     
     [ObservableProperty]
     public partial string? CurrentSplitMethod { get; set; }
     
+    [ObservableProperty]
+    public partial bool HasSplitDataValidationError { get; set; } = false;
+    
+    public List<string> AvailableSplitMethods { get; } = SplitDataViewModelService.GetAvaliableSplitMethods();
+    public IReadOnlyList<CurrencyModel> AvailableCurrencies { get; }
+    public IReadOnlyList<Person> TravelParticipants { get; }
     public Transaction Transaction { get; }
     public PaymentData? PaymentData { get; }
+    
+    public IRelayCommand<Person> AddPayerCommand { get; }
+    public IRelayCommand<PayerInfo> RemovePayerCommand { get; }
+    public IRelayCommand AddPurchaseItemCommand { get; }
+    public IRelayCommand<PurchaseItem> RemovePurchaseItemCommand { get; }
+    public IAsyncRelayCommand SaveCommand { get; }
+    public IAsyncRelayCommand CancelCommand { get; }
     
     private readonly List<ISplitCalculator> splitCalculators;
     private readonly INavigationService navigationService;
     private readonly SessionService sessionService;
+    private readonly CurrencyService currencyService;
     private readonly SplitDataViewModelService splitDataViewModelService;
     
     private bool isLoaded;
+    private IList<PurchaseItem>? cachedPurchaseItems;
     
     public PaymentDetailViewModel(
         SessionService _sessionService,
@@ -49,9 +68,17 @@ public partial class PaymentDetailViewModel: ObservableObject
         splitCalculators = _splitCalculators.ToList();
         navigationService = _navigationService;
         splitDataViewModelService = _splitDataViewModelService;
+        sessionService = _sessionService;
+        currencyService = _currencyService;
+        
+        AddPayerCommand = new RelayCommand<Person>(AddPayer!);
+        RemovePayerCommand = new RelayCommand<PayerInfo>(RemovePayer!);
+        AddPurchaseItemCommand = new RelayCommand(AddPurchaseItem);
+        RemovePurchaseItemCommand = new RelayCommand<PurchaseItem>(RemovePurchaseItem!);
+        SaveCommand = new AsyncRelayCommand(Save);
+        CancelCommand = new AsyncRelayCommand(Cancel);
         
         //todo exception or load state with nullable
-        sessionService = _sessionService;
         Transaction = _sessionService.CurrentTransaction!;
         TravelParticipants = _sessionService.CurrentTravel!.Participants.ToList();
         AvailableCurrencies =
@@ -62,17 +89,22 @@ public partial class PaymentDetailViewModel: ObservableObject
         
         //todo exception or load state with nullable
         PaymentData = Transaction.TransactionData as PaymentData;
-        if (PaymentData != null && PaymentData.PurchaseItems.Count == 0)
-        {
-            PaymentData.PurchaseItems.Add(new PurchaseItem("total cost", 0));
-        }
         
         Date = new DateTime(Transaction.Date.Year, Transaction.Date.Month, Transaction.Date.Day);
         Time = new TimeSpan(Transaction.Date.Hour, Transaction.Date.Minute, Transaction.Date.Second);
+        Currency = currencyService.GetCurrencyInfo(Transaction.Currency);
         
+        LoadPurchasedItems();
         LoadSplitData();
         
         isLoaded = true;
+    }
+    
+    partial void OnCurrencyChanged(CurrencyModel? oldValue, CurrencyModel? newValue)
+    {
+        if (!isLoaded || Currency == null)
+            return;
+        Transaction.Currency = Currency.Code;
     }
     
     partial void OnDateChanged(DateTime? oldValue, DateTime? newValue)
@@ -94,28 +126,110 @@ public partial class PaymentDetailViewModel: ObservableObject
             DateTimeKind.Unspecified);
     }
     
-    [RelayCommand]
-    public void AddPayer(Person person)
+    partial void OnEnableItemListChanged(bool value)
     {
-        PaymentData?.PayerInfos.Add(new PayerInfo(person.Id, 0));
+        if (PaymentData == null)
+            return;
+        if (value)
+        {
+            if (cachedPurchaseItems == null || cachedPurchaseItems.Count == 0)
+                return;
+            PaymentData.PurchaseItems.Clear();
+            foreach (PurchaseItem item in cachedPurchaseItems)
+            {
+                PaymentData.PurchaseItems.Add(item);
+            }
+        }
+        else
+        {
+            cachedPurchaseItems = new List<PurchaseItem>(PaymentData.PurchaseItems);
+            PaymentData.PurchaseItems.Clear();
+            PaymentData.PurchaseItems.Add(new PurchaseItem("Total cost", GetTotalPayment()));
+        }
+        
+        UpdateHasPurchaseItemValidation();
     }
     
-    [RelayCommand]
-    public void RemovePayer(PayerInfo item)
+    private decimal GetTotalPayment()
+    {
+        return PaymentData!.PayerInfos.Sum(i => i.Amount);
+    }
+    
+    private decimal GetTotalPurchasedItems()
+    {
+        return PaymentData!.PurchaseItems.Sum(i => i.Price);
+    }
+    
+    private void AddPayer(Person person)
+    {
+        if (PaymentData?.PayerInfos.Any(p => p.PayerId.Equals(person.Id)) ?? false)
+        {
+            return;
+        }
+        
+        PaymentData?.PayerInfos.Add(new PayerInfo(person.Id));
+    }
+    
+    private void RemovePayer(PayerInfo item)
     {
         PaymentData?.PayerInfos.Remove(item);
+        UpdateHasPurchaseItemValidation();
     }
     
-    [RelayCommand]
-    public void AddPurchaseItem()
+    private void LoadPurchasedItems()
+    {
+        if (PaymentData == null)
+            return;
+        int count = PaymentData.PurchaseItems.Count;
+        switch (count)
+        {
+            case 0:
+                PaymentData.PurchaseItems.Add(new PurchaseItem("Total cost", GetTotalPayment()));
+                EnableItemList = false;
+                break;
+            case 1 when
+                PaymentData.PurchaseItems.Single().Price.Equals(GetTotalPayment()):
+                EnableItemList = false;
+                break;
+            default:
+                EnableItemList = true;
+                break;
+        }
+        
+        UpdateHasPurchaseItemValidation();
+    }
+    
+    public void PaymentPriceUpdated()
+    {
+        if (PaymentData == null || !isLoaded)
+            return;
+        if (EnableItemList && PaymentData.PurchaseItems.Count > 1)
+            return;
+        PaymentData.PurchaseItems.Single().Price = GetTotalPayment();
+        UpdateHasPurchaseItemValidation();
+    }
+    
+    private void AddPurchaseItem()
     {
         PaymentData?.PurchaseItems.Add(new PurchaseItem("", 0));
     }
     
-    [RelayCommand]
-    public void RemovePurchaseItem(PurchaseItem item)
+    private void RemovePurchaseItem(PurchaseItem item)
     {
+        if (PaymentData?.PurchaseItems.Count <= 1)
+            return;
         PaymentData?.PurchaseItems.Remove(item);
+        UpdateHasPurchaseItemValidation();
+    }
+    
+    public void PurchaseItemPriceUpdated()
+    {
+        UpdateHasPurchaseItemValidation();
+    }
+    
+    private void UpdateHasPurchaseItemValidation()
+    {
+        HasPurchaseItemValidationError = GetTotalPurchasedItems() != GetTotalPayment();
     }
     
     private void LoadSplitData()
@@ -134,8 +248,7 @@ public partial class PaymentDetailViewModel: ObservableObject
             CurrentSplitMethod, TravelParticipants, PaymentData);
     }
     
-    [RelayCommand]
-    public async Task Save()
+    private async Task Save()
     {
         ApplyPaymentData();
         
@@ -168,8 +281,7 @@ public partial class PaymentDetailViewModel: ObservableObject
         }
     }
     
-    [RelayCommand]
-    public async Task Cancel()
+    private async Task Cancel()
     {
         await navigationService.PopAsync();
     }

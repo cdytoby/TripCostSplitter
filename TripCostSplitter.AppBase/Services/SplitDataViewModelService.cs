@@ -6,6 +6,11 @@ namespace TripCostSplitter.AppBase.Services;
 
 public class SplitDataViewModelService
 {
+    public static List<string> GetAvaliableSplitMethods()
+    {
+        return [SplitByExactAmount.Key, SplitByPercentage.Key, SplitByItemOwnership.Key, SplitEvenly.Key];
+    }
+    
     public (string splitMethod, SplitDataViewModelBase? viewModel) LoadSplitDataViewModel(
         IReadOnlyList<Person> TravelParticipants, PaymentData PaymentData)
     {

@@ -25,7 +25,7 @@ public class CurrencyTest
     {
         CurrencyService service = TestSetup.ServiceProvider.GetService<CurrencyService>()!;
         
-        decimal result = CurrencyService.ParseFormattedString(key, value);
+        decimal result = CurrencyService.ParseStringToDecimal(value);
         Console.WriteLine(result);
         Assert.That(result, Is.EqualTo(expectedResult));
     }

@@ -23,10 +23,11 @@
             <TextBlock
                 Classes="sub"
                 Text="Sub text" />
-            <NumericUpDown 
+            <TextBlock
                 Classes="error"
-                AllowSpin="False"
-                ShowButtonSpinner="False"/>
+                Text="Error" />
+            <NumericUpDown
+                Classes="error default" />
         </UniformGrid>
     </Design.PreviewWith>
 
@@ -70,6 +71,23 @@
     </Style>
 
     <Style
+        Selector="TextBlock.error">
+        <Setter
+            Property="Foreground"
+            Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+    </Style>
+    
+    <Style
+        Selector="NumericUpDown.default">
+        <Setter
+            Property="AllowSpin"
+            Value="False" />
+        <Setter
+            Property="ShowButtonSpinner"
+            Value="False" />
+    </Style>
+    
+    <Style
         Selector="NumericUpDown.error">
         <Setter
             Property="BorderBrush"
@@ -77,10 +95,10 @@
     </Style>
 
     <Style
-        Selector="TextBlock.h3">
-        <Setter 
+        Selector="TextBlock.h2">
+        <Setter
             Property="VerticalAlignment"
-            Value="Center"/>
+            Value="Center" />
         <Setter
             Property="FontWeight"
             Value="Bold" />
@@ -90,13 +108,23 @@
     </Style>
 
     <Style
+        Selector="TextBlock.h3">
+        <Setter
+            Property="VerticalAlignment"
+            Value="Center" />
+        <Setter
+            Property="FontWeight"
+            Value="Bold" />
+    </Style>
+
+    <Style
         Selector="TextBlock.sub">
         <Setter
             Property="Foreground"
             Value="{DynamicResource SystemControlDescriptionTextForegroundBrush}" />
-        <Setter 
+        <Setter
             Property="VerticalAlignment"
-            Value="Center"/>
+            Value="Center" />
     </Style>
     <!-- Add Styles Here -->
 </Styles>

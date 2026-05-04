@@ -18,6 +18,8 @@ public static class DesignData
     
     public static TransactionListViewModel TransactionListViewModelDesign { get; } = GetTransactionListViewModel();
     
+    public static PaymentDetailViewModel PaymentDetailViewModelDesign { get; } = GetPaymentDetailViewModel();
+    
     private static IServiceProvider GetProvider()
     {
         IServiceCollection serviceCollection = new ServiceCollection();
@@ -52,9 +54,17 @@ public static class DesignData
         return viewModel;
     }
     
+    private static PaymentDetailViewModel GetPaymentDetailViewModel()
+    {
+        SetSession();
+        PaymentDetailViewModel viewModel = serviceProvider.GetRequiredService<PaymentDetailViewModel>();
+        return viewModel;
+    }
+    
     private static void SetSession()
     {
         SessionService session = serviceProvider.GetRequiredService<SessionService>();
         session.CurrentTravel = session.GetAllTravels().First();
+        session.CurrentTransaction = session.GetAllTravels().First().Transactions.First();
     }
 }

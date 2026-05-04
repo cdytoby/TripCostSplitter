@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
 using TripCostSplitter.Core.DataModels;
 
 namespace TripCostSplitter.Core.Services;
@@ -62,26 +64,42 @@ public class CurrencyService
         return GetDescription(knownCurrencies[key]);
     }
     
-    public static string GetFormattedString(string key, decimal currencyValue)
+    public static NumberFormatInfo GetNumberFormat(string key)
     {
         NumberFormatInfo format = GetCultureInfo(key).NumberFormat;
-        format.CurrencyGroupSeparator = string.Empty;
-        return currencyValue.ToString("C", format);
+        format.CurrencyGroupSeparator = "";
+        format.NumberGroupSeparator = "";
+        format.PercentGroupSeparator = "";
+        return format;
     }
     
-    public static decimal ParseFormattedString(string key, string currencyValueString)
+    public static string GetFormattedString(string key, decimal currencyValue)
     {
-        bool success1 = decimal.TryParse(
-            currencyValueString, NumberStyles.Currency, GetCultureInfo(key), out decimal currencyValue);
-        if (success1)
-            return currencyValue;
-        bool success2 = decimal.TryParse(
-            currencyValueString, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture,
-            out decimal currencyValue2);
-        if (success2)
-            return currencyValue2;
+        NumberFormatInfo format = GetNumberFormat(key);
+        format.CurrencyGroupSeparator = string.Empty;
+        return currencyValue.ToString("C2", format);
+    }
+    
+    public static decimal ParseStringToDecimal(string currencyValueString)
+    {
+        string input = currencyValueString;
+        if (string.IsNullOrEmpty(input))
+            return 0m;
+        Regex numberPattern = new("[0-9.,]+");
+        Match? match = numberPattern.Matches(input).FirstOrDefault();
+        if (match == null)
+            return 0m;
+        string[] splitInput = match.Value.Split(',', '.');
+        StringBuilder reconstructBuilder = new();
+        for (int i = 0; i < splitInput.Length; i++)
+        {
+            string s = splitInput[i];
+            if (i == splitInput.Length - 1 && i > 0)
+                reconstructBuilder.Append('.');
+            reconstructBuilder.Append(s);
+        }
         
-        return 0;
+        return decimal.Parse(reconstructBuilder.ToString(), CultureInfo.InvariantCulture);
     }
     
     private static CultureInfo GetCultureInfo(string key)
