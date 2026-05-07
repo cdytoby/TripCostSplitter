@@ -27,7 +27,7 @@ public partial class TravelDetailViewModel: ObservableObject
     {
         sessionService = _sessionService;
         currencyService = _currencyService;
-        AllCurrencies = _currencyService.GetAllCurrencyInfos();
+        AllCurrencies = CurrencyService.GetAllCurrencyInfos();
         
         //todo exception or load state with nullable
         Travel = sessionService.CurrentTravel!;

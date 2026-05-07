@@ -2,6 +2,8 @@
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using TripCostSplitter.AppBase.Messages;
 using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.AppBase.ViewModels.SplitViewModels;
 using TripCostSplitter.Core.DataModels;
@@ -10,9 +12,10 @@ using TripCostSplitter.Core.SplitData;
 
 namespace TripCostSplitter.AppBase.ViewModels;
 
-public partial class PaymentDetailViewModel: ObservableObject
+public partial class PaymentDetailViewModel: ObservableRecipient
 {
     [ObservableProperty]
+    [NotifyPropertyChangedRecipients]
     public partial CurrencyModel? Currency { get; set; }
     
     [ObservableProperty]
@@ -83,7 +86,7 @@ public partial class PaymentDetailViewModel: ObservableObject
         TravelParticipants = _sessionService.CurrentTravel!.Participants.ToList();
         AvailableCurrencies =
         [
-            .._currencyService.GetCurrencyInfos(
+            ..CurrencyService.GetCurrencyInfos(
                 [_sessionService.CurrentTravel.CalculateCurrency, .._sessionService.CurrentTravel.AdditionalCurrencies])
         ];
         
@@ -92,7 +95,7 @@ public partial class PaymentDetailViewModel: ObservableObject
         
         Date = new DateTime(Transaction.Date.Year, Transaction.Date.Month, Transaction.Date.Day);
         Time = new TimeSpan(Transaction.Date.Hour, Transaction.Date.Minute, Transaction.Date.Second);
-        Currency = currencyService.GetCurrencyInfo(Transaction.Currency);
+        Currency = CurrencyService.GetCurrencyInfo(Transaction.Currency);
         
         LoadPurchasedItems();
         LoadSplitData();
@@ -147,7 +150,7 @@ public partial class PaymentDetailViewModel: ObservableObject
             PaymentData.PurchaseItems.Add(new PurchaseItem("Total cost", GetTotalPayment()));
         }
         
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
     }
     
     private decimal GetTotalPayment()
@@ -173,7 +176,7 @@ public partial class PaymentDetailViewModel: ObservableObject
     private void RemovePayer(PayerInfo item)
     {
         PaymentData?.PayerInfos.Remove(item);
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
     }
     
     private void LoadPurchasedItems()
@@ -196,17 +199,13 @@ public partial class PaymentDetailViewModel: ObservableObject
                 break;
         }
         
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
     }
     
     public void PaymentPriceUpdated()
     {
-        if (PaymentData == null || !isLoaded)
-            return;
-        if (EnableItemList && PaymentData.PurchaseItems.Count > 1)
-            return;
-        PaymentData.PurchaseItems.Single().Price = GetTotalPayment();
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
+        Messenger.Send(new PaymentTotalValueChangedMessage(GetTotalPayment()));
     }
     
     private void AddPurchaseItem()
@@ -219,33 +218,40 @@ public partial class PaymentDetailViewModel: ObservableObject
         if (PaymentData?.PurchaseItems.Count <= 1)
             return;
         PaymentData?.PurchaseItems.Remove(item);
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
     }
     
     public void PurchaseItemPriceUpdated()
     {
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
     }
     
-    private void UpdateHasPurchaseItemValidation()
+    private void UpdatePurchaseItemValidation()
     {
+        if (PaymentData == null || !isLoaded)
+            return;
+        if (!EnableItemList || PaymentData.PurchaseItems.Count == 1)
+        {
+            PaymentData.PurchaseItems.Single().Price = GetTotalPayment();
+        }
+        
         HasPurchaseItemValidationError = GetTotalPurchasedItems() != GetTotalPayment();
     }
     
     private void LoadSplitData()
     {
-        if (PaymentData == null)
+        if (PaymentData == null || Currency == null)
             return;
         (CurrentSplitMethod, SplitDataViewModel) =
-            splitDataViewModelService.LoadSplitDataViewModel(TravelParticipants, PaymentData);
+            splitDataViewModelService.LoadSplitDataViewModel(PaymentData, TravelParticipants, Currency, Messenger);
     }
     
     partial void OnCurrentSplitMethodChanged(string? value)
     {
-        if (PaymentData == null)
+        if (PaymentData == null || Currency == null)
             return;
         SplitDataViewModel = splitDataViewModelService.LoadSplitDataViewModel(
-            CurrentSplitMethod, TravelParticipants, PaymentData);
+            CurrentSplitMethod, PaymentData, TravelParticipants, Currency, Messenger);
     }
     
     private async Task Save()

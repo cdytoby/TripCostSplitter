@@ -1,7 +1,5 @@
 using System.Collections.ObjectModel;
-using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
-using TripCostSplitter.Core.JsonExtensions;
 using TripCostSplitter.Core.SplitData;
 
 namespace TripCostSplitter.Core.DataModels;

@@ -1,4 +1,5 @@
-﻿using TripCostSplitter.AppBase.ViewModels.SplitViewModels;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using TripCostSplitter.AppBase.ViewModels.SplitViewModels;
 using TripCostSplitter.Core.DataModels;
 using TripCostSplitter.Core.SplitData;
 
@@ -12,83 +13,92 @@ public class SplitDataViewModelService
     }
     
     public (string splitMethod, SplitDataViewModelBase? viewModel) LoadSplitDataViewModel(
-        IReadOnlyList<Person> TravelParticipants, PaymentData PaymentData)
+        PaymentData paymentData,
+        IReadOnlyList<Person> travelParticipants,
+        CurrencyModel currency,
+        IMessenger? messenger = null)
     {
         string splitMethod = string.Empty;
         SplitDataViewModelBase? viewModel = null;
         
-        switch (PaymentData.SplitData)
+        switch (paymentData.SplitData)
         {
-            case SplitByExactAmount splitDataExactAmount:
+            case SplitByExactAmount:
                 splitMethod = SplitByExactAmount.Key;
-                viewModel = new SplitByExactAmountViewModel();
-                viewModel.Load(splitDataExactAmount, TravelParticipants, PaymentData);
+                viewModel = new SplitByExactAmountViewModel(messenger);
                 break;
-            case SplitByPercentage splitDataPercentage:
+            case SplitByPercentage:
                 splitMethod = SplitByPercentage.Key;
-                viewModel = new SplitByPercentageViewModel();
-                viewModel.Load(splitDataPercentage, TravelParticipants, PaymentData);
+                viewModel = new SplitByPercentageViewModel(messenger);
                 break;
-            case SplitByItemOwnership ownership:
+            case SplitByItemOwnership:
                 splitMethod = SplitByItemOwnership.Key;
-                viewModel = new SplitByItemOwnershipViewModel();
-                viewModel.Load(ownership, TravelParticipants, PaymentData);
+                viewModel = new SplitByItemOwnershipViewModel(messenger);
                 break;
-            case SplitEvenly evenSplitData:
+            case SplitEvenly:
                 splitMethod = SplitEvenly.Key;
-                viewModel = new SplitByPercentageViewModel();
-                viewModel.Load(evenSplitData, TravelParticipants, PaymentData);
+                viewModel = new SplitByPercentageViewModel(messenger);
                 break;
         }
+        
+        viewModel?.Load(paymentData, travelParticipants, currency);
         
         return (splitMethod, viewModel);
     }
     
     public SplitDataViewModelBase? LoadSplitDataViewModel(
-        string? splitMethod, IReadOnlyList<Person> TravelParticipants, PaymentData PaymentData)
+        string? splitMethod,
+        PaymentData paymentData,
+        IReadOnlyList<Person> travelParticipants,
+        CurrencyModel currency,
+        IMessenger? messenger = null)
     {
-        decimal totalPrice = PaymentData.PayerInfos.Sum(pi => pi.Amount);
+        decimal totalPrice = paymentData.PayerInfos.Sum(pi => pi.Amount);
         SplitDataViewModelBase? SplitDataViewModel;
         
         switch (splitMethod)
         {
             case SplitByExactAmount.Key:
-                SplitDataViewModel = new SplitByExactAmountViewModel();
+                SplitDataViewModel = new SplitByExactAmountViewModel(messenger);
                 SplitByExactAmount exactAmountData = new();
-                foreach (Person traveller in TravelParticipants)
+                foreach (Person traveller in travelParticipants)
                 {
-                    exactAmountData.PersonIdAmountDict.Add(traveller.Id, totalPrice / TravelParticipants.Count);
+                    exactAmountData.PersonIdAmountDict.Add(traveller.Id, totalPrice / travelParticipants.Count);
                 }
                 
-                SplitDataViewModel.Load(exactAmountData, TravelParticipants, PaymentData);
+                paymentData.SplitData = exactAmountData;
+                SplitDataViewModel.Load(paymentData, travelParticipants, currency);
                 break;
             case SplitByPercentage.Key:
-                SplitDataViewModel = new SplitByPercentageViewModel();
+                SplitDataViewModel = new SplitByPercentageViewModel(messenger);
                 SplitByPercentage percentageData = new();
-                foreach (Person traveller in TravelParticipants)
+                foreach (Person traveller in travelParticipants)
                 {
-                    percentageData.PersonPercentageDict.Add(traveller.Id, 100m / TravelParticipants.Count);
+                    percentageData.PersonPortionDict.Add(traveller.Id, 1m / travelParticipants.Count);
                 }
                 
-                SplitDataViewModel.Load(percentageData, TravelParticipants, PaymentData);
+                paymentData.SplitData = percentageData;
+                SplitDataViewModel.Load(paymentData, travelParticipants, currency);
                 break;
             case SplitByItemOwnership.Key:
-                SplitDataViewModel = new SplitByItemOwnershipViewModel();
+                SplitDataViewModel = new SplitByItemOwnershipViewModel(messenger);
                 SplitByItemOwnership ownershipData = new();
-                ownershipData.OwnershipGroups.Add(TravelParticipants.First().Id,
-                    [..PaymentData.PurchaseItems.Select(i => i.Item)]);
+                ownershipData.OwnershipGroups.Add(travelParticipants.First().Id,
+                    [..paymentData.PurchaseItems.Select(i => i.Item)]);
                 
-                SplitDataViewModel.Load(ownershipData, TravelParticipants, PaymentData);
+                paymentData.SplitData = ownershipData;
+                SplitDataViewModel.Load(paymentData, travelParticipants, currency);
                 break;
             case SplitEvenly.Key:
-                SplitDataViewModel = new SplitByPercentageViewModel();
+                SplitDataViewModel = new SplitByPercentageViewModel(messenger);
                 SplitEvenly evenData = new();
-                foreach (Person traveller in TravelParticipants)
+                foreach (Person traveller in travelParticipants)
                 {
                     evenData.SplitParticipants.Add(traveller.Id);
                 }
                 
-                SplitDataViewModel.Load(evenData, TravelParticipants, PaymentData);
+                paymentData.SplitData = evenData;
+                SplitDataViewModel.Load(paymentData, travelParticipants, currency);
                 break;
             default:
                 SplitDataViewModel = null;

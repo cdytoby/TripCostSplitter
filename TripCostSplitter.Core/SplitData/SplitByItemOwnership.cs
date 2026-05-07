@@ -6,5 +6,8 @@ public class SplitByItemOwnership : ISplitData
 {
     public const string Key = "ByItemOwnership";
 
+    /// <summary>
+    /// Key is person id, value is the list of items the person owns
+    /// </summary>
     public Dictionary<string, List<string>?> OwnershipGroups { get; set; } = new();
 }

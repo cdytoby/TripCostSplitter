@@ -4,29 +4,76 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels.SplitViewModels;assembly=TripCostSplitter.AppBase"
+    xmlns:designViewModels="clr-namespace:TripCostSplitter.Avalon.DesignViewModels"
+    xmlns:converters="clr-namespace:TripCostSplitter.Avalon.Converters"
     mc:Ignorable="d"
-    d:DesignWidth="800"
-    d:DesignHeight="450"
+    d:DesignWidth="350"
+    d:DesignHeight="400"
+    d:DataContext="{x:Static designViewModels:DesignData.SplitByPercentageViewModelDesign}"
     x:Class="TripCostSplitter.Avalon.Views.SplitViews.SplitByPercentageView"
-    x:CompileBindings="False"
     x:DataType="vm:SplitByPercentageViewModel">
-    <ItemsControl
-        ItemsSource="{Binding SplitParticipants}">
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <Grid
-                    ColumnDefinitions="*,100"
-                    Margin="0,2">
-                    <TextBlock
-                        Grid.Column="0"
-                        Text="{Binding Person.Name}"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Grid.Column="1"
-                        Text="{Binding Value, TargetNullValue=''}"
-                        PlaceholderText="Value" />
-                </Grid>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+
+    <UserControl.Styles>
+        <StyleInclude
+            Source="avares://TripCostSplitter.Avalon/Resources/AppStyles.axaml" />
+    </UserControl.Styles>
+    
+    <UserControl.Resources>
+        <converters:PercentageRealPriceConverter
+            x:Key="PercentageRealPriceConverter" />
+    </UserControl.Resources>
+
+    <StackPanel
+        Spacing="10">
+        <ItemsControl
+            ItemsSource="{Binding SplitParticipants}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid
+                        ColumnDefinitions="*,Auto,*,*"
+                        Margin="0,2">
+                        <TextBlock
+                            Grid.Column="0"
+                            Text="{Binding Person.Name}"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,10,0" />
+                        <CheckBox
+                            Grid.Column="1"
+                            Margin="0,0,10,0"
+                            IsVisible="{Binding $parent[UserControl].((vm:SplitByPercentageViewModel)DataContext).CanDisableParticipant}"
+                            IsChecked="{Binding Enable}" />
+                        <NumericUpDown
+                            Grid.Column="2"
+                            Classes="default"
+                            IsEnabled="{Binding $parent[UserControl].((vm:SplitByPercentageViewModel)DataContext).CanCustomSplit}"
+                            FormatString="P1"
+                            Value="{ReflectionBinding Value, TargetNullValue=0, FallbackValue=0}"
+                            PlaceholderText="Value" />
+                        <TextBlock
+                            Grid.Column="3"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding
+                                    Converter="{StaticResource PercentageRealPriceConverter}">
+                                    <Binding
+                                        Path="Value" />
+                                    <Binding
+                                        Path="$parent[UserControl].((vm:SplitByPercentageViewModel)DataContext).TotalPrice" />
+                                    <Binding
+                                        Path="$parent[UserControl].((vm:SplitByPercentageViewModel)DataContext).Currency" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock 
+            Classes="error"
+            HorizontalAlignment="Center"
+            IsVisible="{Binding HasError}"
+            Text="Percentage sum is not 100%"/>
+    </StackPanel>
 </UserControl>

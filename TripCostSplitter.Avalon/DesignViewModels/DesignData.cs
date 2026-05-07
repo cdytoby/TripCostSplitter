@@ -2,7 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.AppBase.ViewModels;
+using TripCostSplitter.AppBase.ViewModels.SplitViewModels;
+using TripCostSplitter.Core.DataModels;
 using TripCostSplitter.Core.Services;
+using TripCostSplitter.Core.SplitData;
 
 namespace TripCostSplitter.Avalon.DesignViewModels;
 
@@ -19,6 +22,15 @@ public static class DesignData
     public static TransactionListViewModel TransactionListViewModelDesign { get; } = GetTransactionListViewModel();
     
     public static PaymentDetailViewModel PaymentDetailViewModelDesign { get; } = GetPaymentDetailViewModel();
+    
+    public static SplitByPercentageViewModel SplitByPercentageViewModelDesign { get; } =
+        GetSplitByPercentageViewModel();
+    
+    public static SplitByExactAmountViewModel SplitBySplitByExactAmountViewModelDesign { get; } =
+        GetSplitByExactAmountViewModel();
+    
+    public static SplitByItemOwnershipViewModel SplitByItemOwnershipViewModelDesign { get; } =
+        GetSplitByItemOwnershipViewModel();
     
     private static IServiceProvider GetProvider()
     {
@@ -61,10 +73,88 @@ public static class DesignData
         return viewModel;
     }
     
-    private static void SetSession()
+    private static SplitByPercentageViewModel GetSplitByPercentageViewModel()
+    {
+        SetSession();
+        SessionService session = serviceProvider.GetRequiredService<SessionService>();
+        PaymentData paymentData = (session.CurrentTransaction!.TransactionData as PaymentData)!;
+        paymentData.SplitData = new SplitByPercentage
+        {
+            PersonPortionDict = new Dictionary<string, decimal>()
+            {
+                { "1", 0.5m },
+                { "2", 0.5m }
+            }
+        };
+        SplitByPercentageViewModel viewModel = new();
+        viewModel.Load(
+            paymentData,
+            session.CurrentTravel!.Participants,
+            CurrencyService.GetCurrencyInfo("EUR")!);
+        return viewModel;
+    }
+    
+    private static SplitByExactAmountViewModel GetSplitByExactAmountViewModel()
+    {
+        SetSession();
+        SessionService session = serviceProvider.GetRequiredService<SessionService>();
+        PaymentData paymentData = (session.CurrentTransaction!.TransactionData as PaymentData)!;
+        paymentData.SplitData = new SplitByExactAmount
+        {
+            PersonIdAmountDict = new Dictionary<string, decimal>()
+            {
+                { "1", 40m },
+                { "2", 60m }
+            }
+        };
+        SplitByExactAmountViewModel viewModel = new();
+        viewModel.Load(
+            paymentData,
+            session.CurrentTravel!.Participants,
+            CurrencyService.GetCurrencyInfo("EUR")!);
+        return viewModel;
+    }
+    
+    private static SplitByItemOwnershipViewModel GetSplitByItemOwnershipViewModel()
+    {
+        SetSession(1);
+        SessionService session = serviceProvider.GetRequiredService<SessionService>();
+        PaymentData paymentData = (session.CurrentTransaction!.TransactionData as PaymentData)!;
+        paymentData.SplitData = new SplitByItemOwnership
+        {
+            OwnershipGroups = new()
+            {
+                {
+                    "1", [
+                        "Pasta",
+                        "Apple juice",
+                        "Chicken Wings",
+                        "Steak",
+                        "Tip"
+                    ]
+                },
+                {
+                    "2", [
+                        "Pizza",
+                        "Orange juice",
+                        "Tiramisu",
+                        "Tip"
+                    ]
+                }
+            }
+        };
+        SplitByItemOwnershipViewModel viewModel = new();
+        viewModel.Load(
+            paymentData,
+            session.CurrentTravel!.Participants,
+            CurrencyService.GetCurrencyInfo("EUR")!);
+        return viewModel;
+    }
+    
+    private static void SetSession(int transactionIndex = 0)
     {
         SessionService session = serviceProvider.GetRequiredService<SessionService>();
         session.CurrentTravel = session.GetAllTravels().First();
-        session.CurrentTransaction = session.GetAllTravels().First().Transactions.First();
+        session.CurrentTransaction = session.GetAllTravels().First().Transactions[transactionIndex];
     }
 }

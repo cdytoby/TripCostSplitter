@@ -37,7 +37,7 @@ public partial class SettingsViewModel: ObservableRecipient
         currencyService = _currencyService;
         navigationService = _navigationService;
         
-        AvailableCurrencies = currencyService.GetAllCurrencyInfos();
+        AvailableCurrencies = CurrencyService.GetAllCurrencyInfos();
         
         Messenger.Register<PropertyChangedMessage<CurrencyModel>>(this, MarkDuplicateExchangeRates);
         
@@ -49,7 +49,7 @@ public partial class SettingsViewModel: ObservableRecipient
     {
         if (string.IsNullOrEmpty(dataService.Settings.DefaultCurrency))
         {
-            DefaultCurrency = currencyService.GetCurrencyInfoFromCultureInfo(CultureInfo.CurrentCulture);
+            DefaultCurrency = CurrencyService.GetCurrencyInfoFromCultureInfo(CultureInfo.CurrentCulture);
         }
         else
         {

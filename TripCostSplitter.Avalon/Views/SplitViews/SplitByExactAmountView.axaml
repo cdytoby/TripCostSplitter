@@ -4,29 +4,56 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels.SplitViewModels;assembly=TripCostSplitter.AppBase"
+    xmlns:designViewModels="clr-namespace:TripCostSplitter.Avalon.DesignViewModels"
+    xmlns:converters="clr-namespace:TripCostSplitter.Avalon.Converters"
     mc:Ignorable="d"
-    d:DesignWidth="800"
-    d:DesignHeight="450"
+    d:DesignWidth="350"
+    d:DesignHeight="400"
+    d:DataContext="{x:Static designViewModels:DesignData.SplitBySplitByExactAmountViewModelDesign}"
     x:Class="TripCostSplitter.Avalon.Views.SplitViews.SplitByExactAmountView"
-    x:CompileBindings="False"
     x:DataType="vm:SplitByExactAmountViewModel">
-    <ItemsControl
-        ItemsSource="{Binding SplitParticipants}">
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <Grid
-                    ColumnDefinitions="*,100"
-                    Margin="0,2">
-                    <TextBlock
-                        Grid.Column="0"
-                        Text="{Binding Person.Name}"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Grid.Column="1"
-                        Text="{Binding Value, TargetNullValue=''}"
-                        PlaceholderText="Value" />
-                </Grid>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+
+    <UserControl.Resources>
+        <converters:CurrencyInputConverterConverter
+            x:Key="CurrencyInputConverterConverter" />
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <StyleInclude
+            Source="avares://TripCostSplitter.Avalon/Resources/AppStyles.axaml" />
+    </UserControl.Styles>
+
+    <StackPanel
+        Spacing="10">
+        <ItemsControl
+            ItemsSource="{Binding SplitParticipants}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid
+                        ColumnDefinitions="*,2*"
+                        Margin="0,2"
+                        ColumnSpacing="10">
+                        <TextBlock
+                            Grid.Column="0"
+                            Text="{Binding Person.Name}"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center" />
+                        <NumericUpDown
+                            Grid.Column="1"
+                            Classes="default"
+                            TextConverter="{Binding 
+                                $parent[UserControl].((vm:SplitByExactAmountViewModel)DataContext).Currency,
+                                Converter={StaticResource CurrencyInputConverterConverter}}"
+                            Value="{ReflectionBinding Value, TargetNullValue=0, FallbackValue=0}"
+                            PlaceholderText="Value" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock 
+            Classes="error"
+            HorizontalAlignment="Center"
+            IsVisible="{Binding HasError}"
+            Text="Total sum doesn't match spent"/>
+    </StackPanel>
 </UserControl>

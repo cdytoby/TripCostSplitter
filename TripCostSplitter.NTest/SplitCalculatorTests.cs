@@ -161,9 +161,9 @@ public class SplitCalculatorTests
         // Arrange
         SplitByPercentage splitData = new()
         {
-            PersonPercentageDict = new Dictionary<string, decimal>
+            PersonPortionDict = new Dictionary<string, decimal>
             {
-                { _alice.Id, 100 }
+                { _alice.Id, 1 }
             }
         };
         
@@ -194,11 +194,11 @@ public class SplitCalculatorTests
         // Arrange
         SplitByPercentage splitData = new()
         {
-            PersonPercentageDict = new Dictionary<string, decimal>
+            PersonPortionDict = new Dictionary<string, decimal>
             {
-                { _alice.Id, 50 },
-                { _bob.Id, 30 },
-                { _charlie.Id, 20 }
+                { _alice.Id, 0.5m },
+                { _bob.Id, 0.3m },
+                { _charlie.Id, 0.2m }
             }
         };
         
@@ -236,11 +236,11 @@ public class SplitCalculatorTests
         // Arrange
         SplitByPercentage splitData = new()
         {
-            PersonPercentageDict = new Dictionary<string, decimal>
+            PersonPortionDict = new Dictionary<string, decimal>
             {
-                { _alice.Id, 50 },
-                { _bob.Id, 30 },
-                { _charlie.Id, 19 }
+                { _alice.Id, 0.5m },
+                { _bob.Id, 0.3m },
+                { _charlie.Id, 0.19m }
             },
             TotalExactValidation = true
         };

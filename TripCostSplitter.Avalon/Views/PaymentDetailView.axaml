@@ -265,7 +265,7 @@
             </Grid>
 
             <ContentControl
-                MinHeight="250"
+                Padding="0,0,2,0"
                 Content="{Binding SplitDataViewModel}">
                 <ContentControl.DataTemplates>
                     <DataTemplate

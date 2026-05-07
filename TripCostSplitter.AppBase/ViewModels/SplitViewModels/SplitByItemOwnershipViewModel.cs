@@ -1,36 +1,43 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using TripCostSplitter.Core.DataModels;
 using TripCostSplitter.Core.SplitData;
 
 namespace TripCostSplitter.AppBase.ViewModels.SplitViewModels;
 
-public partial class SplitByItemOwnershipViewModel: SplitDataViewModelBase
+public partial class SplitByItemOwnershipViewModel(IMessenger? messenger = null): SplitDataViewModelBase(messenger)
 {
-    public IReadOnlyCollection<string> Items { get; private set; } = [];
-    public IReadOnlyCollection<Person> Participants { get; private set; } = [];
+    [ObservableProperty]
+    public partial IReadOnlyCollection<string> Items { get; private set; } = [];
     
     [ObservableProperty]
-    public partial ObservableCollection<PurchaseItemOwnerViewModel> ItemOwnerViewModels { get; private set; } = [];
+    public partial IReadOnlyCollection<Person> Participants { get; private set; } = [];
     
-    public override void Load(ISplitData splitData, IReadOnlyCollection<Person> travelParticipants, PaymentData paymentData)
+    [ObservableProperty]
+    public partial ObservableCollection<PersonPurchaseItemsViewModel> PersonItemsViewModels { get; private set; } = [];
+    
+    public override void Load(
+        PaymentData paymentData, IReadOnlyCollection<Person> travelParticipants, CurrencyModel useCurrency)
     {
-        if (splitData is SplitByItemOwnership itemOwnershipData)
+        if (paymentData.SplitData is not SplitByItemOwnership itemOwnershipData)
+            return;
+        
+        Items = paymentData.PurchaseItems.Select(pi => pi.Item).ToList();
+        Participants = travelParticipants;
+        
+        foreach (Person participant in Participants)
         {
-            Items = paymentData.PurchaseItems.Select(pi => pi.Item).ToList();
-            Participants = travelParticipants;
-            foreach (KeyValuePair<string, List<string>?> kvp in itemOwnershipData.OwnershipGroups)
+            List<string> ownedItems = [];
+            if (itemOwnershipData.OwnershipGroups.TryGetValue(participant.Id, out List<string>? items) &&
+                items != null)
             {
-                if (kvp.Value == null)
-                    continue;
-                foreach (string itemName in kvp.Value)
-                {
-                    PurchaseItemOwnerViewModel itemVm =
-                        new(itemName, travelParticipants.Single(p => p.Id.Equals(kvp.Key)));
-                    ItemOwnerViewModels.Add(itemVm);
-                }
+                ownedItems.AddRange(items.Where(i => Items.Contains(i)));
             }
+            
+            PersonItemsViewModels.Add(
+                new PersonPurchaseItemsViewModel(participant, Items, ownedItems));
         }
     }
     
@@ -38,15 +45,10 @@ public partial class SplitByItemOwnershipViewModel: SplitDataViewModelBase
     public override ISplitData Save()
     {
         SplitByItemOwnership splitData = new();
-        foreach (PurchaseItemOwnerViewModel viewModel in ItemOwnerViewModels)
+        foreach (PersonPurchaseItemsViewModel viewModel in PersonItemsViewModels)
         {
-            if (!splitData.OwnershipGroups.ContainsKey(viewModel.Owner.Id) ||
-                splitData.OwnershipGroups[viewModel.Owner.Id] == null)
-            {
-                splitData.OwnershipGroups[viewModel.Owner.Id] = new List<string>();
-            }
-            
-            splitData.OwnershipGroups[viewModel.Owner.Id]!.Add(viewModel.ItemName);
+            List<string> ownedItems = viewModel.OwnedItems.ToList();
+            splitData.OwnershipGroups[viewModel.Person.Id] = ownedItems;
         }
         
         return splitData;

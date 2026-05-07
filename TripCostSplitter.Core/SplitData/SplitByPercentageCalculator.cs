@@ -9,16 +9,16 @@ public class SplitByPercentageCalculator : ISplitCalculator
     public IList<RecipientInfo> CalculateDebit(PaymentData paymentData)
     {
         SplitByPercentage splitData = (SplitByPercentage)paymentData.SplitData!;
-        Dictionary<string, decimal> percentages = splitData.PersonPercentageDict;
+        Dictionary<string, decimal> portions = splitData.PersonPortionDict;
 
-        if (!percentages.Any() || !paymentData.PayerInfos.Any())
+        if (!portions.Any() || !paymentData.PayerInfos.Any())
             return new List<RecipientInfo>();
         
         decimal totalPaid = paymentData.PayerInfos.Sum(p => p.Amount);
         List<RecipientInfo> result = [];
-        foreach ((string participant, decimal percentage) in percentages)
+        foreach ((string participant, decimal portion) in portions)
         {
-            result.Add(new RecipientInfo(participant, totalPaid * (percentage / 100)));
+            result.Add(new RecipientInfo(participant, totalPaid * portion));
         }
         
         if (splitData.TotalExactValidation)
