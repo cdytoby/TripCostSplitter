@@ -171,7 +171,7 @@
                                     $parent[ContentPage].((vm:PaymentDetailViewModel)DataContext).Currency,
                                     Converter={StaticResource CurrencyInputConverterConverter}}"
                                 PlaceholderText="Amount"
-                                LostFocus="PaymentPriceInputElement_OnLostFocus"/>
+                                LostFocus="PaymentPriceInputElement_OnLostFocus" />
                             <Button
                                 Grid.Column="2"
                                 Classes="actionIcon"
@@ -198,7 +198,7 @@
                 <CheckBox
                     Grid.Column="1"
                     HorizontalAlignment="Left"
-                    IsChecked="{Binding EnableItemList}"/>
+                    IsChecked="{Binding EnableItemList}" />
                 <TextBlock
                     Grid.Column="2"
                     Classes="error"
@@ -219,13 +219,14 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid
-                            ColumnDefinitions="*,110,Auto"
+                            ColumnDefinitions="*,110,Auto,Auto"
                             ColumnSpacing="10"
                             Margin="0,2">
                             <TextBox
                                 Grid.Column="0"
-                                Text="{Binding Item}"
-                                PlaceholderText="Item Name" />
+                                Text="{Binding ItemName}"
+                                PlaceholderText="Item Name"
+                                LostFocus="PurchaseItemInputElement_OnLostFocus" />
                             <NumericUpDown
                                 Grid.Column="1"
                                 Classes="default"
@@ -234,9 +235,17 @@
                                     $parent[ContentPage].((vm:PaymentDetailViewModel)DataContext).Currency,
                                     Converter={StaticResource CurrencyInputConverterConverter}}"
                                 PlaceholderText="Price"
-                                LostFocus="PurchaseItemPriceInputElement_OnLostFocus"/>
+                                LostFocus="PurchaseItemPriceInputElement_OnLostFocus" />
                             <Button
                                 Grid.Column="2"
+                                Classes="actionIcon"
+                                Command="{Binding $parent[ContentPage].((vm:PaymentDetailViewModel)DataContext).DuplicatePurchaseItemCommand}"
+                                CommandParameter="{Binding}">
+                                <PathIcon
+                                    Data="{StaticResource IconCopyRegular}" />
+                            </Button>
+                            <Button
+                                Grid.Column="3"
                                 Classes="actionIcon"
                                 Content="-"
                                 Command="{Binding $parent[ContentPage].((vm:PaymentDetailViewModel)DataContext).RemovePurchaseItemCommand}"
@@ -265,7 +274,7 @@
             </Grid>
 
             <ContentControl
-                MinHeight="250"
+                Padding="0,0,2,40"
                 Content="{Binding SplitDataViewModel}">
                 <ContentControl.DataTemplates>
                     <DataTemplate

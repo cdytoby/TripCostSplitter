@@ -3,37 +3,127 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=netstandard"
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels.SplitViewModels;assembly=TripCostSplitter.AppBase"
-    xmlns:dataModels="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
+    xmlns:designViewModels="clr-namespace:TripCostSplitter.Avalon.DesignViewModels"
     mc:Ignorable="d"
-    d:DesignWidth="800"
-    d:DesignHeight="450"
+    d:DesignWidth="350"
+    d:DesignHeight="700"
+    d:DataContext="{x:Static designViewModels:DesignData.SplitByItemOwnershipViewModelDesign}"
     x:Class="TripCostSplitter.Avalon.Views.SplitViews.SplitByItemOwnershipView"
-    x:CompileBindings="False"
     x:DataType="vm:SplitByItemOwnershipViewModel">
-    <ItemsControl
-        ItemsSource="{Binding ItemOwnerViewModels}">
-        <ItemsControl.ItemTemplate>
-            <DataTemplate
-                x:DataType="vm:PurchaseItemOwnerViewModel">
-                <Border
-                    BorderBrush="Gray"
-                    BorderThickness="1"
-                    Padding="5"
-                    Margin="0,2">
-                    <Grid
-                        ColumnDefinitions="*,*">
-                        <TextBlock
-                            Grid.Column="0"
-                            Text="{Binding ItemName}" />
-                        <ComboBox
-                            Grid.Column="1"
-                            ItemsSource="{Binding $parent[UserControl].((vm:SplitByItemOwnershipViewModel)DataContext).Participants}"
-                            SelectedItem="{Binding Owner}"
-                            DisplayMemberBinding="{Binding Name}"/>
-                    </Grid>
-                </Border>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+
+    <UserControl.Styles>
+        <StyleInclude
+            Source="avares://TripCostSplitter.Avalon/Resources/AppStyles.axaml" />
+    </UserControl.Styles>
+
+    <StackPanel
+        Spacing="10">
+        <TextBlock
+            Foreground="{DynamicResource SystemErrorTextColor}"
+            IsVisible="{Binding HasError}"
+            Text="Remaining Items:" />
+        <ItemsControl
+            Foreground="{DynamicResource SystemErrorTextColor}"
+            IsVisible="{Binding HasError}"
+            ItemsSource="{Binding RemainingItems}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel
+                        ItemSpacing="10" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+                        Text="{Binding}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <ItemsControl
+            ItemsSource="{Binding PersonItemsViewModels}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        Padding="5"
+                        Margin="0,2,0,2"
+                        BorderBrush="{DynamicResource TextControlBorderBrush}"
+                        BorderThickness="0,0,0,1">
+                        <Grid
+                            ColumnDefinitions="*,2*,Auto"
+                            ColumnSpacing="10"
+                            VerticalAlignment="Center">
+                            <StackPanel
+                                Grid.Column="0"
+                                Orientation="Vertical">
+                                <TextBlock
+                                    TextWrapping="Wrap"
+                                    Text="{Binding Person.Name}" />
+                                <TextBlock
+                                    Classes="sub"
+                                    Text="{Binding AmountPaidFormatted}" />
+                            </StackPanel>
+                            <ItemsControl
+                                Grid.Column="1"
+                                ItemsSource="{Binding OwnedItems}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            BorderBrush="{DynamicResource ComboBoxBorderBrush}"
+                                            CornerRadius="{DynamicResource ControlCornerRadius}"
+                                            BorderThickness="1">
+                                            <Grid
+                                                ColumnDefinitions="*,Auto">
+                                                <TextBlock
+                                                    Grid.Column="0"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding}" />
+                                                <Button
+                                                    Grid.Column="1"
+                                                    Classes="actionIcon"
+                                                    Content="-"
+                                                    Command="{Binding $parent[ItemsControl].((vm:PersonPurchaseItemsViewModel)DataContext).RemoveItemCommand}"
+                                                    CommandParameter="{Binding}" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button
+                                Grid.Column="2"
+                                Name="AddItemButton"
+                                Classes="actionIcon"
+                                VerticalAlignment="Top"
+                                Content="+">
+                                <Button.Flyout>
+                                    <MenuFlyout
+                                        ItemsSource="{Binding AvailableToAdd}">
+                                        <MenuFlyout.ItemContainerTheme>
+                                            <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
+                                            <ControlTheme
+                                                TargetType="MenuItem"
+                                                BasedOn="{StaticResource {x:Type MenuItem}}">
+                                                <Setter
+                                                    Property="Header"
+                                                    Value="{Binding}" />
+                                                <Setter
+                                                    Property="Command"
+                                                    Value="{Binding #AddItemButton.((vm:PersonPurchaseItemsViewModel)DataContext).AddItemCommand}" />
+                                                <Setter
+                                                    Property="CommandParameter"
+                                                    Value="{Binding}" />
+                                            </ControlTheme>
+                                        </MenuFlyout.ItemContainerTheme>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
 </UserControl>

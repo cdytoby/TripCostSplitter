@@ -1,38 +1,102 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using TripCostSplitter.AppBase.Messages;
 using TripCostSplitter.Core.DataModels;
 using TripCostSplitter.Core.SplitData;
 
 namespace TripCostSplitter.AppBase.ViewModels.SplitViewModels;
 
-public partial class SplitByExactAmountViewModel : SplitDataViewModelBase
+public partial class SplitByExactAmountViewModel: SplitDataViewModelBase
 {
     [ObservableProperty]
     public partial ObservableCollection<SplitParticipantViewModel> SplitParticipants { get; set; } = [];
     
-    public override void Load(ISplitData splitData, IReadOnlyCollection<Person> travelParticipants, PaymentData paymentData)
+    [ObservableProperty]
+    public partial CurrencyModel? Currency { get; set; }
+    
+    [ObservableProperty]
+    public partial bool HasError { get; set; } = false;
+    
+    private PaymentData? loadedData { get; set; }
+    private bool isLoaded => loadedData != null;
+    
+    public SplitByExactAmountViewModel(IMessenger? messenger = null): base(messenger)
     {
-        if (splitData is SplitByExactAmount exactAmountData)
+        Messenger.Register<PropertyChangedMessage<CurrencyModel>>(this, CurrencyChanged);
+        Messenger.Register<PropertyChangedMessage<decimal>>(this, ValueChanged);
+        Messenger.Register<PaymentTotalValueChangedMessage>(this, TotalValueChanged);
+    }
+    
+    public override void Load(
+        PaymentData paymentData, IReadOnlyCollection<Person> travelParticipants, CurrencyModel useCurrency)
+    {
+        if (paymentData.SplitData is SplitByExactAmount exactAmountData)
         {
-            foreach (KeyValuePair<string, decimal> kvp in exactAmountData.PersonIdAmountDict)
+            foreach (Person participant in travelParticipants)
             {
                 SplitParticipants.Add(
                     new SplitParticipantViewModel(
-                        travelParticipants.Single(p => p.Id.Equals(kvp.Key)),
-                        kvp.Value));
+                        Messenger,
+                        participant,
+                        exactAmountData.PersonIdAmountDict.GetValueOrDefault(participant.Id)));
             }
         }
+        
+        Currency = useCurrency;
+        loadedData = paymentData;
     }
     
-    //todo validate
+    private void CurrencyChanged(object recipient, PropertyChangedMessage<CurrencyModel> message)
+    {
+        Currency = message.NewValue;
+    }
+    
+    private void ValueChanged(object recipient, PropertyChangedMessage<decimal> message)
+    {
+        if (!isLoaded)
+            return;
+        Validate();
+    }
+    
+    private void TotalValueChanged(object recipient, PaymentTotalValueChangedMessage message)
+    {
+        if (!isLoaded)
+            return;
+        Validate();
+    }
+    
+    private void Validate()
+    {
+        HasError = SplitParticipants.Sum(vm => vm.Value) != loadedData!.PayerInfos.Sum(pi => pi.Amount);
+    }
+    
     public override ISplitData Save()
     {
-        SplitByExactAmount exact = new();
+        SplitByExactAmount splitData = new();
+        if (!isLoaded)
+            return splitData;
         foreach (SplitParticipantViewModel sp in SplitParticipants)
         {
-            exact.PersonIdAmountDict[sp.Person.Id] = sp.Value;
+            if (sp.Value > 0)
+            {
+                splitData.PersonIdAmountDict[sp.Person.Id] = sp.Value;
+            }
         }
         
-        return exact;
+        decimal sum = splitData.PersonIdAmountDict.Sum(kvp => kvp.Value);
+        decimal targetSum = loadedData!.PayerInfos.Sum(pi => pi.Amount);
+        
+        if (sum == targetSum)
+        {
+            return splitData;
+        }
+        
+        decimal diff = targetSum - sum;
+        string personKey = splitData.PersonIdAmountDict.MaxBy(kvp => kvp.Value).Key;
+        splitData.PersonIdAmountDict[personKey] += diff;
+        
+        return splitData;
     }
 }

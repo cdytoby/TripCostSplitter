@@ -5,14 +5,14 @@ namespace TripCostSplitter.Core.DataModels;
 public partial class PurchaseItem: ObservableObject
 {
     [ObservableProperty]
-    public partial string Item { get; set; }
+    public partial string ItemName { get; set; }
     
     [ObservableProperty]
     public partial decimal Price { get; set; }
     
-    public PurchaseItem(string item, decimal price)
+    public PurchaseItem(string itemName, decimal price)
     {
-        Item = item;
+        ItemName = itemName;
         Price = price;
     }
 }

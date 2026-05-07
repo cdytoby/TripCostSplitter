@@ -12,4 +12,5 @@ riderModule.iml
 .idea/
 .vs/
 .vscode/
+.junie/
 *.user

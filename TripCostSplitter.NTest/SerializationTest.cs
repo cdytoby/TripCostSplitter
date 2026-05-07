@@ -26,7 +26,7 @@ public class TravelSerializationTests
             ],
             SplitData = new SplitByItemOwnership
             {
-                OwnershipGroups = new Dictionary<string, List<string>?>
+                OwnershipGroups = new Dictionary<string, List<string>>
                 {
                     { alice.Id, ["Apple", "Orange"] }
                 }

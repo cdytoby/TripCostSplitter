@@ -33,8 +33,8 @@ public partial class ExchangeRateItemViewModel(IMessenger messenger): Observable
     
     public void Load(CurrencyExchangeRateModel model, CurrencyService currencyService)
     {
-        LeftCurrency = currencyService.GetCurrencyInfo(model.fromCurrency);
-        RightCurrency = currencyService.GetCurrencyInfo(model.toCurrency);
+        LeftCurrency = CurrencyService.GetCurrencyInfo(model.fromCurrency);
+        RightCurrency = CurrencyService.GetCurrencyInfo(model.toCurrency);
         LeftToRightRate = model.rate;
     }
     

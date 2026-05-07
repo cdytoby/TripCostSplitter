@@ -2,6 +2,8 @@
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using TripCostSplitter.AppBase.Messages;
 using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.AppBase.ViewModels.SplitViewModels;
 using TripCostSplitter.Core.DataModels;
@@ -10,9 +12,10 @@ using TripCostSplitter.Core.SplitData;
 
 namespace TripCostSplitter.AppBase.ViewModels;
 
-public partial class PaymentDetailViewModel: ObservableObject
+public partial class PaymentDetailViewModel: ObservableRecipient
 {
     [ObservableProperty]
+    [NotifyPropertyChangedRecipients]
     public partial CurrencyModel? Currency { get; set; }
     
     [ObservableProperty]
@@ -45,6 +48,7 @@ public partial class PaymentDetailViewModel: ObservableObject
     public IRelayCommand<Person> AddPayerCommand { get; }
     public IRelayCommand<PayerInfo> RemovePayerCommand { get; }
     public IRelayCommand AddPurchaseItemCommand { get; }
+    public IRelayCommand<PurchaseItem> DuplicatePurchaseItemCommand { get; }
     public IRelayCommand<PurchaseItem> RemovePurchaseItemCommand { get; }
     public IAsyncRelayCommand SaveCommand { get; }
     public IAsyncRelayCommand CancelCommand { get; }
@@ -74,6 +78,7 @@ public partial class PaymentDetailViewModel: ObservableObject
         AddPayerCommand = new RelayCommand<Person>(AddPayer!);
         RemovePayerCommand = new RelayCommand<PayerInfo>(RemovePayer!);
         AddPurchaseItemCommand = new RelayCommand(AddPurchaseItem);
+        DuplicatePurchaseItemCommand = new RelayCommand<PurchaseItem>(DuplicatePurchaseItem!);
         RemovePurchaseItemCommand = new RelayCommand<PurchaseItem>(RemovePurchaseItem!);
         SaveCommand = new AsyncRelayCommand(Save);
         CancelCommand = new AsyncRelayCommand(Cancel);
@@ -83,7 +88,7 @@ public partial class PaymentDetailViewModel: ObservableObject
         TravelParticipants = _sessionService.CurrentTravel!.Participants.ToList();
         AvailableCurrencies =
         [
-            .._currencyService.GetCurrencyInfos(
+            ..CurrencyService.GetCurrencyInfos(
                 [_sessionService.CurrentTravel.CalculateCurrency, .._sessionService.CurrentTravel.AdditionalCurrencies])
         ];
         
@@ -92,7 +97,7 @@ public partial class PaymentDetailViewModel: ObservableObject
         
         Date = new DateTime(Transaction.Date.Year, Transaction.Date.Month, Transaction.Date.Day);
         Time = new TimeSpan(Transaction.Date.Hour, Transaction.Date.Minute, Transaction.Date.Second);
-        Currency = currencyService.GetCurrencyInfo(Transaction.Currency);
+        Currency = CurrencyService.GetCurrencyInfo(Transaction.Currency);
         
         LoadPurchasedItems();
         LoadSplitData();
@@ -147,7 +152,7 @@ public partial class PaymentDetailViewModel: ObservableObject
             PaymentData.PurchaseItems.Add(new PurchaseItem("Total cost", GetTotalPayment()));
         }
         
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
     }
     
     private decimal GetTotalPayment()
@@ -173,7 +178,7 @@ public partial class PaymentDetailViewModel: ObservableObject
     private void RemovePayer(PayerInfo item)
     {
         PaymentData?.PayerInfos.Remove(item);
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
     }
     
     private void LoadPurchasedItems()
@@ -196,22 +201,28 @@ public partial class PaymentDetailViewModel: ObservableObject
                 break;
         }
         
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
     }
     
     public void PaymentPriceUpdated()
     {
-        if (PaymentData == null || !isLoaded)
-            return;
-        if (EnableItemList && PaymentData.PurchaseItems.Count > 1)
-            return;
-        PaymentData.PurchaseItems.Single().Price = GetTotalPayment();
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
+        Messenger.Send(new PaymentTotalValueChangedMessage(GetTotalPayment()));
+        Messenger.Send(new PaymentItemsChangedMessage());
     }
     
     private void AddPurchaseItem()
     {
         PaymentData?.PurchaseItems.Add(new PurchaseItem("", 0));
+        Messenger.Send(new PaymentItemsChangedMessage());
+    }
+    
+    private void DuplicatePurchaseItem(PurchaseItem item)
+    {
+        int index = PaymentData?.PurchaseItems.IndexOf(item) ?? 0;
+        PaymentData?.PurchaseItems.Insert(index, new PurchaseItem(item.ItemName, item.Price));
+        UpdatePurchaseItemValidation();
+        Messenger.Send(new PaymentItemsChangedMessage());
     }
     
     private void RemovePurchaseItem(PurchaseItem item)
@@ -219,33 +230,62 @@ public partial class PaymentDetailViewModel: ObservableObject
         if (PaymentData?.PurchaseItems.Count <= 1)
             return;
         PaymentData?.PurchaseItems.Remove(item);
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
+        Messenger.Send(new PaymentItemsChangedMessage());
     }
     
-    public void PurchaseItemPriceUpdated()
+    public void PurchaseItemUpdated()
     {
-        UpdateHasPurchaseItemValidation();
+        UpdatePurchaseItemValidation();
+        Messenger.Send(new PaymentItemsChangedMessage());
     }
     
-    private void UpdateHasPurchaseItemValidation()
+    private void UpdatePurchaseItemValidation()
     {
+        if (PaymentData == null || !isLoaded)
+            return;
+        if (!EnableItemList)
+        {
+            PaymentData.PurchaseItems.Single().Price = GetTotalPayment();
+        }
+        
+        AdjustPurchaseItemNames();
         HasPurchaseItemValidationError = GetTotalPurchasedItems() != GetTotalPayment();
+    }
+    
+    private void AdjustPurchaseItemNames()
+    {
+        if (PaymentData == null || !isLoaded)
+            return;
+        
+        HashSet<string> uniqueItemNames = [];
+        foreach (PurchaseItem item in PaymentData.PurchaseItems)
+        {
+            if (uniqueItemNames.Add(item.ItemName))
+                continue;
+            do
+            {
+                item.ItemName = $"{item.ItemName} S";
+            } while (uniqueItemNames.Contains(item.ItemName));
+            
+            uniqueItemNames.Add(item.ItemName);
+        }
     }
     
     private void LoadSplitData()
     {
-        if (PaymentData == null)
+        if (PaymentData == null || Currency == null)
             return;
         (CurrentSplitMethod, SplitDataViewModel) =
-            splitDataViewModelService.LoadSplitDataViewModel(TravelParticipants, PaymentData);
+            splitDataViewModelService.LoadSplitDataViewModel(PaymentData, TravelParticipants, Currency, Messenger);
     }
     
     partial void OnCurrentSplitMethodChanged(string? value)
     {
-        if (PaymentData == null)
+        if (PaymentData == null || Currency == null)
             return;
         SplitDataViewModel = splitDataViewModelService.LoadSplitDataViewModel(
-            CurrentSplitMethod, TravelParticipants, PaymentData);
+            CurrentSplitMethod, PaymentData, TravelParticipants, Currency, Messenger);
     }
     
     private async Task Save()

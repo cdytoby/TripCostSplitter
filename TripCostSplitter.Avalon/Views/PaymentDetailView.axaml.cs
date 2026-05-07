@@ -32,8 +32,13 @@ public partial class PaymentDetailView: ContentPage
         ViewModel?.PaymentPriceUpdated();
     }
     
+    private void PurchaseItemInputElement_OnLostFocus(object? sender, FocusChangedEventArgs e)
+    {
+        ViewModel?.PurchaseItemUpdated();
+    }
+    
     private void PurchaseItemPriceInputElement_OnLostFocus(object? sender, FocusChangedEventArgs e)
     {
-        ViewModel?.PurchaseItemPriceUpdated();
+        ViewModel?.PurchaseItemUpdated();
     }
 }
