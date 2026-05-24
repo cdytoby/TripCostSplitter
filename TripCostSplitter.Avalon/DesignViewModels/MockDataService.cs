@@ -39,7 +39,6 @@ public class MockDataService: IDataService
                         Date = DateTime.Now - TimeSpan.FromDays(5),
                         DateTimeZone = TimeZoneInfo.Local,
                         Currency = "EUR",
-                        ExchangeRateOverride = 1.2m,
                         TransactionData = new PaymentData
                         {
                             ParticipantIds = ["1", "2"],
@@ -58,7 +57,7 @@ public class MockDataService: IDataService
                         Date = DateTime.Now - TimeSpan.FromDays(2) + TimeSpan.FromHours(14),
                         DateTimeZone = TimeZoneInfo.Local,
                         Currency = "USD",
-                        ExchangeRateOverride = 1.2m,
+                        ExchangeRateOverride = 0.83m,
                         TransactionData = new PaymentData
                         {
                             ParticipantIds = ["1", "2"],

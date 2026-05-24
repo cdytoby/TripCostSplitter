@@ -46,7 +46,7 @@ public partial class TravelView: ContentPage
         else if (tabItem == DebtsTab)
         {
             travelDebtsView?.ViewModel?.UpdateDebts();
-            NavigationPage.SetTopCommandBar(this, null);
+            NavigationPage.SetTopCommandBar(this, travelDebtsView?.FindResource("TopBar") as Control);
         }
         else if( tabItem == DetailsTab)
         {

@@ -6,83 +6,108 @@
     xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
     xmlns:core="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
     xmlns:converters="clr-namespace:TripCostSplitter.Avalon.Converters"
+    xmlns:dvms="clr-namespace:TripCostSplitter.Avalon.DesignViewModels"
     x:Class="TripCostSplitter.Avalon.Views.TravelDebtsView"
-    x:CompileBindings="False"
+    x:DataType="vm:DebtsViewModel"
+    x:Name="DebtsView"
     d:DesignWidth="400"
     d:DesignHeight="800"
-    DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}">
+    d:DataContext="{x:Static dvms:DesignData.DebtsViewModelDesign}">
+
+    <UserControl.Styles>
+        <StyleInclude
+            Source="avares://TripCostSplitter.Avalon/Resources/AppStyles.axaml" />
+    </UserControl.Styles>
 
     <UserControl.Resources>
+        <!-- ReSharper disable Xaml.RedundantResource -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude
+                    Source="/Resources/AppResources.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        <CommandBar
+            x:Key="TopBar"
+            DataContext="{Binding #DebtsView.((vm:DebtsViewModel)DataContext)}">
+            <CommandBar.PrimaryCommands>
+                <CommandBarButton
+                    Label="Refresh"
+                    Command="{Binding UpdateDebtsCommand}">
+                    <CommandBarButton.Icon>
+                        <PathIcon
+                            Data="{StaticResource IconRefreshRegular}" />
+                    </CommandBarButton.Icon>
+                </CommandBarButton>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+        <!-- ReSharper restore Xaml.RedundantResource -->
         <converters:PersonIdNameConverter
             x:Key="PersonIdNameConverter" />
+        <converters:CurrencyTextConverter
+            x:Key="CurrencyTextConverter" />
     </UserControl.Resources>
 
-    <DockPanel
-        Margin="10">
-        <Button
-            DockPanel.Dock="Top"
-            Content="Refresh Debts"
-            Command="{Binding UpdateDebtsCommand}"
-            HorizontalAlignment="Stretch"
-            Margin="0,0,0,10" />
-
-        <ListBox
-            ItemsSource="{Binding Debts}">
-            <ListBox.ItemTemplate>
-                <DataTemplate
-                    x:DataType="core:DebtItem">
-                    <Border
-                        BorderBrush="LightGray"
-                        BorderThickness="0,0,0,1"
-                        Padding="5">
-                        <Grid
-                            ColumnDefinitions="*,Auto,*">
-                            <TextBlock
-                                Grid.Column="0"
-                                TextAlignment="Right"
-                                FontWeight="SemiBold">
-                                <TextBlock.Text>
-                                    <MultiBinding
-                                        Converter="{StaticResource PersonIdNameConverter}">
-                                        <Binding
-                                            Path="DebtorId" />
-                                        <Binding
-                                            Path="$parent[ContentPage].((vm:DebtsViewModel)DataContext).TravelParticipants" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                            <TextBlock
-                                Grid.Column="1"
-                                Text=" owes "
-                                Foreground="Gray"
-                                Margin="5,0" />
-                            <Grid
-                                Grid.Column="2"
-                                ColumnDefinitions="*,Auto">
-                                <TextBlock
-                                    Grid.Column="0"
-                                    FontWeight="SemiBold">
-                                    <TextBlock.Text>
-                                        <MultiBinding
-                                            Converter="{StaticResource PersonIdNameConverter}">
-                                            <Binding
-                                                Path="CreditorId" />
-                                            <Binding
-                                                Path="$parent[ContentPage].((vm:DebtsViewModel)DataContext).TravelParticipants" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Text="{Binding Amount, StringFormat='{}{0:N2}'}"
-                                    Margin="5,0,0,0"
-                                    Foreground="Green"
-                                    FontWeight="Bold" />
-                            </Grid>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </DockPanel>
+    <ListBox
+        ItemsSource="{Binding Debts}">
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <Border
+                    BorderBrush="{DynamicResource TextControlBorderBrush}"
+                    BorderThickness="0,0,0,1"
+                    Padding="5">
+                    <Grid
+                        ColumnDefinitions="*,Auto,*,*"
+                        ColumnSpacing="10">
+                        <TextBlock
+                            Grid.Column="0"
+                            TextAlignment="Right"
+                            FontWeight="SemiBold">
+                            <TextBlock.Text>
+                                <MultiBinding
+                                    Converter="{StaticResource PersonIdNameConverter}">
+                                    <Binding
+                                        Path="DebtorId" />
+                                    <Binding
+                                        Path="$parent[UserControl].((vm:DebtsViewModel)DataContext).TravelParticipants" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock
+                            Grid.Column="1"
+                            Classes="sub"
+                            Text=" owes " />
+                        <TextBlock
+                            Grid.Column="2"
+                            FontWeight="SemiBold">
+                            <TextBlock.Text>
+                                <MultiBinding
+                                    Converter="{StaticResource PersonIdNameConverter}">
+                                    <Binding
+                                        Path="CreditorId" />
+                                    <Binding
+                                        Path="$parent[UserControl].((vm:DebtsViewModel)DataContext).TravelParticipants" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        
+                        <TextBlock
+                            Grid.Column="3"
+                            Margin="5,0,0,0"
+                            FontWeight="Bold">
+                            <TextBlock.Text>
+                                <MultiBinding
+                                    Converter="{StaticResource CurrencyTextConverter}">
+                                    <Binding
+                                        Path="Amount" />
+                                    <Binding
+                                        Path="$parent[UserControl].((vm:DebtsViewModel)DataContext).Currency" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Grid>
+                </Border>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
 </UserControl>

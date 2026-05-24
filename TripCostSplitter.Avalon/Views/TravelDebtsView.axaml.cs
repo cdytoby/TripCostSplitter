@@ -15,6 +15,7 @@ public partial class TravelDebtsView : UserControl
     public TravelDebtsView(DebtsViewModel _viewModel)
     {
         ViewModel = _viewModel;
+        DataContext = _viewModel;
         InitializeComponent();
     }
 }

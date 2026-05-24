@@ -7,6 +7,8 @@ namespace TripCostSplitter.Core.Services;
 
 public class CurrencyService
 {
+    public const string KeyUnknown = "UNKNOWN";
+    
     private readonly IDataService dataService;
     private IReadOnlyList<CurrencyExchangeRateModel> exchangeRateModels = [];
     
@@ -56,7 +58,7 @@ public class CurrencyService
     {
         return knownCurrencies.Values.SingleOrDefault(
             kvp => kvp.CultureInfoCode.Equals(cultureInfo.Name),
-            knownCurrencies["EUR"]);
+            knownCurrencies["UNKNOWN"]);
     }
     
     public string GetDescription(string key)
@@ -114,6 +116,7 @@ public class CurrencyService
     
     private static readonly Dictionary<string, CurrencyModel> knownCurrencies = new()
     {
+        [KeyUnknown] = new CurrencyModel(KeyUnknown, "¤", "Invariant", ""),
         ["USD"] = new CurrencyModel("USD", "$", "United States Dollar", "en-US"),
         ["EUR"] = new CurrencyModel("EUR", "€", "Euro", "de-DE"),
         ["GBP"] = new CurrencyModel("GBP", "£", "British Pound Sterling", "en-GB"),

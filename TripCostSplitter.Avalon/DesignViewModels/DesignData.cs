@@ -23,6 +23,8 @@ public static class DesignData
     
     public static PaymentDetailViewModel PaymentDetailViewModelDesign { get; } = GetPaymentDetailViewModel();
     
+    public static DebtsViewModel DebtsViewModelDesign { get; } = GetDebtsViewModel();
+    
     public static SplitByPercentageViewModel SplitByPercentageViewModelDesign { get; } =
         GetSplitByPercentageViewModel();
     
@@ -70,6 +72,13 @@ public static class DesignData
     {
         SetSession();
         PaymentDetailViewModel viewModel = serviceProvider.GetRequiredService<PaymentDetailViewModel>();
+        return viewModel;
+    }
+    
+    private static DebtsViewModel GetDebtsViewModel()
+    {
+        SetSession();
+        DebtsViewModel viewModel = serviceProvider.GetRequiredService<DebtsViewModel>();
         return viewModel;
     }
     
