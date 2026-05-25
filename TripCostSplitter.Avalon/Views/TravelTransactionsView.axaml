@@ -47,7 +47,8 @@
     </UserControl.Resources>
 
     <ListBox
-        ItemsSource="{Binding Travel.Transactions}">
+        Background="Transparent"
+        ItemsSource="{Binding SortedTransactions}">
         <ListBox.Styles>
             <Style
                 Selector="ListBoxItem">

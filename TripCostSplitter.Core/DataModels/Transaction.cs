@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TripCostSplitter.Core.JsonExtensions;
@@ -29,5 +30,14 @@ public partial class Transaction: ObservableObject
     public required partial ITransactionData TransactionData { get; set; }
     
     [ObservableProperty]
+    public partial ObservableCollection<string> Images { get; set; } = [];
+    
+    [ObservableProperty]
     public partial IReadOnlyList<RecipientInfo> RecipientInfos { get; set; } = [];
+    
+    public Transaction Copy()
+    {
+        string serialized = JsonSerializer.Serialize(this);
+        return JsonSerializer.Deserialize<Transaction>(serialized)!;
+    }
 }

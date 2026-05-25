@@ -48,66 +48,108 @@
             x:Key="CurrencyTextConverter" />
     </UserControl.Resources>
 
-    <ListBox
-        ItemsSource="{Binding Debts}">
-        <ListBox.ItemTemplate>
-            <DataTemplate>
-                <Border
-                    BorderBrush="{DynamicResource TextControlBorderBrush}"
-                    BorderThickness="0,0,0,1"
-                    Padding="5">
-                    <Grid
-                        ColumnDefinitions="*,Auto,*,*"
-                        ColumnSpacing="10">
-                        <TextBlock
-                            Grid.Column="0"
-                            TextAlignment="Right"
-                            FontWeight="SemiBold">
-                            <TextBlock.Text>
-                                <MultiBinding
-                                    Converter="{StaticResource PersonIdNameConverter}">
-                                    <Binding
-                                        Path="DebtorId" />
-                                    <Binding
-                                        Path="$parent[UserControl].((vm:DebtsViewModel)DataContext).TravelParticipants" />
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                        <TextBlock
-                            Grid.Column="1"
-                            Classes="sub"
-                            Text=" owes " />
-                        <TextBlock
-                            Grid.Column="2"
-                            FontWeight="SemiBold">
-                            <TextBlock.Text>
-                                <MultiBinding
-                                    Converter="{StaticResource PersonIdNameConverter}">
-                                    <Binding
-                                        Path="CreditorId" />
-                                    <Binding
-                                        Path="$parent[UserControl].((vm:DebtsViewModel)DataContext).TravelParticipants" />
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                        
-                        <TextBlock
-                            Grid.Column="3"
-                            Margin="5,0,0,0"
-                            FontWeight="Bold">
-                            <TextBlock.Text>
-                                <MultiBinding
-                                    Converter="{StaticResource CurrencyTextConverter}">
-                                    <Binding
-                                        Path="Amount" />
-                                    <Binding
-                                        Path="$parent[UserControl].((vm:DebtsViewModel)DataContext).Currency" />
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                    </Grid>
-                </Border>
-            </DataTemplate>
-        </ListBox.ItemTemplate>
-    </ListBox>
+    <StackPanel
+        Margin="10"
+        Spacing="10">
+        <Grid
+            DockPanel.Dock="Top"
+            HorizontalAlignment="Center"
+            ColumnDefinitions="Auto,Auto"
+            RowDefinitions="*,*"
+            ColumnSpacing="10"
+            RowSpacing="2">
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Text="Total expense" />
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="1"
+                FontWeight="Bold">
+                <TextBlock.Text>
+                    <MultiBinding
+                        Converter="{StaticResource CurrencyTextConverter}">
+                        <Binding
+                            Path="TotalExpense" />
+                        <Binding
+                            Path="Currency" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                TextAlignment="Right"
+                Text="Transactions" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                TextAlignment="Left"
+                FontWeight="Bold"
+                Text="{Binding TransactionCount}" />
+        </Grid>
+        <ItemsControl
+            Background="Transparent"
+            ItemsSource="{Binding Debts}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        BorderBrush="{DynamicResource TextControlBorderBrush}"
+                        BorderThickness="0,0,0,1"
+                        Padding="10">
+                        <Grid
+                            ColumnDefinitions="*,Auto,*,*"
+                            ColumnSpacing="10">
+                            <TextBlock
+                                Grid.Column="0"
+                                TextAlignment="Right"
+                                FontWeight="SemiBold">
+                                <TextBlock.Text>
+                                    <MultiBinding
+                                        Converter="{StaticResource PersonIdNameConverter}">
+                                        <Binding
+                                            Path="DebtorId" />
+                                        <Binding
+                                            Path="$parent[UserControl].((vm:DebtsViewModel)DataContext).TravelParticipants" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <TextBlock
+                                Grid.Column="1"
+                                Classes="sub"
+                                Text=" owes " />
+                            <TextBlock
+                                Grid.Column="2"
+                                FontWeight="SemiBold">
+                                <TextBlock.Text>
+                                    <MultiBinding
+                                        Converter="{StaticResource PersonIdNameConverter}">
+                                        <Binding
+                                            Path="CreditorId" />
+                                        <Binding
+                                            Path="$parent[UserControl].((vm:DebtsViewModel)DataContext).TravelParticipants" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+
+                            <TextBlock
+                                Grid.Column="3"
+                                Margin="5,0,0,0"
+                                FontWeight="Bold">
+                                <TextBlock.Text>
+                                    <MultiBinding
+                                        Converter="{StaticResource CurrencyTextConverter}">
+                                        <Binding
+                                            Path="Amount" />
+                                        <Binding
+                                            Path="$parent[UserControl].((vm:DebtsViewModel)DataContext).Currency" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
 </UserControl>

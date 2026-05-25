@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using TripCostSplitter.AppBase.Services;
 using TripCostSplitter.Core.DataModels;
 using TripCostSplitter.Core.Services;
@@ -9,6 +11,9 @@ namespace TripCostSplitter.AppBase.ViewModels;
 public partial class TransactionListViewModel: ObservableObject
 {
     public Travel Travel { get; }
+    
+    [ObservableProperty]
+    public partial ObservableCollection<Transaction> SortedTransactions { get; private set; } = [];
     
     private readonly SessionService sessionService;
     private readonly INavigationService navigationService;
@@ -22,6 +27,17 @@ public partial class TransactionListViewModel: ObservableObject
         
         //todo exception or load state with nullable
         Travel = sessionService.CurrentTravel!;
+        
+        RefreshTransactions();
+    }
+    
+    public void RefreshTransactions()
+    {
+        SortedTransactions.Clear();
+        foreach (Transaction transaction in Travel.Transactions.OrderByDescending(t => t.Date))
+        {
+            SortedTransactions.Add(transaction);
+        }
     }
     
     [RelayCommand]
@@ -57,7 +73,8 @@ public partial class TransactionListViewModel: ObservableObject
     public async Task DeleteTransaction(Transaction transaction)
     {
         Travel.Transactions.Remove(transaction);
-        await sessionService.Save();
+        RefreshTransactions();
+        await sessionService.SaveTravel();
         //todo update debts here
     }
 }

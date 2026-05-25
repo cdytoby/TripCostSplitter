@@ -10,28 +10,20 @@ public class CurrencyService
     public const string KeyUnknown = "UNKNOWN";
     
     private readonly IDataService dataService;
-    private IReadOnlyList<CurrencyExchangeRateModel> exchangeRateModels = [];
     
     public CurrencyService(IDataService _dataService)
     {
         dataService = _dataService;
-        
-        Task.Run(LoadExchangeRates);
-    }
-    
-    private async Task LoadExchangeRates()
-    {
-        exchangeRateModels = new List<CurrencyExchangeRateModel>(dataService.Settings.CachedExchangeRates);
     }
     
     public decimal? GetExchangeRate(string fromCurrency, string toCurrency)
     {
-        CurrencyExchangeRateModel? model1 = exchangeRateModels.FirstOrDefault(rateModel =>
+        CurrencyExchangeRateModel? model1 = dataService.Settings.CachedExchangeRates.FirstOrDefault(rateModel =>
             rateModel.fromCurrency.Equals(fromCurrency) && rateModel.toCurrency.Equals(toCurrency));
         if (model1 != null)
             return model1.rate;
         
-        CurrencyExchangeRateModel? model2 = exchangeRateModels.FirstOrDefault(rateModel =>
+        CurrencyExchangeRateModel? model2 = dataService.Settings.CachedExchangeRates.FirstOrDefault(rateModel =>
             rateModel.fromCurrency.Equals(toCurrency) && rateModel.toCurrency.Equals(fromCurrency));
         if (model2 != null)
             return 1m / model2.rate;

@@ -1,5 +1,4 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Interactivity;
 using TripCostSplitter.AppBase.Services;
 
 namespace TripCostSplitter.Avalon.Views;
@@ -32,6 +31,12 @@ public partial class TravelView: ContentPage
         travelTransactionsView = _travelTransactionsView;
     }
     
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        travelTransactionsView?.ViewModel?.RefreshTransactions();
+        travelDebtsView?.ViewModel?.UpdateDebtsCommand.Execute(null);
+    }
+    
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         TabItem[] addedTabItems = e.AddedItems.OfType<TabItem>().ToArray();
@@ -42,11 +47,12 @@ public partial class TravelView: ContentPage
         if (tabItem == TransactionsTab)
         {
             NavigationPage.SetTopCommandBar(this, travelTransactionsView?.FindResource("TopBar") as Control);
+            travelTransactionsView?.ViewModel?.RefreshTransactions();
         }
         else if (tabItem == DebtsTab)
         {
-            travelDebtsView?.ViewModel?.UpdateDebts();
             NavigationPage.SetTopCommandBar(this, travelDebtsView?.FindResource("TopBar") as Control);
+            travelDebtsView?.ViewModel?.UpdateDebtsCommand.Execute(null);
         }
         else if( tabItem == DetailsTab)
         {

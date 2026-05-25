@@ -11,6 +11,7 @@
     d:DesignHeight="800">
     
     <TabControl
+        Padding="0"
         TabStripPlacement="Bottom"
         SelectionChanged="SelectingItemsControl_OnSelectionChanged">
         <!-- Tab 1: Details & Participants -->

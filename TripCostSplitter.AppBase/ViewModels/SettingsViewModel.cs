@@ -20,6 +20,9 @@ public partial class SettingsViewModel: ObservableRecipient
     public partial ObservableCollection<ExchangeRateItemViewModel> ExchangeRateViewModels { get; private set; } = [];
     
     public IReadOnlyList<CurrencyModel> AvailableCurrencies { get; }
+    public IRelayCommand AddExchangeRateCommand { get; }
+    public IRelayCommand RemoveExchangeRateCommand { get; }
+    public IRelayCommand SaveSettingsCommand { get; }
     
     private readonly INavigationService navigationService;
     private readonly IDataService dataService;
@@ -36,6 +39,10 @@ public partial class SettingsViewModel: ObservableRecipient
         dispatcher = _dispatcher;
         currencyService = _currencyService;
         navigationService = _navigationService;
+        
+        AddExchangeRateCommand = new RelayCommand(AddExchangeRate);
+        RemoveExchangeRateCommand = new RelayCommand<ExchangeRateItemViewModel>(RemoveExchangeRate);
+        SaveSettingsCommand = new AsyncRelayCommand(SaveSettingsAsync);
         
         AvailableCurrencies = CurrencyService.GetAllCurrencyInfos();
         
@@ -68,8 +75,7 @@ public partial class SettingsViewModel: ObservableRecipient
         }
     }
     
-    [RelayCommand]
-    public async Task SaveSettingsAsync()
+    private async Task SaveSettingsAsync()
     {
         dataService.Settings.DefaultCurrency = DefaultCurrency!.Code;
         List<CurrencyExchangeRateModel> result = [];
@@ -86,8 +92,7 @@ public partial class SettingsViewModel: ObservableRecipient
         await navigationService.PopAsync();
     }
     
-    [RelayCommand]
-    public void AddExchangeRate()
+    private void AddExchangeRate()
     {
         ExchangeRateViewModels.Add(new ExchangeRateItemViewModel(Messenger)
         {
@@ -95,10 +100,10 @@ public partial class SettingsViewModel: ObservableRecipient
         });
     }
     
-    [RelayCommand]
-    public void RemoveExchangeRate(ExchangeRateItemViewModel rate)
+    private void RemoveExchangeRate(ExchangeRateItemViewModel? rate)
     {
-        ExchangeRateViewModels.Remove(rate);
+        if (rate != null)
+            ExchangeRateViewModels.Remove(rate);
     }
     
     private void MarkDuplicateExchangeRates(object recipient, PropertyChangedMessage<CurrencyModel> message)

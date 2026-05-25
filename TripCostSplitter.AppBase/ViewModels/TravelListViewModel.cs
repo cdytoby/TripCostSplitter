@@ -47,7 +47,7 @@ public partial class TravelListViewModel: ObservableObject
         };
         Travels.Add(newTravel);
         sessionService.CurrentTravel = newTravel;
-        await sessionService.Save();
+        await sessionService.SaveTravel();
         await navigationService.PushAsync(ViewDefinition.TravelDetailView);
     }
     

@@ -84,12 +84,12 @@ public partial class PaymentDetailViewModel: ObservableRecipient
         CancelCommand = new AsyncRelayCommand(Cancel);
         
         //todo exception or load state with nullable
-        Transaction = _sessionService.CurrentTransaction!;
-        TravelParticipants = _sessionService.CurrentTravel!.Participants.ToList();
+        Transaction = sessionService.CurrentTransaction!.Copy();
+        TravelParticipants = sessionService.CurrentTravel!.Participants.ToList();
         AvailableCurrencies =
         [
             ..CurrencyService.GetCurrencyInfos(
-                [_sessionService.CurrentTravel.CalculateCurrency, .._sessionService.CurrentTravel.AdditionalCurrencies])
+                [sessionService.CurrentTravel.CalculateCurrency, ..sessionService.CurrentTravel.AdditionalCurrencies])
         ];
         
         //todo exception or load state with nullable
@@ -294,7 +294,7 @@ public partial class PaymentDetailViewModel: ObservableRecipient
         
         CalculateRecipient();
         
-        await sessionService.Save();
+        await sessionService.SaveTransaction(Transaction);
         
         await navigationService.PopAsync();
     }

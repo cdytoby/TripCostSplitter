@@ -14,6 +14,7 @@ public partial class TravelDetailViewModel: ObservableObject
     [ObservableProperty]
     public partial bool IsCurrencyExchangeMissing { get; set; }
     
+    public IRelayCommand AddAdditionalCurrencyCommand { get; }
     public IRelayCommand DeleteAdditionalCurrencyCommand { get; }
     public IRelayCommand AddPersonCommand { get; }
     public IRelayCommand DeletePersonCommand { get; }
@@ -29,17 +30,18 @@ public partial class TravelDetailViewModel: ObservableObject
         currencyService = _currencyService;
         AllCurrencies = CurrencyService.GetAllCurrencyInfos();
         
-        //todo exception or load state with nullable
-        Travel = sessionService.CurrentTravel!;
+        AddAdditionalCurrencyCommand = new AsyncRelayCommand<string>(AddAdditionalCurrency);
         DeleteAdditionalCurrencyCommand = new AsyncRelayCommand<string>(DeleteAdditionalCurrency);
         AddPersonCommand = new AsyncRelayCommand(AddPerson);
         DeletePersonCommand = new AsyncRelayCommand<Person>(DeletePerson);
         
+        //todo exception or load state with nullable
+        Travel = sessionService.CurrentTravel!;
+        
         CheckExchangeAvailable();
     }
     
-    [RelayCommand]
-    private async Task AddAdditionalCurrency(string code)
+    private async Task AddAdditionalCurrency(string? code)
     {
         if (string.IsNullOrWhiteSpace(code))
             return;
@@ -105,6 +107,6 @@ public partial class TravelDetailViewModel: ObservableObject
     
     public async Task Save()
     {
-        await sessionService.Save();
+        await sessionService.SaveTravel();
     }
 }

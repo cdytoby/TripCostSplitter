@@ -9,17 +9,16 @@ public class SplitEvenlyCalculator : ISplitCalculator
     public IList<RecipientInfo> CalculateDebit(PaymentData paymentData)
     {
         SplitEvenly splitData = (SplitEvenly)paymentData.SplitData!;
-        IList<string> allParticipants = paymentData.ParticipantIds;
 
-        if (!allParticipants.Any() || !paymentData.PayerInfos.Any())
+        if (splitData.SplitParticipants.Count == 0 || !paymentData.PayerInfos.Any())
             return new List<RecipientInfo>();
 
         decimal totalPaid = paymentData.PayerInfos.Sum(p => p.Amount);
-        decimal perPerson = totalPaid / allParticipants.Count;
+        decimal perPerson = totalPaid / splitData.SplitParticipants.Count;
 
         List<RecipientInfo> result = [];
         
-        foreach (string participant in allParticipants)
+        foreach (string participant in splitData.SplitParticipants)
         {
             result.Add(new RecipientInfo(participant, perPerson));
         }

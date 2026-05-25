@@ -29,7 +29,8 @@ public class MockDataService: IDataService
                 Participants =
                 [
                     new Person("1", "Alice"),
-                    new Person("2", "Bob")
+                    new Person("2", "Bob"),
+                    new Person("3", "Charlie")
                 ],
                 Transactions =
                 [
@@ -41,14 +42,15 @@ public class MockDataService: IDataService
                         Currency = "EUR",
                         TransactionData = new PaymentData
                         {
-                            ParticipantIds = ["1", "2"],
+                            ParticipantIds = ["1", "2", "3"],
                             PayerInfos = [new PayerInfo("1", 100)],
                             PurchaseItems = [new PurchaseItem("ItemToPurchase", 100)]
                         },
                         RecipientInfos =
                         [
                             new RecipientInfo("1", 50),
-                            new RecipientInfo("2", 50)
+                            new RecipientInfo("2", 20),
+                            new RecipientInfo("3", 30)
                         ]
                     },
                     new Transaction
