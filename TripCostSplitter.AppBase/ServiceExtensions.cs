@@ -15,6 +15,7 @@ public static class ServiceExtensions
         services.AddTransient<TravelListViewModel>();
         services.AddTransient<TravelDetailViewModel>();
         services.AddTransient<PaymentDetailViewModel>();
+        services.AddTransient<TransferDetailViewModel>();
         services.AddTransient<TransactionListViewModel>();
         services.AddTransient<DebtsViewModel>();
         services.AddTransient<SettingsViewModel>();

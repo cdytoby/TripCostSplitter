@@ -39,6 +39,14 @@
                             Data="{StaticResource IconAddRegular}" />
                     </CommandBarButton.Icon>
                 </CommandBarButton>
+                <CommandBarButton
+                    Label="Transfer"
+                    Command="{Binding AddTransferCommand}">
+                    <CommandBarButton.Icon>
+                        <PathIcon
+                            Data="{StaticResource IconAddRegular}" />
+                    </CommandBarButton.Icon>
+                </CommandBarButton>
             </CommandBar.PrimaryCommands>
         </CommandBar>
         <!-- ReSharper restore Xaml.RedundantResource -->

@@ -23,6 +23,8 @@ public static class DesignData
     
     public static PaymentDetailViewModel PaymentDetailViewModelDesign { get; } = GetPaymentDetailViewModel();
     
+    public static TransferDetailViewModel TransferDetailViewModelDesign { get; } = GetTransferDetailViewModel();
+    
     public static DebtsViewModel DebtsViewModelDesign { get; } = GetDebtsViewModel();
     
     public static SplitByPercentageViewModel SplitByPercentageViewModelDesign { get; } =
@@ -72,6 +74,32 @@ public static class DesignData
     {
         SetSession();
         PaymentDetailViewModel viewModel = serviceProvider.GetRequiredService<PaymentDetailViewModel>();
+        return viewModel;
+    }
+    
+    private static TransferDetailViewModel GetTransferDetailViewModel()
+    {
+        SetSession();
+        SessionService session = serviceProvider.GetRequiredService<SessionService>();
+        Travel travel = session.CurrentTravel!;
+        string fromId = travel.Participants.ElementAtOrDefault(0)?.Id ?? "";
+        string toId = travel.Participants.ElementAtOrDefault(1)?.Id ?? fromId;
+        Transaction transferTransaction = new()
+        {
+            Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
+            TransactionId = "design-transfer",
+            Currency = travel.CalculateCurrency,
+            Description = "Sample Transfer",
+            TransactionData = new TransferData
+            {
+                FromPersonId = fromId,
+                ToPersonId = toId,
+                Amount = 100m
+            }
+        };
+        session.CurrentTransaction = transferTransaction;
+        TransferDetailViewModel viewModel = serviceProvider.GetRequiredService<TransferDetailViewModel>();
         return viewModel;
     }
     

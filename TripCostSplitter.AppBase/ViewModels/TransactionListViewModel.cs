@@ -63,10 +63,38 @@ public partial class TransactionListViewModel: ObservableObject
     }
     
     [RelayCommand]
+    public async Task AddTransfer()
+    {
+        string defaultPersonId = Travel.Participants.FirstOrDefault()?.Id ?? "";
+        TransferData transferData = new()
+        {
+            FromPersonId = defaultPersonId,
+            ToPersonId = defaultPersonId,
+            Amount = 0
+        };
+        Transaction transaction = new()
+        {
+            Date = DateTime.Now,
+            DateTimeZone = TimeZoneInfo.Local,
+            TransactionId = AccessManager.GetNewId(),
+            Currency = Travel.CalculateCurrency,
+            TransactionData = transferData
+        };
+        Travel.Transactions.Add(transaction);
+        sessionService.CurrentTransaction = transaction;
+        await navigationService.PushAsync(ViewDefinition.TransferDetailView);
+    }
+    
+    [RelayCommand]
     public async Task EditTransaction(Transaction transaction)
     {
         sessionService.CurrentTransaction = transaction;
-        await navigationService.PushAsync(ViewDefinition.PaymentDetailView);
+        string targetView = transaction.TransactionData switch
+        {
+            TransferData => ViewDefinition.TransferDetailView,
+            _ => ViewDefinition.PaymentDetailView
+        };
+        await navigationService.PushAsync(targetView);
     }
     
     [RelayCommand]

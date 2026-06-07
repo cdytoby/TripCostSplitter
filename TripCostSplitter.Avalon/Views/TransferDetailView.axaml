@@ -1,0 +1,187 @@
+﻿<ContentPage
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:TripCostSplitter.AppBase.ViewModels;assembly=TripCostSplitter.AppBase"
+    xmlns:dataModels="clr-namespace:TripCostSplitter.Core.DataModels;assembly=TripCostSplitter.Core"
+    xmlns:converters="clr-namespace:TripCostSplitter.Avalon.Converters"
+    xmlns:designViewModels="clr-namespace:TripCostSplitter.Avalon.DesignViewModels"
+    x:Class="TripCostSplitter.Avalon.Views.TransferDetailView"
+    x:DataType="vm:TransferDetailViewModel"
+    x:Name="TransferDetailPage"
+    d:DesignWidth="400"
+    d:DesignHeight="800"
+    d:DataContext="{x:Static designViewModels:DesignData.TransferDetailViewModelDesign}"
+    NavigationPage.TopCommandBar="{StaticResource TopBar}"
+    NavigationPage.Header="{Binding Transaction.Description}">
+
+    <ContentPage.Styles>
+        <StyleInclude
+            Source="avares://TripCostSplitter.Avalon/Resources/AppStyles.axaml" />
+    </ContentPage.Styles>
+
+    <ContentPage.Resources>
+        <!-- ReSharper disable Xaml.RedundantResource -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude
+                    Source="/Resources/AppResources.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        <CommandBar
+            x:Key="TopBar"
+            DataContext="{Binding #TransferDetailPage.((vm:TransferDetailViewModel)DataContext)}">
+            <CommandBar.PrimaryCommands>
+                <CommandBarButton
+                    Label="Cancel"
+                    Command="{Binding CancelCommand}">
+                    <CommandBarButton.Icon>
+                        <PathIcon
+                            Data="{StaticResource IconRejectRegular}" />
+                    </CommandBarButton.Icon>
+                </CommandBarButton>
+                <CommandBarButton
+                    Label="Save"
+                    Command="{Binding SaveCommand}">
+                    <CommandBarButton.Icon>
+                        <PathIcon
+                            Data="{StaticResource IconSaveRegular}" />
+                    </CommandBarButton.Icon>
+                </CommandBarButton>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+        <!-- ReSharper restore Xaml.RedundantResource -->
+        <converters:CurrencyInputConverterConverter
+            x:Key="CurrencyInputConverterConverter" />
+    </ContentPage.Resources>
+
+    <ScrollViewer
+        Padding="10,10,16,10">
+        <StackPanel
+            Spacing="10"
+            Margin="0,0,0,10">
+            <TextBox
+                Text="{Binding Transaction.Description, FallbackValue=''}"
+                PlaceholderText="Description" />
+            <Grid
+                ColumnDefinitions="Auto,*,*"
+                RowDefinitions="Auto,Auto,Auto"
+                RowSpacing="10"
+                ColumnSpacing="10">
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Classes="h3"
+                    VerticalAlignment="Center"
+                    Text="Date time" />
+                <CalendarDatePicker
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    SelectedDate="{Binding Date}" />
+                <TimePicker
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    MinWidth="0"
+                    SelectedTime="{Binding Time}"
+                    ClockIdentifier="24HourClock" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Classes="h3"
+                    VerticalAlignment="Center"
+                    Text="Currency" />
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{Binding AvailableCurrencies}"
+                    SelectedValue="{Binding Currency}"
+                    ItemTemplate="{StaticResource CurrencyComboBoxTemplate}" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Classes="h3"
+                    VerticalAlignment="Center"
+                    Text="Exchange Rate Override" />
+                <NumericUpDown
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Value="{ReflectionBinding Transaction.ExchangeRateOverride}"
+                    HorizontalAlignment="Stretch"
+                    ShowButtonSpinner="False"
+                    AllowSpin="False" />
+            </Grid>
+
+            <!-- Transfer -->
+            <Separator
+                Margin="0,20,0,0" />
+            <Grid
+                ColumnDefinitions="Auto,*"
+                RowDefinitions="Auto,Auto,Auto"
+                RowSpacing="10"
+                ColumnSpacing="10">
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Classes="h3"
+                    VerticalAlignment="Center"
+                    Text="From" />
+                <ComboBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{Binding TravelParticipants}"
+                    SelectedValueBinding="{Binding Id}"
+                    SelectedValue="{Binding TransferData.FromPersonId}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate
+                            DataType="dataModels:Person">
+                            <TextBlock
+                                Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Classes="h3"
+                    VerticalAlignment="Center"
+                    Text="To" />
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{Binding TravelParticipants}"
+                    SelectedValueBinding="{Binding Id}"
+                    SelectedValue="{Binding TransferData.ToPersonId}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate
+                            DataType="dataModels:Person">
+                            <TextBlock
+                                Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Classes="h3"
+                    VerticalAlignment="Center"
+                    Text="Amount" />
+                <NumericUpDown
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Classes="default"
+                    HorizontalAlignment="Stretch"
+                    Value="{ReflectionBinding TransferData.Amount, FallbackValue=0, TargetNullValue=0}"
+                    TextConverter="{Binding Currency, Converter={StaticResource CurrencyInputConverterConverter}}"
+                    PlaceholderText="Amount" />
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</ContentPage>
